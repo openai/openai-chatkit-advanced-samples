@@ -70,3 +70,49 @@ async def discard_fact(fact_id: str) -> dict[str, Any]:
 @app.get("/health")
 async def health_check() -> dict[str, str]:
     return {"status": "healthy"}
+# --- ADD: ChatKit session endpoint (no-code friendly) ---
+import os, httpx
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+
+router = APIRouter()
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+WORKFLOW_ID = os.environ["WORKFLOW_ID"]
+
+@router.post("/chatkit")
+async def create_chatkit_session():
+    """
+    ChatKit frontend bu endpoint'e POST eder.
+    Biz de OpenAI'den session oluşturup client_secret'i geri döneriz.
+    """
+    url = "https://api.openai.com/v1/chatkit/sessions"
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    # 'user' serbest bir son-kullanıcı kimliği. Kullanıcı başına sabit bir değer verebilirsin.
+    payload = {
+        "user": "web-user-1",
+        "workflow": { "id": WORKFLOW_ID },  # Agent Builder'dan aldığın ID
+        # İstersen burada chatkit_configuration / history / file_upload vb. opsiyonları açabilirsin.
+    }
+    async with httpx.AsyncClient(timeout=30) as client:
+        r = await client.post(url, headers=headers, json=payload)
+    data = r.json()
+    # ChatKit'in beklediği alan: client_secret
+    # (frontend bu secret'ı alıp widget'ı başlatır)
+    return JSONResponse(
+        {
+            "client_secret": data.get("client_secret"),
+            "expires_at": data.get("expires_at"),
+        },
+        status_code=r.status_code,
+    )
+
+# Mevcut FastAPI app'ine router'ı bağla:
+# app.include_router(router) satırı zaten varsa gerek yok; yoksa ekleyin:
+try:
+    app.include_router(router)
+except Exception:
+    pass
+# --- /ADD ---
