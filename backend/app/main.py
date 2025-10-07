@@ -120,3 +120,53 @@ async def chatkit_refresh(body: dict = Body(...)):
     )
 
 app.include_router(router)
+# backend/app/main.py  (dosyanın SONUNA ekleyin; varsa eski denemeleri kaldırın)
+import os, httpx
+from fastapi import APIRouter, Body
+from fastapi.responses import JSONResponse
+
+router = APIRouter(prefix="/api")
+
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+WORKFLOW_ID    = os.environ["WORKFLOW_ID"]
+
+OPENAI_SESSIONS_URL = "https://api.openai.com/v1/chatkit/sessions"
+HEADERS = {"Authorization": f"Bearer {OPENAI_API_KEY}",
+           "Content-Type": "application/json"}
+
+@router.post("/chatkit/start")
+async def chatkit_start():
+    payload = {
+        "user": "web-user-1",                 # kullanıcıyı istediğin gibi tanımla
+        "workflow": { "id": WORKFLOW_ID },    # Agent Builder > Workflow ID
+        # Örnek: daha uzun süre istersen
+        # "expires_after": { "seconds": 3600 }
+    }
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(OPENAI_SESSIONS_URL, headers=HEADERS, json=payload)
+    data = resp.json()
+    return JSONResponse(
+      {"client_secret": data.get("client_secret"),
+       "expires_at":   data.get("expires_at")},
+      status_code=resp.status_code
+    )
+
+@router.post("/chatkit/refresh")
+async def chatkit_refresh(body: dict = Body(...)):
+    current = body.get("currentClientSecret")
+    # Çoğu kurulumda aynı endpoint ile refresh yapılır:
+    payload = {
+        "user": "web-user-1",
+        "workflow": { "id": WORKFLOW_ID },
+        "current_client_secret": current
+    }
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(OPENAI_SESSIONS_URL, headers=HEADERS, json=payload)
+    data = resp.json()
+    return JSONResponse(
+      {"client_secret": data.get("client_secret"),
+       "expires_at":   data.get("expires_at")},
+      status_code=resp.status_code
+    )
+
+app.include_router(router)
