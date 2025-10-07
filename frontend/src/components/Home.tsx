@@ -1,5 +1,6 @@
 // frontend/src/components/Home.tsx
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import { CHATKIT_API_DOMAIN_KEY, CHATKIT_API_URL } from "../lib/config";
 
 type Props = {
   scheme: "light" | "dark";
@@ -9,27 +10,26 @@ type Props = {
 export default function Home({ scheme }: Props) {
   const { control } = useChatKit({
     api: {
+      url: CHATKIT_API_URL,
+      domainKey: CHATKIT_API_DOMAIN_KEY,
       getClientSecret: async (currentClientSecret) => {
-        const isRefresh =
-          typeof currentClientSecret === "string" &&
-          currentClientSecret.length > 0;
-        const endpoint = isRefresh
+        const endpoint = currentClientSecret
           ? "/api/chatkit/refresh"
           : "/api/chatkit/start";
 
         const response = await fetch(endpoint, {
           method: "POST",
-          headers: isRefresh
+          headers: currentClientSecret
             ? { "Content-Type": "application/json" }
             : undefined,
-          body: isRefresh
+          body: currentClientSecret
             ? JSON.stringify({ currentClientSecret })
             : undefined,
         });
 
         if (!response.ok) {
           throw new Error(
-            `${isRefresh ? "refresh" : "start"} failed: ${
+            `${currentClientSecret ? "refresh" : "start"} failed: ${
               response.status
             }`,
           );
