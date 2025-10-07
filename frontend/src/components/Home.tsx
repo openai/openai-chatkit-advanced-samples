@@ -9,23 +9,43 @@ type Props = {
 export default function Home({ scheme }: Props) {
   const { control } = useChatKit({
     api: {
-      // İlk token
-      getClientSecret: async () => {
-        const r = await fetch("/api/chatkit/start", { method: "POST" });
-        if (!r.ok) throw new Error(`start failed: ${r.status}`);
-        const data = await r.json();
-        return data.client_secret as string; // <-- string döndür
-      },
-      // Yenileme (opsiyonel ama iyi pratik)
-      refreshClientSecret: async ({ currentClientSecret }) => {
-        const r = await fetch("/api/chatkit/refresh", {
+      getClientSecret: async (currentClientSecret) => {
+        const isRefresh =
+          typeof currentClientSecret === "string" &&
+          currentClientSecret.length > 0;
+        const endpoint = isRefresh
+          ? "/api/chatkit/refresh"
+          : "/api/chatkit/start";
+
+        const response = await fetch(endpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ currentClientSecret }),
+          headers: isRefresh
+            ? { "Content-Type": "application/json" }
+            : undefined,
+          body: isRefresh
+            ? JSON.stringify({ currentClientSecret })
+            : undefined,
         });
-        if (!r.ok) throw new Error(`refresh failed: ${r.status}`);
-        const data = await r.json();
-        return data.client_secret as string; // <-- string döndür
+
+        if (!response.ok) {
+          throw new Error(
+            `${isRefresh ? "refresh" : "start"} failed: ${
+              response.status
+            }`,
+          );
+        }
+
+        const data: unknown = await response.json();
+        const clientSecret =
+          data && typeof data === "object"
+            ? (data as { client_secret?: unknown }).client_secret
+            : undefined;
+
+        if (typeof clientSecret !== "string" || clientSecret.length === 0) {
+          throw new Error("Response missing client_secret");
+        }
+
+        return clientSecret;
       },
     },
     theme: { colorScheme: scheme },
