@@ -16,7 +16,7 @@ dependencies = [
 dev = [
     "ruff>=0.6.4,<0.7",
     "mypy>=1.8,<2",
-    "openai-chatkit>=0.0.2",
+    "openai-chatkit>=1.0.2,<2",
 ]
 
 [build-system]

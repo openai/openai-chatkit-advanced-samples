@@ -9,7 +9,7 @@ dependencies = [
     "httpx>=0.28,<0.29",
     "uvicorn[standard]>=0.30,<0.31",
     "openai>=1.40",
-    "openai-chatkit>=0.0.2",
+    "openai-chatkit>=1.0.2,<2",
 ]
 
 [project.optional-dependencies]

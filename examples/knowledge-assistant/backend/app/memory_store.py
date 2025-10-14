@@ -5,12 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, List
 
 from chatkit.store import NotFoundError, Store
-from chatkit.types import (
-    Attachment,
-    Page,
-    ThreadItem,
-    ThreadMetadata,
-)
+from chatkit.types import Attachment, Page, Thread, ThreadItem, ThreadMetadata
 
 
 @dataclass
@@ -26,20 +21,34 @@ class MemoryStore(Store[dict[str, Any]]):
         self._threads: Dict[str, _ThreadState] = {}
         # Attachments intentionally unsupported; use a real store that enforces auth.
 
+    @staticmethod
+    def _coerce_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
+        """Return thread metadata without any embedded items (openai-chatkit>=1.0)."""
+        has_items = isinstance(thread, Thread) or "items" in getattr(
+            thread, "model_fields_set", set()
+        )
+        if not has_items:
+            return thread.model_copy(deep=True)
+
+        data = thread.model_dump()
+        data.pop("items", None)
+        return ThreadMetadata(**data).model_copy(deep=True)
+
     # -- Thread metadata -------------------------------------------------
     async def load_thread(self, thread_id: str, context: dict[str, Any]) -> ThreadMetadata:
         state = self._threads.get(thread_id)
         if not state:
             raise NotFoundError(f"Thread {thread_id} not found")
-        return state.thread.model_copy(deep=True)
+        return self._coerce_thread_metadata(state.thread)
 
     async def save_thread(self, thread: ThreadMetadata, context: dict[str, Any]) -> None:
+        metadata = self._coerce_thread_metadata(thread)
         state = self._threads.get(thread.id)
         if state:
-            state.thread = thread.model_copy(deep=True)
+            state.thread = metadata
         else:
             self._threads[thread.id] = _ThreadState(
-                thread=thread.model_copy(deep=True),
+                thread=metadata,
                 items=[],
             )
 
@@ -51,7 +60,7 @@ class MemoryStore(Store[dict[str, Any]]):
         context: dict[str, Any],
     ) -> Page[ThreadMetadata]:
         threads = sorted(
-            (state.thread.model_copy(deep=True) for state in self._threads.values()),
+            (self._coerce_thread_metadata(state.thread) for state in self._threads.values()),
             key=lambda t: t.created_at or datetime.min,
             reverse=(order == "desc"),
         )
