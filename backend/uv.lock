@@ -111,7 +111,6 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "mypy" },
-    { name = "openai-chatkit" },
     { name = "ruff" },
 ]
 
@@ -121,8 +120,7 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28,<0.29" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.8,<2" },
     { name = "openai", specifier = ">=1.40" },
-    { name = "openai-chatkit" },
-    { name = "openai-chatkit", marker = "extra == 'dev'", specifier = ">=1.0.2,<2" },
+    { name = "openai-chatkit", specifier = ">=1.0.2,<2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4,<0.7" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.36,<0.37" },
 ]
