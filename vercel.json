@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/scripts/(.*)",
+      "dest": "/404"
+    },
+    {
+      "src": "/reports/(.*)",
+      "dest": "/404"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "VITE_CHATKIT_API_DOMAIN_KEY": "@vite_chatkit_api_domain_key",
+    "OPENAI_API_KEY": "@openai_api_key"
+  },
+  "functions": {
+    "backend/app/main.py": {
+      "runtime": "python3.9"
+    }
+  }
+}

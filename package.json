@@ -7,6 +7,7 @@
     "backend": "uv sync --directory backend && uv run --directory backend uvicorn app.main:app --reload --port 8000"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "vercel": "^48.2.9"
   }
 }
