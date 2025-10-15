@@ -24,12 +24,6 @@
     }
   ],
   "env": {
-    "VITE_CHATKIT_API_DOMAIN_KEY": "@vite_chatkit_api_domain_key",
-    "OPENAI_API_KEY": "@openai_api_key"
-  },
-  "functions": {
-    "backend/app/main.py": {
-      "runtime": "python3.9"
-    }
+    "VITE_CHATKIT_API_DOMAIN_KEY": "@vite_chatkit_api_domain_key"
   }
 }
