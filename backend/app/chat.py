@@ -66,25 +66,6 @@ def _is_tool_completion_item(item: Any) -> bool:
     return isinstance(item, ClientToolCallItem)
 
 
-def _thread_item_done(thread_id: str, item: Any) -> Any:
-    if ThreadItemDoneEvent is None:
-        raise RuntimeError("ThreadItemDoneEvent type is unavailable")
-
-    attempts: tuple[dict[str, Any], ...] = (
-        {"thread_id": thread_id, "item": item},
-        {"threadId": thread_id, "item": item},
-        {"item": item},
-    )
-
-    for kwargs in attempts:
-        try:
-            return ThreadItemDoneEvent(**kwargs)
-        except TypeError:
-            continue
-
-    return ThreadItemDoneEvent(item=item)
-
-
 class FactAgentContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     store: Annotated[MemoryStore, Field(exclude=True)]
