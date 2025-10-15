@@ -1,0 +1,26 @@
+# SEO Redirect Rules for drsayuj.info
+# Generated from SEO audit troubleshooting
+
+# Critical Fix: Broken epilepsy surgery page
+# Redirect the broken URL to the working one
+Redirect 301 /services/epilepsy-surgery /services/epilepsy-surgery-hyderabad
+
+# High Priority Fix: Remove trailing slashes for consistency
+# These redirects will also help with duplicate title tag issues
+Redirect 301 /appointments/ /appointments
+Redirect 301 /services/minimally-invasive-spine-surgery/ /services/minimally-invasive-spine-surgery
+Redirect 301 /conditions/spinal-stenosis-treatment-hyderabad/ /conditions/spinal-stenosis-treatment-hyderabad
+Redirect 301 /conditions/slip-disc-treatment-hyderabad/ /conditions/slip-disc-treatment-hyderabad
+Redirect 301 /services/endoscopic-discectomy-hyderabad/ /services/endoscopic-discectomy-hyderabad
+Redirect 301 /conditions/sciatica-treatment-hyderabad/ /conditions/sciatica-treatment-hyderabad
+
+# Additional redirects for consistency
+# Ensure www redirect (if not already implemented)
+# Redirect 301 http://drsayuj.info https://www.drsayuj.info
+# Redirect 301 https://drsayuj.info https://www.drsayuj.info
+
+# Implementation Notes:
+# 1. These redirects should be implemented in the web server configuration (Apache .htaccess or Nginx)
+# 2. Test all redirects after implementation
+# 3. Monitor for any redirect chains or loops
+# 4. Update internal links to point to the canonical URLs (without trailing slashes)
