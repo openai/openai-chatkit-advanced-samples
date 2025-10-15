@@ -1,0 +1,154 @@
+{
+  "metrics": {
+    "total_pages": 59,
+    "pages_with_https": 59,
+    "pages_with_titles": 59,
+    "pages_with_meta_descriptions": 59,
+    "pages_with_canonical": 59,
+    "pages_with_h1": 59,
+    "pages_with_structured_data": 59,
+    "total_images": 71,
+    "images_with_alt": 71,
+    "images_without_alt": 0,
+    "average_load_time": 0.2677417124732066,
+    "average_word_count": 629.5084745762712,
+    "total_internal_links": 2601,
+    "total_external_links": 228,
+    "https_percentage": 100.0,
+    "title_percentage": 100.0,
+    "meta_desc_percentage": 100.0,
+    "canonical_percentage": 100.0,
+    "h1_percentage": 100.0,
+    "structured_data_percentage": 100.0,
+    "alt_text_percentage": 100.0
+  },
+  "issues": [
+    {
+      "severity": "high",
+      "category": "technical",
+      "description": "Pages with noindex directive",
+      "affected_pages": [
+        "https://www.drsayuj.info/services/epilepsy-surgery"
+      ],
+      "recommendation": "Review and remove noindex from pages that should be indexed"
+    },
+    {
+      "severity": "critical",
+      "category": "technical",
+      "description": "Pages returning error status codes",
+      "affected_pages": [
+        "https://www.drsayuj.info/services/epilepsy-surgery"
+      ],
+      "recommendation": "Fix broken pages and implement proper redirects"
+    },
+    {
+      "severity": "medium",
+      "category": "content",
+      "description": "Pages with thin content (less than 300 words)",
+      "affected_pages": [
+        "https://www.drsayuj.info/conditions",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+        "https://www.drsayuj.info/contact",
+        "https://www.drsayuj.info/services/epilepsy-surgery",
+        "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad/",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad/"
+      ],
+      "recommendation": "Expand content to provide more value to users"
+    },
+    {
+      "severity": "high",
+      "category": "content",
+      "description": "Duplicate title tags found",
+      "affected_pages": [
+        "https://www.drsayuj.info",
+        "https://www.drsayuj.info/",
+        "https://www.drsayuj.info/appointments",
+        "https://www.drsayuj.info/services/minimally-invasive-spine-surgery",
+        "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+        "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment-hyderabad",
+        "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad",
+        "https://www.drsayuj.info/services/microvascular-decompression",
+        "https://www.drsayuj.info/services/radiosurgery-gamma-knife",
+        "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment",
+        "https://www.drsayuj.info/appointments/",
+        "https://www.drsayuj.info/services/minimally-invasive-spine-surgery/",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad/",
+        "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/",
+        "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad/",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad/"
+      ],
+      "recommendation": "Create unique title tags for each page"
+    }
+  ],
+  "issue_summary": {
+    "high": 2,
+    "critical": 1,
+    "medium": 1
+  },
+  "issues_by_category": {
+    "technical": [
+      {
+        "severity": "high",
+        "description": "Pages with noindex directive",
+        "affected_pages": [
+          "https://www.drsayuj.info/services/epilepsy-surgery"
+        ],
+        "recommendation": "Review and remove noindex from pages that should be indexed"
+      },
+      {
+        "severity": "critical",
+        "description": "Pages returning error status codes",
+        "affected_pages": [
+          "https://www.drsayuj.info/services/epilepsy-surgery"
+        ],
+        "recommendation": "Fix broken pages and implement proper redirects"
+      }
+    ],
+    "content": [
+      {
+        "severity": "medium",
+        "description": "Pages with thin content (less than 300 words)",
+        "affected_pages": [
+          "https://www.drsayuj.info/conditions",
+          "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+          "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+          "https://www.drsayuj.info/contact",
+          "https://www.drsayuj.info/services/epilepsy-surgery",
+          "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+          "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad/",
+          "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad/"
+        ],
+        "recommendation": "Expand content to provide more value to users"
+      },
+      {
+        "severity": "high",
+        "description": "Duplicate title tags found",
+        "affected_pages": [
+          "https://www.drsayuj.info",
+          "https://www.drsayuj.info/",
+          "https://www.drsayuj.info/appointments",
+          "https://www.drsayuj.info/services/minimally-invasive-spine-surgery",
+          "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad",
+          "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+          "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+          "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment-hyderabad",
+          "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad",
+          "https://www.drsayuj.info/services/microvascular-decompression",
+          "https://www.drsayuj.info/services/radiosurgery-gamma-knife",
+          "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment",
+          "https://www.drsayuj.info/appointments/",
+          "https://www.drsayuj.info/services/minimally-invasive-spine-surgery/",
+          "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad/",
+          "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/",
+          "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad/",
+          "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad/"
+        ],
+        "recommendation": "Create unique title tags for each page"
+      }
+    ]
+  }
+}

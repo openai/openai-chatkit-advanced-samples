@@ -1,0 +1,255 @@
+{
+  "competitor_analysis": {
+    "primary_competitors": [
+      {
+        "name": "Yashoda Hospital",
+        "website": "yashodahospitals.com",
+        "strengths": [
+          "Large hospital network with multiple locations",
+          "Strong brand recognition in Hyderabad",
+          "Comprehensive medical services",
+          "Established patient base"
+        ],
+        "weaknesses": [
+          "May lack specialized focus on neurosurgery",
+          "Generic medical content",
+          "Less personalized approach"
+        ],
+        "opportunities": [
+          "Target specialized neurosurgery content",
+          "Emphasize personalized care",
+          "Focus on minimally invasive procedures"
+        ]
+      },
+      {
+        "name": "Apollo Hospital",
+        "website": "apollohospitals.com",
+        "strengths": [
+          "National brand recognition",
+          "Advanced technology and facilities",
+          "Experienced medical professionals",
+          "Strong online presence"
+        ],
+        "weaknesses": [
+          "High cost perception",
+          "Less local focus",
+          "Generic patient experience"
+        ],
+        "opportunities": [
+          "Competitive pricing strategy",
+          "Local community engagement",
+          "Personalized patient care"
+        ]
+      },
+      {
+        "name": "Continental Hospital",
+        "website": "continentalhospitals.com",
+        "strengths": [
+          "Modern facilities",
+          "Good technology infrastructure",
+          "Competitive pricing"
+        ],
+        "weaknesses": [
+          "Limited brand recognition",
+          "Less specialized content",
+          "Weak local SEO"
+        ],
+        "opportunities": [
+          "Build stronger local presence",
+          "Create specialized content",
+          "Improve patient testimonials"
+        ]
+      }
+    ],
+    "local_competitors": [
+      {
+        "name": "KIMS Hospital",
+        "website": "kimshospitals.com",
+        "focus": "General neurosurgery",
+        "local_presence": "Strong in Secunderabad"
+      },
+      {
+        "name": "Medicover Hospital",
+        "website": "medicoverhospitals.in",
+        "focus": "Spine surgery",
+        "local_presence": "Multiple locations in Hyderabad"
+      }
+    ],
+    "keyword_analysis": {
+      "primary_keywords": [
+        {
+          "keyword": "neurosurgeon Hyderabad",
+          "search_volume": "High",
+          "competition": "High",
+          "current_ranking": "Not available",
+          "opportunity": "High - focus on local content"
+        },
+        {
+          "keyword": "brain surgery Hyderabad",
+          "search_volume": "Medium",
+          "competition": "Medium",
+          "current_ranking": "Not available",
+          "opportunity": "Medium - create educational content"
+        },
+        {
+          "keyword": "spine surgery Hyderabad",
+          "search_volume": "High",
+          "competition": "High",
+          "current_ranking": "Not available",
+          "opportunity": "High - emphasize minimally invasive"
+        },
+        {
+          "keyword": "endoscopic spine surgery Hyderabad",
+          "search_volume": "Medium",
+          "competition": "Low",
+          "current_ranking": "Not available",
+          "opportunity": "Very High - niche specialization"
+        },
+        {
+          "keyword": "brain tumor surgery Hyderabad",
+          "search_volume": "Medium",
+          "competition": "Medium",
+          "current_ranking": "Not available",
+          "opportunity": "High - create case studies"
+        }
+      ],
+      "long_tail_keywords": [
+        "best neurosurgeon in Hyderabad for brain tumors",
+        "minimally invasive spine surgery cost Hyderabad",
+        "endoscopic discectomy recovery time Hyderabad",
+        "brain surgery success rate Hyderabad",
+        "spine specialist near me Hyderabad"
+      ]
+    },
+    "content_gaps": [
+      {
+        "topic": "Patient success stories",
+        "competitor_coverage": "Limited",
+        "opportunity": "High - create detailed case studies"
+      },
+      {
+        "topic": "Cost transparency",
+        "competitor_coverage": "Poor",
+        "opportunity": "Very High - provide clear pricing"
+      },
+      {
+        "topic": "Recovery timelines",
+        "competitor_coverage": "Limited",
+        "opportunity": "High - detailed recovery guides"
+      },
+      {
+        "topic": "Technology and equipment",
+        "competitor_coverage": "Generic",
+        "opportunity": "Medium - showcase advanced tools"
+      }
+    ],
+    "backlink_opportunities": [
+      {
+        "type": "Medical directories",
+        "examples": ["Practo", "1mg", "Medlife"],
+        "priority": "High"
+      },
+      {
+        "type": "Local business directories",
+        "examples": ["Justdial", "Sulekha", "IndiaMART"],
+        "priority": "High"
+      },
+      {
+        "type": "Medical associations",
+        "examples": ["Neurological Society of India", "Spine Society of India"],
+        "priority": "Medium"
+      },
+      {
+        "type": "Local news outlets",
+        "examples": ["The Hindu", "Deccan Chronicle", "Times of India"],
+        "priority": "Medium"
+      },
+      {
+        "type": "Medical journals",
+        "examples": ["Indian Journal of Neurosurgery", "Asian Spine Journal"],
+        "priority": "Low"
+      }
+    ]
+  },
+  "local_seo_strategy": {
+    "google_business_profile": {
+      "current_status": "Needs verification",
+      "optimization_priorities": [
+        "Complete NAP information",
+        "Add high-quality photos",
+        "List all services offered",
+        "Set accurate business hours",
+        "Enable messaging and booking"
+      ]
+    },
+    "nap_consistency": {
+      "directories_to_audit": [
+        "Google My Business",
+        "Bing Places",
+        "Yelp",
+        "Practo",
+        "Justdial",
+        "Sulekha",
+        "IndiaMART",
+        "Yellow Pages"
+      ],
+      "current_status": "Needs audit"
+    },
+    "local_content_strategy": [
+      {
+        "page_type": "Location-specific landing pages",
+        "targets": [
+          "Neurosurgeon in Jubilee Hills",
+          "Brain Surgery in Banjara Hills",
+          "Spine Surgery in Hitec City"
+        ]
+      },
+      {
+        "page_type": "Service-area pages",
+        "targets": [
+          "Neurosurgery services in Secunderabad",
+          "Brain tumor treatment in Gachibowli",
+          "Spine surgery in Kondapur"
+        ]
+      },
+      {
+        "page_type": "Local FAQ pages",
+        "targets": [
+          "Where to find the best neurosurgeon in Hyderabad?",
+          "What is the cost of brain surgery in Hyderabad?",
+          "How to choose a spine surgeon in Hyderabad?"
+        ]
+      }
+    ],
+    "local_schema_markup": {
+      "recommended_schemas": [
+        "MedicalBusiness",
+        "Physician",
+        "LocalBusiness",
+        "MedicalClinic",
+        "Hospital"
+      ],
+      "implementation_priority": "High"
+    }
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Fix the broken epilepsy surgery page",
+      "Remove noindex directive from epilepsy surgery page",
+      "Create unique title tags for duplicate pages",
+      "Expand thin content pages"
+    ],
+    "short_term_goals": [
+      "Optimize Google Business Profile",
+      "Create location-specific landing pages",
+      "Implement local schema markup",
+      "Build local citations"
+    ],
+    "long_term_strategy": [
+      "Develop comprehensive content calendar",
+      "Build high-authority backlinks",
+      "Create patient success story content",
+      "Implement advanced tracking and analytics"
+    ]
+  }
+}
