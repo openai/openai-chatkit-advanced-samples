@@ -359,9 +359,8 @@ class AdCreativeServer(ChatKitServer[dict[str, Any]]):
         async for event in stream_agent_response(agent_context, result):
             yield event
 
-        last_response_id = getattr(result, "response_id", None)
-        if last_response_id is not None:
-            metadata["previous_response_id"] = last_response_id
+        if result.last_response_id is not None:
+            metadata["previous_response_id"] = result.last_response_id
             thread.metadata = metadata
             await self.store.save_thread(thread, context)
 
