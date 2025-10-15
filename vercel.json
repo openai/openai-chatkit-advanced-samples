@@ -22,8 +22,5 @@
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
-  ],
-  "env": {
-    "VITE_CHATKIT_API_DOMAIN_KEY": "@vite_chatkit_api_domain_key"
-  }
+  ]
 }
