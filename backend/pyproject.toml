@@ -9,14 +9,13 @@ dependencies = [
     "httpx>=0.28,<0.29",
     "uvicorn[standard]>=0.36,<0.37",
     "openai>=1.40",
-    "openai-chatkit",
+    "openai-chatkit>=1.0.2,<2",
 ]
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.6.4,<0.7",
     "mypy>=1.8,<2",
-    "openai-chatkit>=1.0.2,<2",
 ]
 
 [build-system]
