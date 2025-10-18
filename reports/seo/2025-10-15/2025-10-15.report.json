@@ -1,0 +1,314 @@
+{
+  "generated_at": "2025-10-15T05:23:28.617181+00:00",
+  "date": "2025-10-15",
+  "site": "https://www.drsayuj.info",
+  "pages_crawled": 38,
+  "robots": {
+    "disallow_rules": [
+      "/api/",
+      "/drafts/"
+    ],
+    "sitemap_url": "https://www.drsayuj.info/sitemap.xml"
+  },
+  "title_length": {
+    "average": 107.63,
+    "min": 75,
+    "max": 141,
+    "longest": [
+      {
+        "url": "https://www.drsayuj.info/technology-facilities",
+        "title_length": 141
+      },
+      {
+        "url": "https://www.drsayuj.info/disease-guides",
+        "title_length": 137
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success",
+        "title_length": 137
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+        "title_length": 128
+      },
+      {
+        "url": "https://www.drsayuj.info/emergency-rehabilitation",
+        "title_length": 127
+      }
+    ]
+  },
+  "meta_description_length": {
+    "average": 157.53,
+    "min": 98,
+    "max": 334,
+    "longest": [
+      {
+        "url": "https://www.drsayuj.info/patient-stories/temporal-lobe-epilepsy-control",
+        "meta_description_length": 334
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+        "meta_description_length": 301
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/lumbar-miss-tlif-recovery",
+        "meta_description_length": 299
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success",
+        "meta_description_length": 264
+      },
+      {
+        "url": "https://www.drsayuj.info",
+        "meta_description_length": 236
+      }
+    ]
+  },
+  "word_count": {
+    "average": 801.32,
+    "min": 355,
+    "max": 2210,
+    "thin_pages": [
+      {
+        "url": "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+        "word_count": 374
+      },
+      {
+        "url": "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+        "word_count": 358
+      },
+      {
+        "url": "https://www.drsayuj.info/locations",
+        "word_count": 400
+      },
+      {
+        "url": "https://www.drsayuj.info/about",
+        "word_count": 448
+      },
+      {
+        "url": "https://www.drsayuj.info/contact",
+        "word_count": 355
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+        "word_count": 411
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/lumbar-miss-tlif-recovery",
+        "word_count": 414
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/temporal-lobe-epilepsy-control",
+        "word_count": 413
+      },
+      {
+        "url": "https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success",
+        "word_count": 411
+      }
+    ]
+  },
+  "issue_summary": {
+    "title_length": 38,
+    "meta_description_length": 16,
+    "canonical_mismatch": 5
+  },
+  "impact_ease_matrix": [
+    {
+      "issue_type": "title_length",
+      "occurrences": 38,
+      "impact": "High",
+      "ease": "Medium"
+    },
+    {
+      "issue_type": "meta_description_length",
+      "occurrences": 16,
+      "impact": "High",
+      "ease": "Medium"
+    },
+    {
+      "issue_type": "canonical_mismatch",
+      "occurrences": 5,
+      "impact": "High",
+      "ease": "Medium"
+    }
+  ],
+  "recommendations": [
+    {
+      "issue_type": "title_length",
+      "affected_pages": 38,
+      "recommendation": "Rewrite titles to 50\u201360 characters with keywords front-loaded and clinic value props."
+    },
+    {
+      "issue_type": "meta_description_length",
+      "affected_pages": 16,
+      "recommendation": "Craft unique 140\u2013155 char descriptions with CTA to book consults."
+    },
+    {
+      "issue_type": "canonical_mismatch",
+      "affected_pages": 5,
+      "recommendation": "Align canonical URLs with live URLs; update CMS config to avoid trailing slash conflicts."
+    }
+  ],
+  "lighthouse_scores": {
+    "mobile": {
+      "performance": 93.0,
+      "accessibility": 93.0,
+      "best-practices": 96.0,
+      "seo": 92.0
+    },
+    "desktop": {
+      "performance": 100,
+      "accessibility": 93.0,
+      "best-practices": 96.0,
+      "seo": 92.0
+    }
+  },
+  "structured_data_types": {
+    "WebSite": 38,
+    "Hospital": 38,
+    "FAQPage": 9,
+    "MedicalWebPage": 7,
+    "BreadcrumbList": 5,
+    "LocalBusiness": 3,
+    "BlogPosting": 3,
+    "MedicalClinic": 2,
+    "Article": 4
+  },
+  "canonical_mismatches": [
+    "https://www.drsayuj.info/patient-stories",
+    "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+    "https://www.drsayuj.info/patient-stories/lumbar-miss-tlif-recovery",
+    "https://www.drsayuj.info/patient-stories/temporal-lobe-epilepsy-control",
+    "https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success"
+  ],
+  "competitor_domains": [
+    "hyderabadorthospine.com",
+    "www.apollohospitals.com",
+    "drraveesh.com",
+    "www.yashodahospitals.com",
+    "www.pristyncare.com",
+    "absneuro.com",
+    "www.drsridharspine.com",
+    "drabhinandanspine.com",
+    "doctorforspine.com",
+    "www.practo.com",
+    "www.exploretelangana.com",
+    "www.kimshospitals.com"
+  ],
+  "serp_samples": [
+    {
+      "query": "endoscopic spine surgery hyderabad",
+      "results": [
+        {
+          "title": "Endoscopic Spine Surgery - hyderabadorthospine",
+          "url": "https://hyderabadorthospine.com/endoscopic-spine-surgery/",
+          "snippet": "At our Hyderabad Ortho Spine & Pain Care Centre, we specialize in Endoscopic Spine Surgery , a highly advanced and minimally invasive technique designed to treat a range of spinal disorders with minimal disruption to surrounding tissues. As leaders in spine care, our goal is to offer effective, safe, and patient-friendly surgical solutions that promote faster recovery and lasting relief from ..."
+        },
+        {
+          "title": "Best Hospital for Endoscopic Spine Surgery in Hyderabad",
+          "url": "https://www.apollohospitals.com/hyderabad/procedures/endoscopic-spine-surgery",
+          "snippet": "Overview Endoscopic Spine Surgery is a minimally invasive procedure designed to treat various spinal conditions with precision and care. At Apollo Hospitals Hyderabad , we pride ourselves on being one of the best hospitals for Endoscopic Spine Surgery , offering cutting-edge technology and a team of highly skilled specialists."
+        },
+        {
+          "title": "Endoscopic Spine Surgery In Hyderabad - Dr Raveesh Sunkara",
+          "url": "https://drraveesh.com/endoscopic-spine-surgery-in-hyderabad/",
+          "snippet": "Explore endoscopic spine surgery in Hyderabad . Discover cost detail & advanced techniques available in India for effective & minimally invasive spine treatment."
+        },
+        {
+          "title": "Best Hospital for Endoscopic Spine Surgery in Hyderabad, India",
+          "url": "https://www.yashodahospitals.com/surgery-care/endoscopic-spine-surgery/",
+          "snippet": "Get Advanced Endoscopic Spine Surgery in Hyderabad , India at an Affordable Cost. Experienced Surgeons & World-Class Facilities. Get Free Second Opinion Now"
+        },
+        {
+          "title": "Endoscopic Spine Surgery in Hyderabad - Pristyn Care Surgical Centre",
+          "url": "https://www.pristyncare.com/hyderabad/treatment/spine-surgery/",
+          "snippet": "Endoscopic Spine Surgery in Hyderabad Seek relief from chronic back pain due to slip disc, arthritis and other spinal issues with Endoscopic Spinal Surgery . Meet the Best Spine Specialists in Hyderabad at Pristyn Care for Minimally Invasive Spine Surgery ."
+        },
+        {
+          "title": "Best Endoscopic Spine Surgery in Hyderabad | Best Surgical",
+          "url": "https://absneuro.com/best-endoscopic-spine-surgery-in-hyderabad/",
+          "snippet": "In recent years, Best endoscopic spine surgery in hyderabad has emerged as a revolutionary technique in the field of spinal care. It is a minimally invasive surgical approach that offers quicker recovery times and less discomfort compared to traditional open surgeries. If you are searching for the best endoscopic spine surgery in Hyderabad , this guide provides a comprehensive understanding of ..."
+        },
+        {
+          "title": "Endoscopic Spine Surgery - Dr Sridhar Spine",
+          "url": "https://www.drsridharspine.com/endoscopic-spine-surgery/",
+          "snippet": "What is Endoscopic Spine Surgery ? Endoscopic spine surgery is a minimally invasive procedure used to treat various spinal conditions, such as herniated discs, sciatica, spinal stenosis, and degenerative disc disease. The procedure is performed using a small incision, an endoscope (a tiny camera), and specialized surgical instruments to treat the affected area with precision."
+        },
+        {
+          "title": "Dr. Abhinandan Reddy - Top Spine Surgeon in Hyderabad",
+          "url": "https://drabhinandanspine.com/",
+          "snippet": "Dr. Abhinandan Reddy Expert Spine Surgeon in Hyderabad With 10+ years of experience and over 5,000 successful surgeries, Dr. Reddy specializes in endoscopic spine surgery , minimally invasive procedures, and pain management."
+        },
+        {
+          "title": "Advanced endoscopic spine surgery in Hyderabad - ABS NEURO",
+          "url": "https://absneuro.com/advanced-endoscopic-spine-surgery-in-hyderabad/",
+          "snippet": "Advanced Endoscopic Spine Surgery in Hyderabad : A Step Towards Better Health Choosing ABS Neuro Hospital for advanced endoscopic spine surgery in Hyderabad is a step towards better health and well-being. Our expertise, advanced technology, and patient-centric approach make us the best choice for your spinal health needs."
+        },
+        {
+          "title": "Endoscopic Spine Surgery in Hyderabad - Dr. Suresh Cheekatla",
+          "url": "https://doctorforspine.com/blog/endoscopic-spine-surgery-in-hyderabad/",
+          "snippet": "What is Endoscopic Spine Surgery ? Endoscopic spine surgery in hyderabad is a minimally invasive surgical technique that utilizes specialized instruments and advanced imaging technology to treat spinal conditions. Unlike traditional open surgery , this procedure involves smaller incisions, minimal tissue disruption, and faster recovery times."
+        }
+      ]
+    },
+    {
+      "query": "neurosurgeon hyderabad",
+      "results": [
+        {
+          "title": "Best Neurosurgeons Near Me in Hyderabad - Practo",
+          "url": "https://www.practo.com/hyderabad/neurosurgeon",
+          "snippet": "Find the Top Neurosurgeons Near You in Hyderabad with Practo. Book appointments online. View fees, check doctor's timings and availability, phone number, and experience. Read verified patient reviews to choose the right Neurosurgeon for your needs. Appointment Booking is 100% Free.| Practo"
+        },
+        {
+          "title": "10 Best Neurosurgeons In Hyderabad In 2025 (Updated List)",
+          "url": "https://www.exploretelangana.com/neurosurgeons-in-hyderabad/",
+          "snippet": "Get to know the best neurosurgeons in Hyderabad for brain and spine conditions. Read reviews and explore treatment options available."
+        },
+        {
+          "title": "Dr. Manas Kumar Panigrahi | Best Brain Surgeon in Hyderabad | Top Neuro ...",
+          "url": "https://www.kimshospitals.com/doctor-profile/dr-manas-kumar-panigrahi/",
+          "snippet": "Dr. Manas Kumar Panigrahi has 22 years of experience as a neurosurgeon and is practising as Sr. Consultant Neurosurgery at KIMS Hospitals for Brain Surgery, Spinal Tumors, Gliomas, Pituitary Tumours, Movement Disorders, Parkinson's Disease and Deep Brain Stimulation."
+        },
+        {
+          "title": "Best Neurosurgery & Spine Surgery Hospital in Hyderabad | AIG Hospitals",
+          "url": "https://aighospitals.com/speciality/neurosurgery-spine-surgery",
+          "snippet": "AIG Hospitals Hyderabad , offers expert neurosurgery & spine surgery for brain tumors, spinal disorders, stroke, trauma, and nerve conditions. Advanced minimally invasive & robotic-assisted procedures for better recovery. Book a consultation today!"
+        },
+        {
+          "title": "3 Best Neurosurgeons in Hyderabad, TS - Expert Recommendations",
+          "url": "https://threebestrated.in/neurosurgeons-in-hyderabad-ts",
+          "snippet": "3 Best Neurosurgeons in Hyderabad , TS Expert-recommended Top 3 Neurosurgeons in Hyderabad , Telangana. All of our neurosurgeons face a rigorous 50-Point Inspection, which includes customer reviews, history, complaints, ratings, satisfaction, trust, cost and their general excellence. You deserve only the best!"
+        },
+        {
+          "title": "Top 10 Neurosurgeon in Hyderabad, Best Neurosurgeon in Hyderabad ...",
+          "url": "https://www.365doctor.in/neurosurgeon-in-hyderabad",
+          "snippet": "Top 10 Neurosurgeon in Hyderabad - Read reviews, 2025 Updated list Find Best Neurosurgeon in Hyderabad . get Hyderabad Neurosurgeon Doctor Contact number / phone number, fees, Address and user feedback / reviews."
+        },
+        {
+          "title": "Top 10 Neurosurgeons in Hyderabad - Book Now Online",
+          "url": "https://www.docindia.org/india/tg/hyderabad/neurosurgery",
+          "snippet": "Find the top Neurosurgeons in Hyderabad at DocIndia. View the list of qualified doctors and book an appointment for in-clinic or virtual consultation."
+        },
+        {
+          "title": "Best Neurosurgeon in Hyderabad - Apollo Hospitals",
+          "url": "https://www.apollohospitals.com/book-doctor-appointment/neurosurgeon/hyderabad",
+          "snippet": "Book an appointment with the best Neurosurgeon in Hyderabad at Apollo Hospitals. Neurosurgeon Doctors in Hyderabad offer the best treatment options."
+        },
+        {
+          "title": "Neuro Surgery Apollo Hyderabad",
+          "url": "https://www.neurosurgeryapollohyderabad.com/",
+          "snippet": "The Neurosurgery and Neuroanesthesia Residency programs at Apollo Jubilee Hills, Hyderabad seeks to deliver hands-on experience, alongside research opportunities and patient clinical care under supervision of renowned neurosurgical faculty members."
+        },
+        {
+          "title": "Top Neurosurgeon in Hyderabad - Kims Hospital",
+          "url": "https://www.kimshospitals.com/secunderabad/speciality/neurosurgery/d/top-neurosurgeon-in-hyderabad/",
+          "snippet": "Best Neurosurgeon in Hyderabad The KIMS Institute of Neurosciences features Hyderabad's best team of neurologists and neurosurgeons . To assist the team, the institute is well equipped with cutting edge instrumentation and infrastructure for diagnosis such as 3-tesla intraoperative MRI, as well as invasive and non invasive therapy, rehabilitation, neurocritical care and general patient care ..."
+        }
+      ]
+    }
+  ],
+  "data_gaps": {
+    "search_console": "Not connected \u2013 unable to pull impressions/CTR or index coverage.",
+    "analytics": "No Google Analytics or other traffic source available locally."
+  }
+}

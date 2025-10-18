@@ -1,0 +1,145 @@
+{
+  "generated_at": "2025-10-15T23:23:17.922869",
+  "target_website": "https://www.drsayuj.info",
+  "priority": "CRITICAL",
+  "implementation_order": [
+    {
+      "step": 1,
+      "task": "Fix 404 redirect",
+      "priority": "CRITICAL",
+      "timeline": "Day 1",
+      "details": {
+        "redirect_type": "301_permanent",
+        "source_url": "/services/epilepsy-surgery",
+        "target_url": "/services/epilepsy-surgery-hyderabad",
+        "implementations": {
+          "apache_htaccess": "\n# Add to .htaccess file\nRedirect 301 /services/epilepsy-surgery https://www.drsayuj.info/services/epilepsy-surgery-hyderabad\n",
+          "nginx_config": "\n# Add to nginx.conf\nlocation = /services/epilepsy-surgery {\n    return 301 https://www.drsayuj.info/services/epilepsy-surgery-hyderabad;\n}\n",
+          "nextjs_config": "\n// Add to next.config.js\nmodule.exports = {\n  async redirects() {\n    return [\n      {\n        source: '/services/epilepsy-surgery',\n        destination: '/services/epilepsy-surgery-hyderabad',\n        permanent: true,\n      },\n    ]\n  },\n}\n",
+          "vercel_config": "\n// Add to vercel.json\n{\n  \"redirects\": [\n    {\n      \"source\": \"/services/epilepsy-surgery\",\n      \"destination\": \"/services/epilepsy-surgery-hyderabad\",\n      \"permanent\": true\n    }\n  ]\n}\n"
+        }
+      }
+    },
+    {
+      "step": 2,
+      "task": "Fix canonical URLs",
+      "priority": "HIGH",
+      "timeline": "Day 2",
+      "details": {
+        "/patient-stories": {
+          "current_canonical": "https://www.drsayuj.info",
+          "correct_canonical": "https://www.drsayuj.info/patient-stories",
+          "html_fix": "<link rel=\"canonical\" href=\"https://www.drsayuj.info/patient-stories\" />"
+        },
+        "/patient-stories/minimal-invasive-meningioma-resection": {
+          "current_canonical": "https://www.drsayuj.info",
+          "correct_canonical": "https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection",
+          "html_fix": "<link rel=\"canonical\" href=\"https://www.drsayuj.info/patient-stories/minimal-invasive-meningioma-resection\" />"
+        },
+        "/patient-stories/lumbar-miss-tlif-recovery": {
+          "current_canonical": "https://www.drsayuj.info",
+          "correct_canonical": "https://www.drsayuj.info/patient-stories/lumbar-miss-tlif-recovery",
+          "html_fix": "<link rel=\"canonical\" href=\"https://www.drsayuj.info/patient-stories/lumbar-miss-tlif-recovery\" />"
+        },
+        "/patient-stories/temporal-lobe-epilepsy-control": {
+          "current_canonical": "https://www.drsayuj.info",
+          "correct_canonical": "https://www.drsayuj.info/patient-stories/temporal-lobe-epilepsy-control",
+          "html_fix": "<link rel=\"canonical\" href=\"https://www.drsayuj.info/patient-stories/temporal-lobe-epilepsy-control\" />"
+        },
+        "/patient-stories/carpal-tunnel-day-care-success": {
+          "current_canonical": "https://www.drsayuj.info",
+          "correct_canonical": "https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success",
+          "html_fix": "<link rel=\"canonical\" href=\"https://www.drsayuj.info/patient-stories/carpal-tunnel-day-care-success\" />"
+        }
+      }
+    },
+    {
+      "step": 3,
+      "task": "Optimize title tags",
+      "priority": "HIGH",
+      "timeline": "Day 3",
+      "details": {
+        "optimization_guidelines": {
+          "target_length": "50-60 characters",
+          "format": "Primary Keyword | Dr. Sayuj Krishnan | Location",
+          "keyword_placement": "Front-load primary keywords"
+        },
+        "optimized_titles": {
+          "homepage": {
+            "current": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+            "optimized": "Best Neurosurgeon Hyderabad | Dr. Sayuj Krishnan",
+            "length": 47
+          },
+          "services": {
+            "current": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+            "optimized": "Neurosurgery Services Hyderabad | Dr. Sayuj Krishnan",
+            "length": 52
+          },
+          "epilepsy_surgery": {
+            "current": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+            "optimized": "Epilepsy Surgery Hyderabad | Dr. Sayuj Krishnan",
+            "length": 48
+          },
+          "brain_tumor": {
+            "current": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+            "optimized": "Brain Tumor Surgery Hyderabad | Dr. Sayuj Krishnan",
+            "length": 50
+          },
+          "spine_surgery": {
+            "current": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+            "optimized": "Spine Surgery Hyderabad | Dr. Sayuj Krishnan",
+            "length": 46
+          }
+        }
+      }
+    },
+    {
+      "step": 4,
+      "task": "Optimize meta descriptions",
+      "priority": "MEDIUM",
+      "timeline": "Day 4",
+      "details": {
+        "optimization_guidelines": {
+          "target_length": "150-160 characters",
+          "include_elements": [
+            "Primary keyword",
+            "Location",
+            "CTA"
+          ],
+          "format": "Description of service + location + call to action"
+        },
+        "optimized_meta_descriptions": {
+          "homepage": {
+            "current": "Dr. Sayuj Krishnan is the best neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures. Same-day discharge available at Yashoda Hospital Malakpet. Book consultation now.",
+            "optimized": "Expert neurosurgeon in Hyderabad specializing in brain & spine surgery. Minimally invasive procedures with same-day discharge. Book consultation at Yashoda Hospital.",
+            "length": 158
+          },
+          "services": {
+            "current": "Dr. Sayuj Krishnan is the best neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures. Same-day discharge available at Yashoda Hospital Malakpet. Book consultation now.",
+            "optimized": "Comprehensive neurosurgery services in Hyderabad. Brain tumor surgery, spine surgery, and minimally invasive procedures. Expert care at Yashoda Hospital.",
+            "length": 145
+          },
+          "epilepsy_surgery": {
+            "current": "Dr. Sayuj Krishnan is the best neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures. Same-day discharge available at Yashoda Hospital Malakpet. Book consultation now.",
+            "optimized": "Expert epilepsy surgery in Hyderabad. Advanced treatment for drug-resistant epilepsy. Minimally invasive procedures with Dr. Sayuj Krishnan.",
+            "length": 132
+          }
+        }
+      }
+    },
+    {
+      "step": 5,
+      "task": "Validate all fixes",
+      "priority": "CRITICAL",
+      "timeline": "Day 5",
+      "details": "Run validation script"
+    }
+  ],
+  "success_criteria": {
+    "redirect_fix": "301 status code with correct Location header",
+    "canonical_fixes": "All 5 patient story pages self-reference",
+    "title_optimization": "All titles 50-60 characters",
+    "meta_optimization": "All meta descriptions 150-160 characters",
+    "seo_score_improvement": "From 92/100 to 95+/100"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "title_tag_optimization": {
+    "description": "Unique title tags for pages with duplicate titles",
+    "guidelines": {
+      "length": "50-60 characters",
+      "primary_keyword": "Place near the beginning",
+      "brand": "Include 'Dr. Sayuj Krishnan' or 'Neurosurgeon Hyderabad'",
+      "uniqueness": "Each page must have a unique title"
+    },
+    "optimized_titles": {
+      "homepage": {
+        "https://www.drsayuj.info": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery",
+        "https://www.drsayuj.info/": "Dr. Sayuj Krishnan | Best Neurosurgeon in Hyderabad | Brain & Spine Surgery"
+      },
+      "appointments": {
+        "https://www.drsayuj.info/appointments": "Book Appointment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/appointments/": "Book Appointment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad"
+      },
+      "services": {
+        "https://www.drsayuj.info/services/minimally-invasive-spine-surgery": "Minimally Invasive Spine Surgery | Dr. Sayuj Krishnan | Hyderabad",
+        "https://www.drsayuj.info/services/minimally-invasive-spine-surgery/": "Minimally Invasive Spine Surgery | Dr. Sayuj Krishnan | Hyderabad",
+        "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad": "Endoscopic Discectomy Surgery | Dr. Sayuj Krishnan | Hyderabad",
+        "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad/": "Endoscopic Discectomy Surgery | Dr. Sayuj Krishnan | Hyderabad",
+        "https://www.drsayuj.info/services/microvascular-decompression": "Microvascular Decompression Surgery | Dr. Sayuj Krishnan | Hyderabad",
+        "https://www.drsayuj.info/services/radiosurgery-gamma-knife": "Gamma Knife Radiosurgery | Dr. Sayuj Krishnan | Hyderabad"
+      },
+      "conditions": {
+        "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad": "Slip Disc Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/": "Slip Disc Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad": "Spinal Stenosis Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad/": "Spinal Stenosis Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad": "Sciatica Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad/": "Sciatica Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment-hyderabad": "Trigeminal Neuralgia Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad",
+        "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment": "Trigeminal Neuralgia Treatment | Dr. Sayuj Krishnan | Neurosurgeon Hyderabad"
+      }
+    },
+    "implementation_notes": {
+      "priority": "High - affects 18 pages",
+      "method": "Update page templates or individual page metadata",
+      "testing": "Verify uniqueness after implementation",
+      "monitoring": "Check for duplicate titles in future crawls"
+    },
+    "seo_benefits": [
+      "Eliminates duplicate content issues",
+      "Improves click-through rates from search results",
+      "Better keyword targeting for each page",
+      "Enhanced user experience and navigation"
+    ]
+  }
+}

@@ -1,0 +1,2924 @@
+{
+  "analysis_date": "2025-10-15",
+  "total_pages_analyzed": 10,
+  "total_issues_found": 2,
+  "results": [
+    {
+      "url": "https://www.drsayuj.info/",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I know if I'm a candidate for endoscopic spine surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Candidates usually have leg-dominant pain from a herniated disc or lumbar stenosis that has not responded to six weeks of supervised physiotherapy and medication.\nDuring consultation we review MRI scans, complete a focused neurological exam, and discuss work or sport demands before confirming the suitability of an endoscopic approach."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What recovery milestones should I expect after minimally invasive surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Day 0: walk within three hours with physiotherapy support. Week 2: return to desk work once wound inspection is clear.\nWe schedule tele-follow ups at 48 hours, seven days, and 30 days, and the eight-week recovery roadmap below outlines each phase in detail."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much does minimally invasive spine surgery cost with insurance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Endoscopic discectomy packages typically range from INR 95,000 to 1,35,000 for self-pay patients including surgeon fees, OT charges, implants, and follow-up visits.\nCashless insurance approvals reduce out-of-pocket expense by roughly 12\u201318% once pre-authorisation is cleared. Contact us for a personalized quote based on your specific procedure and insurance coverage."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What documents do you provide for insurance or corporate approvals?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Our coordination team issues a detailed medical estimate, necessity letter, implant invoice, and operative summary aligned to TPA requirements.\nCorporate employees also receive stamped medical leave summaries and fit-to-work certificates tailored to HR policies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you offer teleconsultations for patients outside Hyderabad?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We provide secure video consultations for second opinions and post-operative reviews\u2014share MRI scans via our encrypted portal or WhatsApp before the call.\nInternational patients receive assistance with itinerary planning, visa documentation, and extended follow-up scheduling."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "When can I travel or return to the gym after surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Short domestic travel is generally safe after 7\u201310 days once pain is controlled and the wound has healed.\nGym and strength training resume after week six with progressive loading, while high-impact sports restart after clearance during the week-eight review."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you manage pain after endoscopic procedures?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We combine regional anaesthesia, targeted oral medication, and physiotherapy-led movement drills to keep discomfort below three on ten.\nPatients receive breathing routines, cold-therapy guidance, and mindfulness resources with a 24/7 helpline for escalations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I get a second opinion using my existing MRI scans?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. Upload your DICOM files to our portal or bring the CD to clinic\u2014we review images during consult and explain every treatment path in plain language.\nYou leave with a written care summary covering conservative care, surgical options, and red-flag symptoms that require urgent attention."
+                }
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "@id": "https://www.drsayuj.info#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I know if I'm a candidate for endoscopic spine surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Candidates usually have leg-dominant pain from a herniated disc or lumbar stenosis that has not responded to six weeks of supervised physiotherapy and medication.\nDuring consultation we review MRI scans, complete a focused neurological exam, and discuss work or sport demands before confirming the suitability of an endoscopic approach."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What recovery milestones should I expect after minimally invasive surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Day 0: walk within three hours with physiotherapy support. Week 2: return to desk work once wound inspection is clear.\nWe schedule tele-follow ups at 48 hours, seven days, and 30 days, and the eight-week recovery roadmap below outlines each phase in detail."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much does minimally invasive spine surgery cost with insurance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Endoscopic discectomy packages typically range from INR 95,000 to 1,35,000 for self-pay patients including surgeon fees, OT charges, implants, and follow-up visits.\nCashless insurance approvals reduce out-of-pocket expense by roughly 12\u201318% once pre-authorisation is cleared. Contact us for a personalized quote based on your specific procedure and insurance coverage."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What documents do you provide for insurance or corporate approvals?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Our coordination team issues a detailed medical estimate, necessity letter, implant invoice, and operative summary aligned to TPA requirements.\nCorporate employees also receive stamped medical leave summaries and fit-to-work certificates tailored to HR policies."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you offer teleconsultations for patients outside Hyderabad?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. We provide secure video consultations for second opinions and post-operative reviews\u2014share MRI scans via our encrypted portal or WhatsApp before the call.\nInternational patients receive assistance with itinerary planning, visa documentation, and extended follow-up scheduling."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "When can I travel or return to the gym after surgery?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Short domestic travel is generally safe after 7\u201310 days once pain is controlled and the wound has healed.\nGym and strength training resume after week six with progressive loading, while high-impact sports restart after clearance during the week-eight review."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you manage pain after endoscopic procedures?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We combine regional anaesthesia, targeted oral medication, and physiotherapy-led movement drills to keep discomfort below three on ten.\nPatients receive breathing routines, cold-therapy guidance, and mindfulness resources with a 24/7 helpline for escalations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I get a second opinion using my existing MRI scans?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Absolutely. Upload your DICOM files to our portal or bring the CD to clinic\u2014we review images during consult and explain every treatment path in plain language.\nYou leave with a written care summary covering conservative care, surgical options, and red-flag symptoms that require urgent attention."
+                }
+              }
+            ]
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": [
+        {
+          "type": "duplicate_faqpage",
+          "severity": "critical",
+          "description": "Found 2 FAQPage schemas on the same page",
+          "fix": "Remove duplicate FAQPage schemas, keep only one per page"
+        },
+        {
+          "type": "duplicate_schema",
+          "severity": "high",
+          "description": "Found 2 FAQPage schemas on the same page",
+          "fix": "Remove duplicate FAQPage schemas, keep only one per page"
+        }
+      ]
+    },
+    {
+      "url": "https://www.drsayuj.info/services",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "MedicalWebPage",
+            "mainEntityOfPage": "https://www.drsayuj.info/services/",
+            "name": "Neurosurgical Services in Hyderabad | Dr. Sayuj Krishnan",
+            "description": "Expert neurosurgical services including endoscopic spine surgery, brain tumor surgery, epilepsy surgery, and trigeminal neuralgia treatment in Hyderabad.",
+            "medicalSpecialty": "Neurosurgery",
+            "about": [
+              {
+                "@type": "MedicalProcedure",
+                "name": "Endoscopic Spine Surgery",
+                "description": "Minimally invasive spine procedures using advanced endoscopic techniques"
+              },
+              {
+                "@type": "MedicalProcedure",
+                "name": "Brain Tumor Surgery",
+                "description": "Advanced neuronavigation-guided microsurgery with neuromonitoring"
+              },
+              {
+                "@type": "MedicalProcedure",
+                "name": "Epilepsy Surgery",
+                "description": "Comprehensive surgical treatment for drug-resistant epilepsy"
+              }
+            ],
+            "author": {
+              "@id": "https://www.drsayuj.info/#physician"
+            },
+            "publisher": {
+              "@id": "https://www.drsayuj.info/#organization"
+            },
+            "datePublished": "2023-01-01T00:00:00+05:30",
+            "dateModified": "2025-10-12T06:44:28.784Z",
+            "breadcrumb": {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.drsayuj.info/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Services",
+                  "item": "https://www.drsayuj.info/services/"
+                }
+              ]
+            },
+            "potentialAction": {
+              "@type": "SeekToAction",
+              "target": "https://www.drsayuj.info/appointments",
+              "queryInput": "required name=query"
+            },
+            "hasPart": [
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "What makes endoscopic surgery different from traditional surgery?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Endoscopic surgery uses small incisions (8-10mm) and specialized instruments to access and treat spine conditions. This results in less muscle damage, reduced pain, faster recovery, and lower risk of complications compared to traditional open surgery."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How long is the recovery time for endoscopic procedures?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Recovery times vary by procedure, but most endoscopic spine surgeries allow patients to return to desk work within 1-2 weeks and full activities within 4-6 weeks. This is significantly faster than traditional open surgery."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Are all patients candidates for minimally invasive surgery?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Not all patients are suitable for endoscopic procedures. We evaluate each case individually based on MRI findings, symptoms, and overall health. Some complex cases may require traditional open surgery for optimal outcomes."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "What should I expect during my consultation?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "During your consultation, Dr. Sayuj will review your MRI scans, discuss your symptoms, explain treatment options, and develop a personalized treatment plan. Bring your imaging studies and a list of current medications."
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/conditions",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/about",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/contact",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "MedicalClinic",
+            "name": "Dr. Sayuj Krishnan | Yashoda Hospital, Malakpet, Hyderabad",
+            "url": "https://www.drsayuj.info",
+            "telephone": "+91 9778280044",
+            "email": "neurospinehyd@drsayuj.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Yashoda Hospital, Room 317, OPD Block",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Telangana",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 17.377,
+              "longitude": 78.498
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "17:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Saturday"
+                ],
+                "opens": "09:00",
+                "closes": "13:00"
+              }
+            ]
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/services/epilepsy-surgery-hyderabad",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/services/endoscopic-discectomy-hyderabad",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "MedicalWebPage",
+            "@id": "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/#webpage",
+            "url": "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/",
+            "name": "Slip Disc Treatment in Hyderabad | Endoscopic Discectomy",
+            "description": "Expert slip disc treatment in Hyderabad with endoscopic discectomy. Same-day discharge, minimal pain, faster recovery. Book consultation with Dr. Sayuj Krishnan.",
+            "inLanguage": "en-IN",
+            "isPartOf": {
+              "@type": "WebSite",
+              "@id": "https://www.drsayuj.info/#website",
+              "name": "Dr. Sayuj Krishnan - Neurosurgeon in Hyderabad",
+              "url": "https://www.drsayuj.info"
+            },
+            "about": {
+              "@type": "Physician",
+              "@id": "https://www.drsayuj.info/#physician",
+              "name": "Dr. Sayuj Krishnan"
+            },
+            "reviewedBy": {
+              "@type": "Physician",
+              "@id": "https://www.drsayuj.info/#physician",
+              "name": "Dr. Sayuj Krishnan"
+            },
+            "datePublished": "2024-01-01",
+            "dateModified": "2025-10-15",
+            "author": {
+              "@type": "Person",
+              "name": "Dr. Sayuj Krishnan",
+              "jobTitle": "Neurosurgeon",
+              "worksFor": {
+                "@type": "Hospital",
+                "name": "Yashoda Hospital",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Hyderabad",
+                  "addressCountry": "IN"
+                }
+              }
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Dr. Sayuj Krishnan",
+              "url": "https://www.drsayuj.info"
+            },
+            "mainEntity": {
+              "@type": "MedicalCondition",
+              "name": "Slip Disc Treatment",
+              "description": "Expert slip disc treatment in Hyderabad with endoscopic discectomy. Same-day discharge, minimal pain, faster recovery. Book consultation with Dr. Sayuj Krishnan.",
+              "possibleTreatment": {
+                "@type": "MedicalTherapy",
+                "name": "Neurosurgical Treatment",
+                "provider": {
+                  "@type": "Physician",
+                  "@id": "https://www.drsayuj.info/#physician",
+                  "name": "Dr. Sayuj Krishnan"
+                }
+              }
+            },
+            "breadcrumb": {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.drsayuj.info/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Conditions",
+                  "item": "https://www.drsayuj.info/conditions/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Slip Disc Treatment",
+                  "item": "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/"
+                }
+              ]
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is minimally invasive spine surgery right for me?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Patients with leg-dominant pain from a herniated disc or stenosis who don't improve with medicines and physiotherapy may benefit. MRI and examination confirm candidacy. Dr. Krishnan will evaluate your specific condition and recommend the best treatment approach."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How soon can I walk after endoscopic discectomy?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Most patients walk the same day; return to desk work is often within 1\u20132 weeks, depending on recovery and job demands. Physical jobs may require 4-8 weeks with a graded return plan. Dr. Krishnan provides personalized recovery guidelines for each patient."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What makes Dr Sayuj Krishnan the best neurosurgeon in Hyderabad?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Dr. Krishnan combines 15+ years of experience with advanced training in Germany, state-of-the-art minimally invasive techniques, and a patient-centered approach. His expertise in endoscopic spine surgery, brain tumor surgery, and epilepsy treatment makes him a leading choice for neurosurgical care."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you accept insurance for neurosurgical procedures?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, we work with most major insurance providers and TPAs. Our team will help you understand your coverage and provide transparent cost estimates. We also offer flexible payment options to make quality neurosurgical care accessible."
+                }
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@id": "https://www.drsayuj.info/",
+                  "name": "Home"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@id": "https://www.drsayuj.info/conditions/",
+                  "name": "Conditions"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@id": "https://www.drsayuj.info/conditions/slip-disc-treatment-hyderabad/",
+                  "name": "Slip Disc Treatment"
+                }
+              }
+            ]
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/conditions/spinal-stenosis-treatment-hyderabad",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "url": "https://www.drsayuj.info/conditions/sciatica-treatment-hyderabad",
+      "status": 200,
+      "structured_data": [
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://www.drsayuj.info/#website",
+            "url": "https://www.drsayuj.info",
+            "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+            "description": "Expert neurosurgeon in Hyderabad specializing in minimally invasive brain & spine surgery",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://www.drsayuj.info/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Physician",
+                "@id": "https://www.drsayuj.info/#physician",
+                "name": "Dr Sayuj Krishnan",
+                "alternateName": "Dr Sayuj",
+                "description": "Expert neurosurgeon in Hyderabad specializing in endoscopic spine surgery, brain tumor surgery, and minimally invasive procedures",
+                "url": "https://www.drsayuj.info",
+                "image": "https://www.drsayuj.info/images/dr-sayuj-krishnan.jpg",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "medicalSpecialty": [
+                  "Neurosurgery",
+                  "Spine Surgery",
+                  "Brain Surgery",
+                  "Endoscopic Surgery",
+                  "Minimally Invasive Surgery"
+                ],
+                "hasCredential": [
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "MBBS"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "degree",
+                    "educationalLevel": "DNB Neurosurgery"
+                  },
+                  {
+                    "@type": "EducationalOccupationalCredential",
+                    "credentialCategory": "certification",
+                    "educationalLevel": "Fellowship in Minimally Invasive Spine Surgery"
+                  }
+                ],
+                "memberOf": [
+                  {
+                    "@type": "Organization",
+                    "name": "Neurological Society of India"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Association of Spine Surgeons of India"
+                  }
+                ],
+                "worksFor": {
+                  "@type": "Hospital",
+                  "name": "Yashoda Hospital",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Malakpet",
+                    "addressLocality": "Hyderabad",
+                    "addressRegion": "Telangana",
+                    "addressCountry": "IN"
+                  }
+                },
+                "availableService": [
+                  {
+                    "@type": "MedicalService",
+                    "name": "Endoscopic Spine Surgery",
+                    "description": "Minimally invasive spine surgery using endoscopic techniques",
+                    "url": "https://www.drsayuj.info/services/minimally-invasive-spine-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Brain Tumor Surgery",
+                    "description": "Advanced brain tumor surgery with neuronavigation",
+                    "url": "https://www.drsayuj.info/services/brain-tumor-surgery-hyderabad"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Epilepsy Surgery",
+                    "description": "Surgical treatment for drug-resistant epilepsy",
+                    "url": "https://www.drsayuj.info/services/epilepsy-surgery"
+                  },
+                  {
+                    "@type": "MedicalService",
+                    "name": "Trigeminal Neuralgia Treatment",
+                    "description": "Advanced treatment for trigeminal neuralgia including microvascular decompression",
+                    "url": "https://www.drsayuj.info/conditions/trigeminal-neuralgia-treatment"
+                  }
+                ],
+                "sameAs": [
+                  "https://g.co/kgs/9366939683880052414",
+                  "https://www.google.com/maps/place/Dr+Sayuj+Krishnan",
+                  "https://www.yashodahospitals.com/doctor/dr-sayuj-krishnan/",
+                  "https://www.linkedin.com/in/dr-sayuj-krishnan",
+                  "https://www.researchgate.net/profile/Dr-Sayuj-Krishnan"
+                ]
+              },
+              {
+                "@type": "LocalBusiness",
+                "@id": "https://www.drsayuj.info/#localbusiness",
+                "name": "Dr Sayuj Krishnan - Neurosurgeon in Hyderabad",
+                "description": "Expert neurosurgeon specializing in endoscopic spine surgery and brain surgery in Hyderabad",
+                "url": "https://www.drsayuj.info",
+                "telephone": "+919778280044",
+                "email": "neurospinehyd@drsayuj.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Room No 317, OPD Block",
+                  "addressLocality": "Malakpet",
+                  "addressRegion": "Telangana",
+                  "postalCode": "500036",
+                  "addressCountry": "IN"
+                },
+                "geo": {
+                  "@type": "GeoCoordinates",
+                  "latitude": 17.385,
+                  "longitude": 78.4867
+                },
+                "openingHours": [
+                  "Mo-Fr 09:00-17:00",
+                  "Sa 09:00-13:00"
+                ],
+                "priceRange": "$$",
+                "currenciesAccepted": "INR",
+                "paymentAccepted": "Cash, Credit Card, Insurance, UPI",
+                "areaServed": [
+                  {
+                    "@type": "City",
+                    "name": "Hyderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "City",
+                    "name": "Secunderabad",
+                    "containedInPlace": {
+                      "@type": "State",
+                      "name": "Telangana"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Banjara Hills",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "Hi-Tech City",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  },
+                  {
+                    "@type": "Place",
+                    "name": "LB Nagar",
+                    "containedInPlace": {
+                      "@type": "City",
+                      "name": "Hyderabad"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "source": "script tag"
+        },
+        {
+          "type": "json-ld",
+          "data": {
+            "@context": "https://schema.org",
+            "@type": "Hospital",
+            "@id": "https://www.drsayuj.info/#hospital",
+            "name": "Yashoda Hospital, Malakpet",
+            "url": "https://www.yashodahospitals.com/malakpet/",
+            "telephone": "+91-40-6769 9999",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Nalgonda X Roads",
+              "addressLocality": "Malakpet",
+              "addressRegion": "Hyderabad",
+              "postalCode": "500036",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "17.3750",
+              "longitude": "78.5147"
+            },
+            "department": {
+              "@type": "MedicalSpecialty",
+              "name": "Department of Neurosurgery",
+              "availableService": [
+                "Brain Surgery",
+                "Spine Surgery",
+                "Minimally Invasive Neurosurgery"
+              ]
+            }
+          },
+          "source": "script tag"
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "issues": [
+    {
+      "url": "https://www.drsayuj.info/",
+      "issue_type": "duplicate_faqpage",
+      "severity": "critical",
+      "description": "Found 2 FAQPage schemas on the same page",
+      "fix_recommendation": "Remove duplicate FAQPage schemas, keep only one per page"
+    },
+    {
+      "url": "https://www.drsayuj.info/",
+      "issue_type": "duplicate_schema",
+      "severity": "high",
+      "description": "Found 2 FAQPage schemas on the same page",
+      "fix_recommendation": "Remove duplicate FAQPage schemas, keep only one per page"
+    }
+  ]
+}
