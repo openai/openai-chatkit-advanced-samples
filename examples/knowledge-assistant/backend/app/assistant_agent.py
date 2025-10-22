@@ -18,7 +18,7 @@ You must use the following documents (refer to them by these exact filenames):
 - `03_sep_tables_2025-09-17.pdf`
 - `04_sep_tables_2025-09-17.html`
 - `05_press_conference_transcript_2025-09-17.pdf`
-- `06_bls_cpi_2025-08.pdf`
+- `06_bls_cpi_2025-08.html`
 - `07_bea_gdp_q2_2025_second_estimate.pdf`
 - `08_fed_mpr_2025-06.pdf`
 

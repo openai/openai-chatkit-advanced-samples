@@ -58,7 +58,7 @@ DOCUMENTS: tuple[DocumentMetadata, ...] = (
     ),
     DocumentMetadata(
         id="bls_cpi_august",
-        filename="06_bls_cpi_2025-08.pdf",
+        filename="06_bls_cpi_2025-08.html",
         title="BLS Consumer Price Index — August 2025",
         description="Consumer Price Index report providing the latest inflation readings.",
     ),
