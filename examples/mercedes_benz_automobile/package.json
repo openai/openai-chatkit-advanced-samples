@@ -1,0 +1,14 @@
+{
+  "name": "chatkit-mercedes-benz-automobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mercedes-Benz Automobile Voice Assistant - ChatKit Example",
+  "scripts": {
+    "start": "concurrently -n backend,frontend -c blue,green \"npm run backend\" \"npm run frontend\"",
+    "frontend": "npm --prefix frontend install && npm --prefix frontend run dev",
+    "backend": "uv sync --directory backend && uv run --directory backend uvicorn app.main:app --host 0.0.0.0 --port 8004 --reload"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
