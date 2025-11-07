@@ -86,6 +86,41 @@ With the app reachable locally or via a tunnel, open it in the browser and try a
 2. **Weather Info** - prompt: `What's the weather in San Francisco today?`
 3. **Theme Switcher** - prompt: `Change the theme to dark mode` 
 
+## Non-Streaming Interface for WhatsApp & Other Platforms
+
+ChatKit now includes a non-streaming endpoint (`/chatkit/complete`) designed for platforms that don't support Server-Sent Events (SSE), such as WhatsApp, SMS, Slack, and other messaging platforms.
+
+**Key Features:**
+- Same ChatKit protocol as the streaming endpoint
+- Returns complete JSON responses instead of streaming events
+- Perfect for WhatsApp integration with [pywa](https://pywa.readthedocs.io/)
+- Thread management for multi-turn conversations
+
+**Quick Example:**
+```bash
+curl -X POST http://localhost:8000/chatkit/complete \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "threads.create",
+    "params": {
+      "input": {
+        "content": [{"type": "text", "text": "Hello!"}]
+      }
+    }
+  }'
+```
+
+**Response:**
+```json
+{
+  "text": "Hello! How can I help you today?",
+  "thread_id": "thread_abc123",
+  "message_id": "msg_xyz789"
+}
+```
+
+See [**docs/NON_STREAMING.md**](docs/NON_STREAMING.md) for complete documentation and [**backend/examples/whatsapp_integration.py**](backend/examples/whatsapp_integration.py) for a WhatsApp integration example.
+
 ## What's next
 
 Under the [`examples`](examples) directory, you'll find three more sample apps that ground the starter kit in real-world scenarios:
