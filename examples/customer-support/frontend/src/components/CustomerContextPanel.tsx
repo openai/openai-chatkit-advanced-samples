@@ -47,7 +47,7 @@ export function CustomerContextPanel({ profile, loading, error }: CustomerContex
   }
 
   return (
-    <section className="flex h-full flex-col gap-6 overflow-hidden rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-[0_45px_90px_-45px_rgba(15,23,42,0.5)] ring-1 ring-slate-200/60 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-[0_45px_95px_-55px_rgba(15,23,42,0.85)] dark:ring-slate-800/60">
+    <section className="flex h-full flex-col gap-6 overflow-auto rounded-3xl border border-slate-200/60 bg-white/80 p-6 shadow-[0_45px_90px_-45px_rgba(15,23,42,0.5)] ring-1 ring-slate-200/60 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70 dark:shadow-[0_45px_95px_-55px_rgba(15,23,42,0.85)] dark:ring-slate-800/60">
       <header className="space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>

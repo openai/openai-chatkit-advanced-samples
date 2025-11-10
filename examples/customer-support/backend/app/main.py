@@ -1,31 +1,50 @@
 from __future__ import annotations
 
 import asyncio
+import logging
+from datetime import datetime
 from typing import Any, AsyncIterator
 
 from agents import RunConfig, Runner
 from agents.model_settings import ModelSettings
-from chatkit.agents import AgentContext, ThreadItemConverter, stream_agent_response
+from chatkit.agents import AgentContext, stream_agent_response
 from chatkit.server import ChatKitServer, StreamingResult
 from chatkit.types import (
+    Action,
+    AssistantMessageContent,
+    AssistantMessageItem,
     Attachment,
+    HiddenContextItem,
+    ThreadItemDoneEvent,
+    ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
+    WidgetItem,
+    WidgetRootUpdated,
 )
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from openai.types.responses import ResponseInputContentParam, ResponseInputTextParam
 from openai.types.responses.response_input_param import Message
+from pydantic import ValidationError
 from starlette.responses import JSONResponse
 
 from .airline_state import AirlineStateManager, CustomerProfile
+from .meal_preferences import (
+    SET_MEAL_PREFERENCE_ACTION_TYPE,
+    SetMealPreferencePayload,
+    build_meal_preference_widget,
+    meal_preference_label,
+)
 from .memory_store import MemoryStore
 from .support_agent import state_manager, support_agent
+from .thread_item_converter import CustomerSupportThreadItemConverter
 from .title_agent import title_agent
 
 DEFAULT_THREAD_ID = "demo_default_thread"
+logger = logging.getLogger(__name__)
 
 
 def _get_customer_profile_as_input_item(profile: CustomerProfile) -> str:
@@ -71,7 +90,53 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         self.agent_state = agent_state
         self.agent = support_agent
         self.title_agent = title_agent
-        self.thread_item_converter = ThreadItemConverter()
+        self.thread_item_converter = CustomerSupportThreadItemConverter()
+
+    async def action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        sender: WidgetItem | None,
+        context: dict[str, Any],
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        if action.type != SET_MEAL_PREFERENCE_ACTION_TYPE:
+            return
+
+        payload = self._parse_meal_preference_payload(action)
+        if payload is None:
+            return
+
+        meal_label = meal_preference_label(payload.meal)
+        self.agent_state.set_meal(thread.id, meal_label)
+
+        if sender is not None:
+            widget = build_meal_preference_widget(
+                selected=payload.meal,
+            )
+            yield ThreadItemUpdated(
+                item_id=sender.id,
+                update=WidgetRootUpdated(widget=widget),
+            )
+            yield ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=thread.id,
+                    id=self.store.generate_item_id("message", thread, context),
+                    created_at=datetime.now(),
+                    content=[
+                        AssistantMessageContent(
+                            text=f'Your meal preference has been updated to "{meal_label}".'
+                        )
+                    ],
+                ),
+            )
+
+        hidden = HiddenContextItem(
+            id=self.store.generate_item_id("message", thread, context),
+            thread_id=thread.id,
+            created_at=datetime.now(),
+            content=f"<WIDGET_ACTION widgetId={sender.id}>{action.type} was performed with payload: {payload.meal}</WIDGET_ACTION>",
+        )
+        await self.store.add_thread_item(thread.id, hidden, context)
 
     async def respond(
         self,
@@ -88,6 +153,7 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         )
         items = list(reversed(items_page.data))  # Runner expects last message last
 
+        # Prepend customer profile as part of the agent input
         profile = self.agent_state.get_profile(thread.id)
         profile_item = _get_customer_profile_as_input_item(profile)
         input_items = [profile_item] + (await self.thread_item_converter.to_agent_input(items))
@@ -126,6 +192,14 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
+
+    @staticmethod
+    def _parse_meal_preference_payload(action: Action[str, Any]) -> SetMealPreferencePayload | None:
+        try:
+            return SetMealPreferencePayload.model_validate(action.payload or {})
+        except ValidationError as exc:
+            logger.warning("Invalid meal preference payload: %s", exc)
+            return None
 
 
 support_server = CustomerSupportServer(agent_state=state_manager)
