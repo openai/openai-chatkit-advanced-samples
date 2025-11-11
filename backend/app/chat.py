@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Annotated, Any, AsyncIterator, Final, Literal
 from uuid import uuid4
 
-from agents import Agent, RunContextWrapper, Runner, function_tool
+from agents import Agent, RunContextWrapper, Runner, StopAtTools, function_tool
 from chatkit.agents import (
     AgentContext,
     ClientToolCall,
@@ -191,6 +191,8 @@ class FactAssistantServer(ChatKitServer[dict[str, Any]]):
             name="ChatKit Guide",
             instructions=INSTRUCTIONS,
             tools=tools,  # type: ignore[arg-type]
+            # Stop generating response after client tool calls are made
+            tool_use_behavior=StopAtTools(stop_at_tool_names=[save_fact.name, switch_theme.name]),
         )
         self.thread_item_converter = BasicThreadItemConverter()
 
