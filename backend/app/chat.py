@@ -13,7 +13,7 @@ from chatkit.agents import (
     ClientToolCall,
     stream_agent_response,
 )
-from chatkit.server import ChatKitServer, ThreadItemDoneEvent
+from chatkit.server import ChatKitServer
 from chatkit.types import (
     Attachment,
     HiddenContextItem,
@@ -25,7 +25,7 @@ from openai.types.responses import ResponseInputContentParam
 from pydantic import ConfigDict, Field
 
 from .constants import INSTRUCTIONS, MODEL
-from .facts import Fact, fact_store
+from .facts import fact_store
 from .memory_store import MemoryStore
 from .sample_widget import render_weather_widget, weather_widget_copy_text
 from .thread_item_converter import BasicThreadItemConverter

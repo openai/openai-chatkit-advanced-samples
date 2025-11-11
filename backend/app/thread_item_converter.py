@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-import inspect
-import json
-from typing import Any
-
 from chatkit.agents import ThreadItemConverter
 from chatkit.types import HiddenContextItem
 from openai.types.responses import ResponseInputTextParam

@@ -26,8 +26,11 @@ from chatkit.types import (
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
-from openai.types.responses import ResponseInputContentParam, ResponseInputTextParam
-from openai.types.responses.response_input_param import Message
+from openai.types.responses import (
+    EasyInputMessageParam,
+    ResponseInputContentParam,
+    ResponseInputTextParam,
+)
 from pydantic import ValidationError
 from starlette.responses import JSONResponse
 
@@ -47,7 +50,7 @@ DEFAULT_THREAD_ID = "demo_default_thread"
 logger = logging.getLogger(__name__)
 
 
-def _get_customer_profile_as_input_item(profile: CustomerProfile) -> str:
+def _get_customer_profile_as_input_item(profile: CustomerProfile):
     segments = []
     for segment in profile.segments:
         segments.append(
@@ -72,9 +75,9 @@ def _get_customer_profile_as_input_item(profile: CustomerProfile) -> str:
         "</CUSTOMER_PROFILE>"
     )
 
-    return Message(
-        role="user",
+    return EasyInputMessageParam(
         type="message",
+        role="user",
         content=[ResponseInputTextParam(type="input_text", text=content)],
     )
 
@@ -130,13 +133,13 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
                 ),
             )
 
-        hidden = HiddenContextItem(
-            id=self.store.generate_item_id("message", thread, context),
-            thread_id=thread.id,
-            created_at=datetime.now(),
-            content=f"<WIDGET_ACTION widgetId={sender.id}>{action.type} was performed with payload: {payload.meal}</WIDGET_ACTION>",
-        )
-        await self.store.add_thread_item(thread.id, hidden, context)
+            hidden = HiddenContextItem(
+                id=self.store.generate_item_id("message", thread, context),
+                thread_id=thread.id,
+                created_at=datetime.now(),
+                content=f"<WIDGET_ACTION widgetId={sender.id}>{action.type} was performed with payload: {payload.meal}</WIDGET_ACTION>",
+            )
+            await self.store.add_thread_item(thread.id, hidden, context)
 
     async def respond(
         self,
