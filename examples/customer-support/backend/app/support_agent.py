@@ -1,29 +1,38 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Dict
 
-from agents import Agent, RunContextWrapper, function_tool
+from agents import Agent, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext
+from chatkit.types import AssistantMessageContent, AssistantMessageItem, ThreadItemDoneEvent
 
 from .airline_state import AirlineStateManager
+from .meal_preferences import build_meal_preference_widget
 
 SUPPORT_AGENT_INSTRUCTIONS = """
 You are a friendly and efficient airline customer support agent for OpenSkies.
 You help elite flyers with seat changes, cancellations, checked bags, and
 special requests. Follow these guidelines:
 
-- Always acknowledge the customer's loyalty status and recent travel plans.
+- Acknowledge the customer's loyalty status and recent travel plans if you haven't
+  already done so.
 - When a task requires action, call the appropriate tool instead of describing
   the change hypothetically.
 - After using a tool, confirm the outcome and offer next steps.
-- If you cannot fulfill a request, apologise and suggest an alternative.
+- If you cannot fulfill a request, apologize and suggest an alternative.
 - Keep responses concise (2-3 sentences) unless extra detail is required.
+- For tool calls `cancel_trip` and `add_checked_bag`, ask the user for confirmation before proceeding.
+
+Custom tags:
+- <CUSTOMER_PROFILE> - provides contexto on the customer's account and travel details.
 
 Available tools:
 - change_seat(flight_number: str, seat: str) – move the passenger to a new seat.
 - cancel_trip() – cancel the upcoming reservation and note the refund.
 - add_checked_bag() – add one checked bag to the itinerary.
-- set_meal_preference(meal: str) – update meal preference (e.g. vegetarian).
+- meal_preference_list() – show meal options so the traveller can pick their preference.
+  Invoke this tool when the user requests to set or change their meal preference or option.
 - request_assistance(note: str) – record a special assistance request.
 
 Only use information provided in the customer context or tool results. Do not
@@ -69,14 +78,24 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         return {"result": message, "bags_checked": profile.bags_checked}
 
     @function_tool(
-        description_override="Record or update the passenger's meal preference.",
+        description_override="Display the meal preference picker so the traveller can choose an option.",
     )
-    async def set_meal_preference(
+    async def meal_preference_list(
         ctx: RunContextWrapper[AgentContext],
-        meal: str,
     ) -> Dict[str, str]:
-        message = state_manager.set_meal(_thread_id(ctx), meal)
-        return {"result": message}
+        await ctx.context.stream(
+            ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=ctx.context.thread.id,
+                    id=ctx.context.generate_id("message"),
+                    created_at=datetime.now(),
+                    content=[AssistantMessageContent(text="Please select your meal preference.")],
+                ),
+            )
+        )
+        widget = build_meal_preference_widget()
+        await ctx.context.stream_widget(widget)
+        return {"result": "Shared meal preference options with the traveller."}
 
     @function_tool(
         description_override="Note a special assistance request for airport staff.",
@@ -92,7 +111,7 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         change_seat,
         cancel_trip,
         add_checked_bag,
-        set_meal_preference,
+        meal_preference_list,
         request_assistance,
     ]
 
@@ -101,6 +120,7 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         name="OpenSkies Concierge",
         instructions=SUPPORT_AGENT_INSTRUCTIONS,
         tools=tools,  # type: ignore[arg-type]
+        tool_use_behavior=StopAtTools(stop_at_tool_names=[meal_preference_list.name]),
     )
 
 

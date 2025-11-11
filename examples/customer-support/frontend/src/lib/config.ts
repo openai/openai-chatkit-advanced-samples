@@ -24,7 +24,7 @@ export const SUPPORT_CUSTOMER_URL =
 
 export const SUPPORT_GREETING =
   import.meta.env.VITE_SUPPORT_GREETING ??
-  "Thanks for reaching OpenSkies concierge. How can I make your trip smoother today?";
+  "How can I make your trip smoother today?";
 
 export const SUPPORT_STARTER_PROMPTS: StartScreenPrompt[] = [
   {
@@ -40,6 +40,11 @@ export const SUPPORT_STARTER_PROMPTS: StartScreenPrompt[] = [
   {
     label: "Add checked bag",
     prompt: "Add one more checked bag to my reservation.",
-    icon: "compass",
+    icon: "suitcase",
+  },
+  {
+    label: "Set a meal preference",
+    prompt: "Set a meal preference for my trip.",
+    icon: "notebook-pencil",
   },
 ];

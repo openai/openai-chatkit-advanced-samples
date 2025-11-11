@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import asyncio
+import logging
+from datetime import datetime
 from typing import Any, AsyncIterator
 
 from agents import RunConfig, Runner
@@ -7,35 +10,47 @@ from agents.model_settings import ModelSettings
 from chatkit.agents import AgentContext, stream_agent_response
 from chatkit.server import ChatKitServer, StreamingResult
 from chatkit.types import (
+    Action,
+    AssistantMessageContent,
+    AssistantMessageItem,
     Attachment,
-    ClientToolCallItem,
+    HiddenContextItem,
+    ThreadItemDoneEvent,
+    ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
+    WidgetItem,
+    WidgetRootUpdated,
 )
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
-from openai.types.responses import ResponseInputContentParam
+from openai.types.responses import (
+    EasyInputMessageParam,
+    ResponseInputContentParam,
+    ResponseInputTextParam,
+)
+from pydantic import ValidationError
 from starlette.responses import JSONResponse
 
 from .airline_state import AirlineStateManager, CustomerProfile
+from .meal_preferences import (
+    SET_MEAL_PREFERENCE_ACTION_TYPE,
+    SetMealPreferencePayload,
+    build_meal_preference_widget,
+    meal_preference_label,
+)
 from .memory_store import MemoryStore
 from .support_agent import state_manager, support_agent
+from .thread_item_converter import CustomerSupportThreadItemConverter
+from .title_agent import title_agent
 
 DEFAULT_THREAD_ID = "demo_default_thread"
+logger = logging.getLogger(__name__)
 
 
-def _user_message_text(item: UserMessageItem) -> str:
-    parts: list[str] = []
-    for part in item.content:
-        text = getattr(part, "text", None)
-        if text:
-            parts.append(text)
-    return " ".join(parts).strip()
-
-
-def _format_customer_context(profile: CustomerProfile) -> str:
+def _get_customer_profile_as_input_item(profile: CustomerProfile):
     segments = []
     for segment in profile.segments:
         segments.append(
@@ -45,8 +60,8 @@ def _format_customer_context(profile: CustomerProfile) -> str:
     summary = "\n".join(segments)
     timeline = profile.timeline[:3]
     recent = "\n".join(f"  * {entry['entry']} ({entry['timestamp']})" for entry in timeline)
-    return (
-        "Customer Profile\n"
+    content = (
+        "<CUSTOMER_PROFILE>\n"
         f"Name: {profile.name} ({profile.loyalty_status})\n"
         f"Loyalty ID: {profile.loyalty_id}\n"
         f"Contact: {profile.email}, {profile.phone}\n"
@@ -56,12 +71,15 @@ def _format_customer_context(profile: CustomerProfile) -> str:
         "Upcoming Segments:\n"
         f"{summary}\n"
         "Recent Service Timeline:\n"
-        f"{recent or '  * No service actions recorded yet.'}"
+        f"{recent or '  * No service actions recorded yet.'}\n"
+        "</CUSTOMER_PROFILE>"
     )
 
-
-def _is_tool_completion_item(item: Any) -> bool:
-    return isinstance(item, ClientToolCallItem)
+    return EasyInputMessageParam(
+        type="message",
+        role="user",
+        content=[ResponseInputTextParam(type="input_text", text=content)],
+    )
 
 
 class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
@@ -74,34 +92,74 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         self.store = store
         self.agent_state = agent_state
         self.agent = support_agent
+        self.title_agent = title_agent
+        self.thread_item_converter = CustomerSupportThreadItemConverter()
 
-    def _resolve_thread_id(self, thread: ThreadMetadata | None) -> str:
-        return thread.id if thread and thread.id else DEFAULT_THREAD_ID
+    async def action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        sender: WidgetItem | None,
+        context: dict[str, Any],
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        if action.type != SET_MEAL_PREFERENCE_ACTION_TYPE:
+            return
+
+        payload = self._parse_meal_preference_payload(action)
+        if payload is None:
+            return
+
+        meal_label = meal_preference_label(payload.meal)
+        self.agent_state.set_meal(thread.id, meal_label)
+
+        if sender is not None:
+            widget = build_meal_preference_widget(
+                selected=payload.meal,
+            )
+            yield ThreadItemUpdated(
+                item_id=sender.id,
+                update=WidgetRootUpdated(widget=widget),
+            )
+            yield ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=thread.id,
+                    id=self.store.generate_item_id("message", thread, context),
+                    created_at=datetime.now(),
+                    content=[
+                        AssistantMessageContent(
+                            text=f'Your meal preference has been updated to "{meal_label}".'
+                        )
+                    ],
+                ),
+            )
+
+            hidden = HiddenContextItem(
+                id=self.store.generate_item_id("message", thread, context),
+                thread_id=thread.id,
+                created_at=datetime.now(),
+                content=f"<WIDGET_ACTION widgetId={sender.id}>{action.type} was performed with payload: {payload.meal}</WIDGET_ACTION>",
+            )
+            await self.store.add_thread_item(thread.id, hidden, context)
 
     async def respond(
         self,
         thread: ThreadMetadata,
-        item: UserMessageItem | None,
+        input_user_message: UserMessageItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        if item is None:
-            return
-
-        if _is_tool_completion_item(item):
-            return
-
-        message_text = _user_message_text(item)
-        if not message_text:
-            return
-
-        thread_key = self._resolve_thread_id(thread)
-        profile = self.agent_state.get_profile(thread_key)
-        context_prompt = _format_customer_context(profile)
-
-        combined_prompt = (
-            f"{context_prompt}\n\nCurrent request: {message_text}\n"
-            "Respond as the OpenSkies concierge."
+        # Load all items from the thread to send as agent input.
+        # Needed to ensure that the agent is aware of the full conversation
+        # when generating a response.
+        items_page = await self.store.load_thread_items(thread.id, None, 20, "desc", context)
+        updating_thread_title = asyncio.create_task(
+            self.maybe_update_thread_title(thread, input_user_message)
         )
+        items = list(reversed(items_page.data))  # Runner expects last message last
+
+        # Prepend customer profile as part of the agent input
+        profile = self.agent_state.get_profile(thread.id)
+        profile_item = _get_customer_profile_as_input_item(profile)
+        input_items = [profile_item] + (await self.thread_item_converter.to_agent_input(items))
 
         agent_context = AgentContext(
             thread=thread,
@@ -110,7 +168,7 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         )
         result = Runner.run_streamed(
             self.agent,
-            combined_prompt,
+            input_items,
             context=agent_context,
             run_config=RunConfig(model_settings=ModelSettings(temperature=0.4)),
         )
@@ -118,8 +176,33 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         async for event in stream_agent_response(agent_context, result):
             yield event
 
+        await updating_thread_title
+
+    async def maybe_update_thread_title(
+        self, thread: ThreadMetadata, user_message: UserMessageItem | None
+    ) -> None:
+        if user_message is None or thread.title is not None:
+            return
+
+        run = await Runner.run(
+            title_agent,
+            input=await self.thread_item_converter.to_agent_input(user_message),
+        )
+        model_result: str = run.final_output
+        # Capitalize the first letter only
+        model_result = model_result[:1].upper() + model_result[1:]
+        thread.title = model_result.strip(".")
+
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
+
+    @staticmethod
+    def _parse_meal_preference_payload(action: Action[str, Any]) -> SetMealPreferencePayload | None:
+        try:
+            return SetMealPreferencePayload.model_validate(action.payload or {})
+        except ValidationError as exc:
+            logger.warning("Invalid meal preference payload: %s", exc)
+            return None
 
 
 support_server = CustomerSupportServer(agent_state=state_manager)

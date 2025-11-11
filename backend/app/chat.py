@@ -2,25 +2,21 @@
 
 from __future__ import annotations
 
-import inspect
 import logging
 from datetime import datetime
 from typing import Annotated, Any, AsyncIterator, Final, Literal
 from uuid import uuid4
 
-from agents import Agent, RunContextWrapper, Runner, function_tool
+from agents import Agent, RunContextWrapper, Runner, StopAtTools, function_tool
 from chatkit.agents import (
     AgentContext,
     ClientToolCall,
-    ThreadItemConverter,
     stream_agent_response,
 )
-from chatkit.server import ChatKitServer, ThreadItemDoneEvent
+from chatkit.server import ChatKitServer
 from chatkit.types import (
     Attachment,
-    ClientToolCallItem,
     HiddenContextItem,
-    ThreadItem,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
@@ -29,9 +25,10 @@ from openai.types.responses import ResponseInputContentParam
 from pydantic import ConfigDict, Field
 
 from .constants import INSTRUCTIONS, MODEL
-from .facts import Fact, fact_store
+from .facts import fact_store
 from .memory_store import MemoryStore
 from .sample_widget import render_weather_widget, weather_widget_copy_text
+from .thread_item_converter import BasicThreadItemConverter
 from .weather import (
     WeatherLookupError,
     retrieve_weather,
@@ -62,29 +59,10 @@ def _gen_id(prefix: str) -> str:
     return f"{prefix}_{uuid4().hex[:8]}"
 
 
-def _is_tool_completion_item(item: Any) -> bool:
-    return isinstance(item, ClientToolCallItem)
-
-
 class FactAgentContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     store: Annotated[MemoryStore, Field(exclude=True)]
     request_context: dict[str, Any]
-
-
-async def _stream_saved_hidden(ctx: RunContextWrapper[FactAgentContext], fact: Fact) -> None:
-    await ctx.context.stream(
-        ThreadItemDoneEvent(
-            item=HiddenContextItem(
-                id=_gen_id("msg"),
-                thread_id=ctx.context.thread.id,
-                created_at=datetime.now(),
-                content=(
-                    f'<FACT_SAVED id="{fact.id}" threadId="{ctx.context.thread.id}">{fact.text}</FACT_SAVED>'
-                ),
-            ),
-        )
-    )
 
 
 @function_tool(description_override="Record a fact shared by the user so it is saved immediately.")
@@ -97,7 +75,19 @@ async def save_fact(
         confirmed = await fact_store.mark_saved(saved.id)
         if confirmed is None:
             raise ValueError("Failed to save fact")
-        await _stream_saved_hidden(ctx, confirmed)
+
+        await ctx.context.store.add_thread_item(
+            ctx.context.thread.id,
+            HiddenContextItem(
+                id=_gen_id("msg"),
+                thread_id=ctx.context.thread.id,
+                created_at=datetime.now(),
+                content=(
+                    f'<FACT_SAVED id="{confirmed.id}" threadId="{ctx.context.thread.id}">{confirmed.text}</FACT_SAVED>'
+                ),
+            ),
+            ctx.context.request_context,
+        )
         ctx.context.client_tool_call = ClientToolCall(
             name="record_fact",
             arguments={"fact_id": confirmed.id, "fact_text": confirmed.text},
@@ -189,15 +179,6 @@ async def get_weather(
     }
 
 
-def _user_message_text(item: UserMessageItem) -> str:
-    parts: list[str] = []
-    for part in item.content:
-        text = getattr(part, "text", None)
-        if text:
-            parts.append(text)
-    return " ".join(parts).strip()
-
-
 class FactAssistantServer(ChatKitServer[dict[str, Any]]):
     """ChatKit server wired up with the fact-recording tool."""
 
@@ -210,8 +191,10 @@ class FactAssistantServer(ChatKitServer[dict[str, Any]]):
             name="ChatKit Guide",
             instructions=INSTRUCTIONS,
             tools=tools,  # type: ignore[arg-type]
+            # Stop generating response after client tool calls are made
+            tool_use_behavior=StopAtTools(stop_at_tool_names=[save_fact.name, switch_theme.name]),
         )
-        self._thread_item_converter = self._init_thread_item_converter()
+        self.thread_item_converter = BasicThreadItemConverter()
 
     async def respond(
         self,
@@ -225,20 +208,24 @@ class FactAssistantServer(ChatKitServer[dict[str, Any]]):
             request_context=context,
         )
 
-        target_item: ThreadItem | None = item
-        if target_item is None:
-            target_item = await self._latest_thread_item(thread, context)
-
-        if target_item is None or _is_tool_completion_item(target_item):
-            return
-
-        agent_input = await self._to_agent_input(thread, target_item)
-        if agent_input is None:
-            return
+        # Load all items from the thread to send as agent input.
+        # Needed to ensure that the agent is aware of the full conversation
+        # when generating a response.
+        items_page = await self.store.load_thread_items(
+            thread.id,
+            after=None,
+            limit=20,
+            order="desc",
+            context=context,
+        )
+        # Runner expects last message last
+        items = list(reversed(items_page.data))
+        input_items = await self.thread_item_converter.to_agent_input(items)
 
         result = Runner.run_streamed(
             self.assistant,
-            agent_input,
+            # Use default ThreadItemConverter to convert chatkit thread items to agent input
+            input_items,
             context=agent_context,
         )
 
@@ -248,107 +235,6 @@ class FactAssistantServer(ChatKitServer[dict[str, Any]]):
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
-
-    def _init_thread_item_converter(self) -> Any | None:
-        converter_cls = ThreadItemConverter
-        if converter_cls is None or not callable(converter_cls):
-            return None
-
-        attempts: tuple[dict[str, Any], ...] = (
-            {"to_message_content": self.to_message_content},
-            {"message_content_converter": self.to_message_content},
-            {},
-        )
-
-        for kwargs in attempts:
-            try:
-                return converter_cls(**kwargs)
-            except TypeError:
-                continue
-        return None
-
-    async def _latest_thread_item(
-        self, thread: ThreadMetadata, context: dict[str, Any]
-    ) -> ThreadItem | None:
-        try:
-            items = await self.store.load_thread_items(thread.id, None, 1, "desc", context)
-        except Exception:  # pragma: no cover - defensive
-            return None
-
-        return items.data[0] if getattr(items, "data", None) else None
-
-    async def _to_agent_input(
-        self,
-        thread: ThreadMetadata,
-        item: ThreadItem,
-    ) -> Any | None:
-        if _is_tool_completion_item(item):
-            return None
-
-        converter = getattr(self, "_thread_item_converter", None)
-        if converter is not None:
-            for attr in (
-                "to_input_item",
-                "convert",
-                "convert_item",
-                "convert_thread_item",
-            ):
-                method = getattr(converter, attr, None)
-                if method is None:
-                    continue
-                call_args: list[Any] = [item]
-                call_kwargs: dict[str, Any] = {}
-                try:
-                    signature = inspect.signature(method)
-                except (TypeError, ValueError):
-                    signature = None
-
-                if signature is not None:
-                    params = [
-                        parameter
-                        for parameter in signature.parameters.values()
-                        if parameter.kind
-                        not in (
-                            inspect.Parameter.VAR_POSITIONAL,
-                            inspect.Parameter.VAR_KEYWORD,
-                        )
-                    ]
-                    if len(params) >= 2:
-                        next_param = params[1]
-                        if next_param.kind in (
-                            inspect.Parameter.POSITIONAL_ONLY,
-                            inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                        ):
-                            call_args.append(thread)
-                        else:
-                            call_kwargs[next_param.name] = thread
-
-                result = method(*call_args, **call_kwargs)
-                if inspect.isawaitable(result):
-                    return await result
-                return result
-
-        if isinstance(item, UserMessageItem):
-            return _user_message_text(item)
-
-        return None
-
-    async def _add_hidden_item(
-        self,
-        thread: ThreadMetadata,
-        context: dict[str, Any],
-        content: str,
-    ) -> None:
-        await self.store.add_thread_item(
-            thread.id,
-            HiddenContextItem(
-                id=_gen_id("msg"),
-                thread_id=thread.id,
-                created_at=datetime.now(),
-                content=content,
-            ),
-            context,
-        )
 
 
 def create_chatkit_server() -> FactAssistantServer | None:

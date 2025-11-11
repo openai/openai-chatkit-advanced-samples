@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.11"
 
 [[package]]
@@ -120,7 +120,7 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28,<0.29" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.8,<2" },
     { name = "openai", specifier = ">=1.40" },
-    { name = "openai-chatkit", specifier = ">=1.0.2,<2" },
+    { name = "openai-chatkit", specifier = ">=1.1.2,<2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4,<0.7" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.36,<0.37" },
 ]
@@ -462,7 +462,7 @@ wheels = [
 
 [[package]]
 name = "openai-chatkit"
-version = "1.0.2"
+version = "1.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openai" },
@@ -470,9 +470,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "uvicorn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/46/cc/cdbf0bdc633e5f5be109d15b1c2e840fe8303fd3e9548ac9dcf8ea427e70/openai_chatkit-1.0.2.tar.gz", hash = "sha256:a553114d232c51bda383cbf118370d3863530a936d674b9acfdba5ed0c7c0a9e", size = 49351, upload-time = "2025-10-09T21:29:20.278Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/cc/d395cfb7db9ac2b677c70a95483cf28f5b0c1de79b66e079e1c634d31a69/openai_chatkit-1.1.2.tar.gz", hash = "sha256:53d783ced5460be7adbd65b9a966ace969576cc7361171e511130ff576f4a61c", size = 49635, upload-time = "2025-11-07T22:15:35.362Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e4/01/31349758df071f8b4c35d455fb6187c5dd06b4cb3b7b060e6f6d47e1c154/openai_chatkit-1.0.2-py3-none-any.whl", hash = "sha256:ebe97eb95778ab3ca005b9f07640607c3ea0c2ba1b63157367c32a70d4e7f8c4", size = 35231, upload-time = "2025-10-09T21:29:19.267Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/38/15e5651407cf81548a0549498f028127d81e7e985e18a7228e575d48dece/openai_chatkit-1.1.2-py3-none-any.whl", hash = "sha256:402d304b880be8d6b26e291484de62420e5f25d2c9fc3070b6807e840eb9e158", size = 35352, upload-time = "2025-11-07T22:15:33.987Z" },
 ]
 
 [[package]]

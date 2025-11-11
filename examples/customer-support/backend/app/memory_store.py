@@ -22,7 +22,7 @@ class MemoryStore(Store[dict[str, Any]]):
         # Attachments intentionally unsupported; use a real store that enforces auth.
 
     @staticmethod
-    def _coerce_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
+    def _get_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
         """Return thread metadata without any embedded items (openai-chatkit>=1.0)."""
         has_items = isinstance(thread, Thread) or "items" in getattr(
             thread, "model_fields_set", set()
@@ -39,10 +39,10 @@ class MemoryStore(Store[dict[str, Any]]):
         state = self._threads.get(thread_id)
         if not state:
             raise NotFoundError(f"Thread {thread_id} not found")
-        return self._coerce_thread_metadata(state.thread)
+        return self._get_thread_metadata(state.thread)
 
     async def save_thread(self, thread: ThreadMetadata, context: dict[str, Any]) -> None:
-        metadata = self._coerce_thread_metadata(thread)
+        metadata = self._get_thread_metadata(thread)
         state = self._threads.get(thread.id)
         if state:
             state.thread = metadata
@@ -60,7 +60,7 @@ class MemoryStore(Store[dict[str, Any]]):
         context: dict[str, Any],
     ) -> Page[ThreadMetadata]:
         threads = sorted(
-            (self._coerce_thread_metadata(state.thread) for state in self._threads.values()),
+            (self._get_thread_metadata(state.thread) for state in self._threads.values()),
             key=lambda t: t.created_at or datetime.min,
             reverse=(order == "desc"),
         )
