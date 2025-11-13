@@ -18,10 +18,30 @@ type AppState = {
   refreshCat: (overrideId?: string | null) => Promise<CatStatePayload | undefined>;
   applyCatUpdate: (update: Partial<CatStatePayload>) => void;
   speech: SpeechState;
-  setSpeech: (speech: SpeechState) => void;
+  setSpeech: (payload: CatSpeechPayload) => void;
   flashMessage: string | null;
   setFlashMessage: (message: string | null) => void;
 };
+
+const SPEECH_TIMEOUT_MS = 10_000;
+const FLASH_TIMEOUT_MS = 10_000;
+
+let speechTimer: ReturnType<typeof setTimeout> | null = null;
+let flashTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearSpeechTimer() {
+  if (speechTimer) {
+    clearTimeout(speechTimer);
+    speechTimer = null;
+  }
+}
+
+function clearFlashTimer() {
+  if (flashTimer) {
+    clearTimeout(flashTimer);
+    flashTimer = null;
+  }
+}
 
 function getInitialScheme(): ColorScheme {
   if (typeof window === "undefined") {
@@ -73,6 +93,8 @@ export const useAppStore = create<AppState>((set, get) => {
       if (previousId === threadId) {
         return;
       }
+      clearSpeechTimer();
+      clearFlashTimer();
       set({ threadId, speech: null, flashMessage: null });
       void get().refreshCat(threadId ?? null);
     },
@@ -139,8 +161,39 @@ export const useAppStore = create<AppState>((set, get) => {
       }
     },
     speech: null,
-    setSpeech: (speech) => set({ speech }),
+    setSpeech: (payload) => {
+      const speechPayload: SpeechState =
+        payload ? { ...payload, id: Date.now() } : null;
+
+      clearSpeechTimer();
+      clearFlashTimer();
+      set({ speech: speechPayload, flashMessage: null });
+
+      if (!speechPayload) {
+        return;
+      }
+
+      speechTimer = setTimeout(() => {
+        set({ speech: null });
+        speechTimer = null;
+      }, SPEECH_TIMEOUT_MS);
+    },
     flashMessage: null,
-    setFlashMessage: (message) => set({ flashMessage: message }),
+    setFlashMessage: (message) => {
+      if (!message) {
+        clearFlashTimer();
+        set({ flashMessage: null });
+        return;
+      }
+
+      clearFlashTimer();
+      clearSpeechTimer();
+      set({ flashMessage: message, speech: null });
+
+      flashTimer = setTimeout(() => {
+        set({ flashMessage: null });
+        flashTimer = null;
+      }, FLASH_TIMEOUT_MS);
+    },
   };
 });

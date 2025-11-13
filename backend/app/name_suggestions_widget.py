@@ -1,6 +1,11 @@
+"""
+Defines an interactive widget that prompts the user to select a name for the cat.
+This widget wires up two client action configs.
+"""
+
 from __future__ import annotations
 
-from typing import Any, Literal, Mapping, Sequence
+from typing import Literal, Sequence
 
 from chatkit.actions import Action as WidgetAction
 from chatkit.widgets import Button, Col, Icon, ListView, ListViewItem, Row, Text
@@ -24,16 +29,8 @@ class CatNameSelectionPayload(BaseModel):
     options: list[CatNameSuggestion] = Field(default_factory=list)
 
 
-class RequestMoreCatNamesPayload(BaseModel):
-    """Payload for requesting another batch of name suggestions."""
-
-    refresh: bool = True
-
-
 SelectCatNameAction = WidgetAction[Literal[SELECT_CAT_NAME_ACTION_TYPE], CatNameSelectionPayload]
-RequestMoreNamesAction = WidgetAction[
-    Literal[REQUEST_MORE_CAT_NAMES_ACTION_TYPE], RequestMoreCatNamesPayload
-]
+RequestMoreNamesAction = WidgetAction[Literal[REQUEST_MORE_CAT_NAMES_ACTION_TYPE], None]
 
 
 def _name_suggestion_item(
@@ -82,10 +79,7 @@ def _request_more_names_item(disabled: bool) -> ListViewItem:
     return ListViewItem(
         children=[
             Button(
-                onClickAction=RequestMoreNamesAction.create(
-                    RequestMoreCatNamesPayload(),
-                    handler="client",
-                ),
+                onClickAction=RequestMoreNamesAction.create(None, handler="client"),
                 variant="outline",
                 color="discovery",
                 size="lg",
@@ -101,7 +95,7 @@ def _request_more_names_item(disabled: bool) -> ListViewItem:
 
 
 def build_name_suggestions_widget(
-    names: Sequence[str | CatNameSuggestion | Mapping[str, Any]],
+    names: Sequence[CatNameSuggestion],
     *,
     selected: str | None = None,
 ) -> ListView:

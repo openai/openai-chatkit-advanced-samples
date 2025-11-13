@@ -1,4 +1,6 @@
-"""ChatKit server powering the virtual cat companion experience."""
+"""
+CatAssistantServer implements the ChatKitServer interface.
+"""
 
 from __future__ import annotations
 
@@ -27,14 +29,14 @@ from openai.types.responses import ResponseInputContentParam
 from pydantic import ValidationError
 
 from .cat_agent import CatAgentContext, cat_agent
-from .cat_name_widget import (
+from .cat_store import CatStore
+from .memory_store import MemoryStore
+from .name_suggestions_widget import (
     SELECT_CAT_NAME_ACTION_TYPE,
     CatNameSelectionPayload,
     CatNameSuggestion,
     build_name_suggestions_widget,
 )
-from .cat_store import CatStore
-from .memory_store import MemoryStore
 from .thread_item_converter import BasicThreadItemConverter
 
 logging.basicConfig(level=logging.INFO)
@@ -45,11 +47,13 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
 
     def __init__(self) -> None:
         self.store: MemoryStore = MemoryStore()
-        self.cat_store = CatStore()
         super().__init__(self.store)
-        self.assistant = cat_agent
+
+        # Define additional instance variables for convenience.
+        self.cat_store = CatStore()
         self.thread_item_converter = BasicThreadItemConverter()
 
+    # -- Required overrides ----------------------------------------------------
     async def action(
         self,
         thread: ThreadMetadata,
@@ -78,6 +82,8 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
         item: UserMessageItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
+        # The agent context includes information that we'll be able to access in tool calls.
+        # This is NOT sent to the model as input.
         agent_context = CatAgentContext(
             thread=thread,
             store=self.store,
@@ -85,6 +91,8 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
             request_context=context,
         )
 
+        # All items in the thread are loaded and sent to the agent as input
+        # so that the agent is aware of the full conversation when generating a response.
         items_page = await self.store.load_thread_items(
             thread.id,
             after=None,
@@ -92,11 +100,15 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
             order="desc",
             context=context,
         )
+
+        # Runner expects the most recent message to be last.
         items = list(reversed(items_page.data))
+
+        # Translate ChatKit thread items into agent input.
         input_items = await self.thread_item_converter.to_agent_input(items)
 
         result = Runner.run_streamed(
-            self.assistant,
+            cat_agent,
             input_items,
             context=agent_context,
         )
@@ -108,8 +120,9 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
 
-    @staticmethod
+    # -- Helpers ----------------------------------------------------
     def _parse_select_name_payload(
+        self,
         action: Action[str, Any],
     ) -> CatNameSelectionPayload | None:
         try:
@@ -189,9 +202,8 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
                 )
             ],
         )
-        # Make sure that any new message items are explicitly added to the thread - emitted items are not
-        # automatically stored to the chatkit store when handling actions.
-        # await self.store.add_thread_item(thread.id, message_item, context)
+        # No need to explicitly save the assistant message item in the store.
+        # It will be automatically saved when the agent response is streamed.
         yield ThreadItemDoneEvent(item=message_item)
 
 

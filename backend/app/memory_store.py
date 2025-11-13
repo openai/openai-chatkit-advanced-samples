@@ -1,3 +1,8 @@
+"""
+Simple in-memory store compatible with the ChatKit Store interface.
+A production app would implement this using a persistant database.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -15,7 +20,7 @@ class _ThreadState:
 
 
 class MemoryStore(Store[dict[str, Any]]):
-    """Simple in-memory store compatible with the ChatKit server interface."""
+    """Simple in-memory store compatible with the ChatKit Store interface."""
 
     def __init__(self) -> None:
         self._threads: Dict[str, _ThreadState] = {}

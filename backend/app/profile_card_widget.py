@@ -1,3 +1,8 @@
+"""
+Defines a widget for the cat's profile card.
+This is an example of a static presentation widget.
+"""
+
 from __future__ import annotations
 
 from chatkit.widgets import Badge, Box, Caption, Card, Col, Image, Row, Spacer, Text, Title
@@ -103,4 +108,4 @@ def render_profile_card(state: CatState, favorite_toy: str | None = None) -> Car
 
 
 def profile_widget_copy_text(state: CatState) -> str:
-    return f"{state.name}, age {state.age}, is a calico cat who loves chasing laser pointers."
+    return f"{state.name}, age {state.age}, is a {state.color_pattern} cat."

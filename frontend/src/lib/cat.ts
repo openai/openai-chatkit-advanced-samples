@@ -6,7 +6,7 @@ export type CatStatePayload = {
   energy: number;
   happiness: number;
   cleanliness: number;
-  age: string;
+  age: number;
   colorPattern: CatColorPattern | null;
   updatedAt: string;
 };
@@ -22,7 +22,7 @@ export const DEFAULT_CAT_STATE: CatStatePayload = {
   energy: 6,
   happiness: 6,
   cleanliness: 6,
-  age: "2",
+  age: 2,
   colorPattern: null,
   updatedAt: new Date().toISOString(),
 };

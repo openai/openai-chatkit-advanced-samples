@@ -7,20 +7,17 @@ import ragDollCatImage from "../assets/rag-doll-cat.png";
 import maineCoonCatImage from "../assets/maine-coon-cat.png";
 import whiteCatImage from "../assets/white-cat.png";
 import unknownCatImage from "../assets/whos-that-cat.png";
-import type { CatColorPattern, CatSpeechPayload, CatStatePayload } from "../lib/cat";
+import type { CatColorPattern, CatStatePayload } from "../lib/cat";
+import { useAppStore } from "../store/useAppStore";
 
 const STATUS_CONFIG = [
-  { key: "energy", label: "Energy", direction: "normal" as const },
-  { key: "happiness", label: "Happiness", direction: "normal" as const },
-  { key: "cleanliness", label: "Cleanliness", direction: "normal" as const },
+  { key: "energy", label: "Energy"},
+  { key: "happiness", label: "Happiness"},
+  { key: "cleanliness", label: "Cleanliness"},
 ];
 
 type CatStatusPanelProps = {
-  cat: CatStatePayload;
-  speech: (CatSpeechPayload & { id: number }) | null;
-  flashMessage: string | null;
   onQuickAction?: (message: string) => Promise<void> | void;
-  quickActionsDisabled?: boolean;
 };
 
 type QuickAction = {
@@ -60,27 +57,15 @@ const QUICK_ACTIONS: QuickAction[] = [
 ];
 
 export function CatStatusPanel({
-  cat,
-  speech,
-  flashMessage,
   onQuickAction,
-  quickActionsDisabled = false,
 }: CatStatusPanelProps) {
-  const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const speech = useAppStore((state) => state.speech);
+  const flashMessage = useAppStore((state) => state.flashMessage);
+  const cat = useAppStore((state) => state.cat);
 
   const handleQuickAction = useCallback(
-    async (action: QuickAction) => {
-      if (!onQuickAction || quickActionsDisabled) {
-        return;
-      }
-      setPendingAction(action.id);
-      try {
-        await onQuickAction(action.prompt(cat));
-      } finally {
-        setPendingAction(null);
-      }
-    },
-    [cat, onQuickAction, quickActionsDisabled]
+    (action: QuickAction) => onQuickAction(action.prompt(cat)),
+    [cat]
   );
 
   const catImage = useMemo(() => {
@@ -139,7 +124,6 @@ export function CatStatusPanel({
             key={status.key}
             label={status.label}
             value={cat[status.key as keyof CatStatePayload] as number}
-            direction={status.direction}
           />
         ))}
       </dl>
@@ -150,18 +134,14 @@ export function CatStatusPanel({
         </p>
         <div className="mt-3 flex flex-col gap-3 sm:flex-row">
           {QUICK_ACTIONS.map((action) => {
-            const disabled =
-              quickActionsDisabled || !onQuickAction || (!!pendingAction && pendingAction !== action.id);
             return (
               <button
                 key={action.id}
                 type="button"
                 onClick={() => handleQuickAction(action)}
-                disabled={disabled}
                 className={clsx(
                   "flex-1 rounded-2xl border px-4 py-3 text-left shadow-sm transition-colors",
                   "border-slate-200 bg-white/80 text-slate-800 hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-slate-600",
-                  disabled && "opacity-50 cursor-not-allowed"
                 )}
               >
                 <div className="text-sm font-semibold">
@@ -180,13 +160,12 @@ export function CatStatusPanel({
 type StatusMeterProps = {
   label: string;
   value: number;
-  direction: "normal" | "inverse";
 };
 
-function StatusMeter({ label, value, direction }: StatusMeterProps) {
+function StatusMeter({ label, value }: StatusMeterProps) {
   const normalized = Math.max(0, Math.min(10, Number(value) || 0));
   const percentage = (normalized / 10) * 100;
-  const colorClass = getColor(normalized, direction);
+  const colorClass = getColor(normalized);
 
   return (
     <div>
@@ -206,10 +185,9 @@ function StatusMeter({ label, value, direction }: StatusMeterProps) {
   );
 }
 
-function getColor(value: number, direction: "normal" | "inverse") {
-  const effective = direction === "inverse" ? 10 - value : value;
-  if (effective >= 7) return "bg-green-500";
-  if (effective >= 5) return "bg-yellow-400";
-  if (effective >= 3) return "bg-orange-400";
+function getColor(value: number) {
+  if (value >= 7) return "bg-green-500";
+  if (value >= 5) return "bg-yellow-400";
+  if (value >= 3) return "bg-orange-400";
   return "bg-red-500";
 }

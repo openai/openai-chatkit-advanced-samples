@@ -1,3 +1,7 @@
+"""
+This is an example of a store for non-chatkit application data.
+"""
+
 from __future__ import annotations
 
 import asyncio

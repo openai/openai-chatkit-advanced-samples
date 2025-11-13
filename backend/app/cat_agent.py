@@ -13,11 +13,11 @@ from chatkit.types import (
 )
 from pydantic import ConfigDict, Field, ValidationError
 
-from .cat_name_widget import CatNameSuggestion, build_name_suggestions_widget
 from .cat_state import CatState
 from .cat_store import CatStore
-from .cat_widget import profile_widget_copy_text, render_profile_card
 from .memory_store import MemoryStore
+from .name_suggestions_widget import CatNameSuggestion, build_name_suggestions_widget
+from .profile_card_widget import profile_widget_copy_text, render_profile_card
 
 INSTRUCTIONS: str = """
     You are Cozy Cat Companion, a playful caretaker helping the user look after a virtual cat.
@@ -281,36 +281,40 @@ async def suggest_cat_names(
     suggestions: list[CatNameSuggestion],
 ):
     print("[TOOL CALL] suggest_cat_names")
-    normalized: list[CatNameSuggestion] = []
-    for entry in suggestions:
-        try:
-            normalized.append(
-                entry
-                if isinstance(entry, CatNameSuggestion)
-                else CatNameSuggestion.model_validate(entry)
+    try:
+        normalized: list[CatNameSuggestion] = []
+        for entry in suggestions:
+            try:
+                normalized.append(
+                    entry
+                    if isinstance(entry, CatNameSuggestion)
+                    else CatNameSuggestion.model_validate(entry)
+                )
+            except ValidationError as exc:
+                print(f"Invalid name suggestion payload: {exc}")
+        if not normalized:
+            raise ValueError("Provide at least one valid name suggestion before calling the tool.")
+
+        await ctx.context.stream(
+            ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=ctx.context.thread.id,
+                    id=ctx.context.generate_id("message"),
+                    created_at=datetime.now(),
+                    content=[
+                        AssistantMessageContent(text="Here are some name suggestions for your cat.")
+                    ],
+                ),
             )
-        except ValidationError as exc:
-            print(f"Invalid name suggestion payload: {exc}")
-    if not normalized:
-        raise ValueError("Provide at least one valid name suggestion before calling the tool.")
-
-    await ctx.context.stream(
-        ThreadItemDoneEvent(
-            item=AssistantMessageItem(
-                thread_id=ctx.context.thread.id,
-                id=ctx.context.generate_id("message"),
-                created_at=datetime.now(),
-                content=[
-                    AssistantMessageContent(text="Here are some name suggestions for your cat.")
-                ],
-            ),
         )
-    )
 
-    widget = build_name_suggestions_widget(normalized)
-    await ctx.context.stream_widget(
-        widget, copy_text=", ".join(suggestion.name for suggestion in normalized)
-    )
+        widget = build_name_suggestions_widget(normalized)
+        await ctx.context.stream_widget(
+            widget, copy_text=", ".join(suggestion.name for suggestion in normalized)
+        )
+    except Exception as exc:
+        print(f"Error suggesting cat names: {exc}")
+        raise
 
 
 cat_agent = Agent[CatAgentContext](
