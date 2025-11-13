@@ -211,7 +211,7 @@ async def show_cat_profile(
     ctx: RunContextWrapper[CatAgentContext],
     age: int | None = None,
     favorite_toy: str | None = None,
-) -> dict[str, Any]:
+):
     def mutate(state: CatState) -> None:
         state.set_age(age)
 
@@ -255,7 +255,7 @@ async def speak_as_cat(
     ctx: RunContextWrapper[CatAgentContext],
     line: str,
     mood: str | None = None,
-) -> dict[str, Any]:
+):
     print(f"[TOOL CALL] speak_as_cat({line}, {str(mood)})")
     message = line.strip()
     if not message:

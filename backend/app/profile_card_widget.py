@@ -20,6 +20,12 @@ def _format_color_pattern_label(color_pattern: str | None) -> str:
     return color_pattern.capitalize()
 
 
+def _format_favorite_toy(favorite_toy: str | None) -> str:
+    if favorite_toy is None:
+        return "A laser pointer"
+    return favorite_toy.capitalize()
+
+
 def _detail_row(label: str, value: str) -> Row:
     return Row(
         children=[
@@ -93,7 +99,7 @@ def render_profile_card(state: CatState, favorite_toy: str | None = None) -> Car
                     Title(value=state.name, size="md"),
                     _detail_row("Age", _format_age_label(state.age)),
                     _detail_row("Color pattern", _format_color_pattern_label(state.color_pattern)),
-                    _detail_row("Toy choice", favorite_toy.capitalize() or "A laser pointer"),
+                    _detail_row("Toy choice", _format_favorite_toy(favorite_toy)),
                 ],
             ),
         ],

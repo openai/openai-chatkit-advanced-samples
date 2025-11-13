@@ -95,7 +95,7 @@ def _request_more_names_item(disabled: bool) -> ListViewItem:
 
 
 def build_name_suggestions_widget(
-    names: Sequence[CatNameSuggestion],
+    names: list[CatNameSuggestion],
     *,
     selected: str | None = None,
 ) -> ListView:
