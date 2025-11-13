@@ -1,33 +1,114 @@
-import { useRef } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import type { Widgets } from "@openai/chatkit";
+import { useCallback, useRef } from "react";
+
 import {
-  CHATKIT_API_URL,
   CHATKIT_API_DOMAIN_KEY,
-  STARTER_PROMPTS,
-  PLACEHOLDER_INPUT,
+  CHATKIT_API_URL,
   GREETING,
+  STARTER_PROMPTS,
+  getPlaceholder,
 } from "../lib/config";
-import type { FactAction } from "../hooks/useFacts";
-import type { ColorScheme } from "../hooks/useColorScheme";
+import type { CatStatePayload } from "../lib/cat";
+import { useAppStore } from "../store/useAppStore";
+
+export type ChatKit = ReturnType<typeof useChatKit>;
 
 type ChatKitPanelProps = {
-  theme: ColorScheme;
-  onWidgetAction: (action: FactAction) => Promise<void>;
-  onResponseEnd: () => void;
-  onThemeRequest: (scheme: ColorScheme) => void;
+  onChatKitReady: (chatkit: ChatKit) => void;
 };
 
 export function ChatKitPanel({
-  theme,
-  onWidgetAction,
-  onResponseEnd,
-  onThemeRequest,
+  onChatKitReady,
 }: ChatKitPanelProps) {
-  const processedFacts = useRef(new Set<string>());
+  const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
+
+  // Select state
+  const theme = useAppStore((state) => state.scheme);
+  const activeThread = useAppStore((state) => state.threadId);
+  const setSpeech = useAppStore((state) => state.setSpeech);
+  const setFlashMessage = useAppStore((state) => state.setFlashMessage);
+  const setThreadId = useAppStore((state) => state.setThreadId);
+  const cat = useAppStore((state) => state.cat);
+  const refresh = useAppStore((state) => state.refreshCat);
+  const applyUpdate = useAppStore((state) => state.applyCatUpdate);
+
+  const handleStatusUpdate = useCallback(
+    (state: CatStatePayload, flash?: string) => {
+      applyUpdate(state);
+
+      if (flash) {
+        setFlashMessage(flash);
+      }
+    },
+    [applyUpdate, setFlashMessage]
+  );
+
+  const handleWidgetAction = useCallback(
+    async (
+      action: { type: string; payload?: Record<string, unknown> },
+      widgetItem: { id: string; widget: Widgets.Card | Widgets.ListView }
+    ) => {
+      const chatkit = chatkitRef.current;
+      if (!chatkit) {
+        return;
+      }
+      // When the user clicks "Suggest more names", the client action handler simply
+      // sends a user message using a chatkit command.
+      if (action.type === "cats.more_names") {
+        await chatkit.sendUserMessage({ text: "More name suggestions, please" });
+        return;
+      }
+      // This is a more complex client action handler that:
+      // - Invokes the server action handler
+      // - Then fetches the latest post-server-action cat status
+      if (action.type === "cats.select_name") {
+        if (!activeThread) {
+          console.warn("Ignoring name selection without an active thread.");
+          return;
+        }
+        // Send the server action.
+        await chatkit.sendCustomAction(action, widgetItem.id);
+        // Then fetch the latest cat status so that we can reflect the update client-side.
+        const data = await refresh();
+        if (data) {
+          handleStatusUpdate(data, `Now called ${data.name}`);
+        }
+        return;
+      }
+    },
+    [refresh, handleStatusUpdate, activeThread]
+  );
+
+  const handleClientToolCall = useCallback((toolCall: {
+    name: string;
+    params: Record<string, unknown>;
+  }) => {
+      if (toolCall.name === "update_cat_status") {
+        const data = toolCall.params.state as CatStatePayload | undefined;
+        if (data) {
+          handleStatusUpdate(data, toolCall.params.flash as string | undefined);
+        }
+        return { success: true };
+      }
+
+      if (toolCall.name === "cat_say") {
+        const message = String(toolCall.params.message ?? "");
+        if (message) {
+          setSpeech({
+            message,
+            mood: toolCall.params.mood as string | undefined,
+          });
+        }
+        return { success: true };
+      }
+      return { success: false };
+    }, [])
 
   const chatkit = useChatKit({
     api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY },
     theme: {
+      density: "spacious",
       colorScheme: theme,
       color: {
         grayscale: {
@@ -47,55 +128,28 @@ export function ChatKitPanel({
       prompts: STARTER_PROMPTS,
     },
     composer: {
-      placeholder: PLACEHOLDER_INPUT,
+      placeholder: getPlaceholder(cat.name),
     },
     threadItemActions: {
       feedback: false,
     },
-    onClientTool: async (invocation) => {
-      if (invocation.name === "switch_theme") {
-        const requested = invocation.params.theme;
-        if (requested === "light" || requested === "dark") {
-          if (import.meta.env.DEV) {
-            console.debug("[ChatKitPanel] switch_theme", requested);
-          }
-          onThemeRequest(requested);
-          return { success: true };
-        }
-        return { success: false };
-      }
-
-      if (invocation.name === "record_fact") {
-        const id = String(invocation.params.fact_id ?? "");
-        const text = String(invocation.params.fact_text ?? "");
-        if (!id || processedFacts.current.has(id)) {
-          return { success: true };
-        }
-        processedFacts.current.add(id);
-        void onWidgetAction({
-          type: "save",
-          factId: id,
-          factText: text.replace(/\s+/g, " ").trim(),
-        });
-        return { success: true };
-      }
-
-      return { success: false };
+    widgets: {
+      onAction: handleWidgetAction,
     },
-    onResponseEnd: () => {
-      onResponseEnd();
-    },
-    onThreadChange: () => {
-      processedFacts.current.clear();
-    },
+    onClientTool: handleClientToolCall,
+    onThreadChange: ({ threadId }) => setThreadId(threadId),
     onError: ({ error }) => {
       // ChatKit handles displaying the error to the user
       console.error("ChatKit error", error);
     },
+    onReady: () => {
+      onChatKitReady?.(chatkit);
+    },
   });
+  chatkitRef.current = chatkit;
 
   return (
-    <div className="relative h-full w-full overflow-hidden border border-slate-200/60 bg-white shadow-card dark:border-slate-800/70 dark:bg-slate-900">
+    <div className="relative h-full w-full overflow-hidden">
       <ChatKit control={chatkit.control} className="block h-full w-full" />
     </div>
   );

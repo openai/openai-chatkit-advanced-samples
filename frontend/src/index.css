@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  margin: 0;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    @apply opacity-0;
+    animation: fade-in 300ms ease-out forwards;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer base {
   :root {
     color-scheme: light dark;

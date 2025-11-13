@@ -14,7 +14,7 @@ export default defineConfig({
         target: backendTarget,
         changeOrigin: true,
       },
-      "/facts": {
+      "/cats": {
         target: backendTarget,
         changeOrigin: true,
       },

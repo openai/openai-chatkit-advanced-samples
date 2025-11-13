@@ -1,3 +1,8 @@
+"""
+Simple in-memory store compatible with the ChatKit Store interface.
+A production app would implement this using a persistant database.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -15,7 +20,7 @@ class _ThreadState:
 
 
 class MemoryStore(Store[dict[str, Any]]):
-    """Simple in-memory store compatible with the ChatKit server interface."""
+    """Simple in-memory store compatible with the ChatKit Store interface."""
 
     def __init__(self) -> None:
         self._threads: Dict[str, _ThreadState] = {}
@@ -23,7 +28,7 @@ class MemoryStore(Store[dict[str, Any]]):
 
     @staticmethod
     def _coerce_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
-        """Return thread metadata without any embedded items (openai-chatkit>=1.0)."""
+        """Return thread metadata without any embedded items."""
         has_items = isinstance(thread, Thread) or "items" in getattr(
             thread, "model_fields_set", set()
         )
@@ -85,7 +90,7 @@ class MemoryStore(Store[dict[str, Any]]):
         self._threads.pop(thread_id, None)
 
     # -- Thread items ----------------------------------------------------
-    def _items(self, thread_id: str) -> List[ThreadItem]:
+    def _thread_state(self, thread_id: str) -> _ThreadState:
         state = self._threads.get(thread_id)
         if state is None:
             state = _ThreadState(
@@ -93,6 +98,10 @@ class MemoryStore(Store[dict[str, Any]]):
                 items=[],
             )
             self._threads[thread_id] = state
+        return state
+
+    def _items(self, thread_id: str) -> List[ThreadItem]:
+        state = self._thread_state(thread_id)
         return state.items
 
     async def load_thread_items(

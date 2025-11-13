@@ -102,7 +102,6 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
-    { name = "httpx" },
     { name = "openai" },
     { name = "openai-chatkit" },
     { name = "uvicorn", extra = ["standard"] },
@@ -117,7 +116,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.114.1,<0.116" },
-    { name = "httpx", specifier = ">=0.28,<0.29" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.8,<2" },
     { name = "openai", specifier = ">=1.40" },
     { name = "openai-chatkit", specifier = ">=1.1.2,<2" },

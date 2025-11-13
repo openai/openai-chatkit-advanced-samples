@@ -9,18 +9,14 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from starlette.responses import JSONResponse
 
-from .chat import (
-    FactAssistantServer,
-    create_chatkit_server,
-)
-from .facts import fact_store
+from .chat import CatAssistantServer, create_chatkit_server
 
 app = FastAPI(title="ChatKit API")
 
-_chatkit_server: FactAssistantServer | None = create_chatkit_server()
+_chatkit_server: CatAssistantServer | None = create_chatkit_server()
 
 
-def get_chatkit_server() -> FactAssistantServer:
+def get_chatkit_server() -> CatAssistantServer:
     if _chatkit_server is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -34,7 +30,7 @@ def get_chatkit_server() -> FactAssistantServer:
 
 @app.post("/chatkit")
 async def chatkit_endpoint(
-    request: Request, server: FactAssistantServer = Depends(get_chatkit_server)
+    request: Request, server: CatAssistantServer = Depends(get_chatkit_server)
 ) -> Response:
     payload = await request.body()
     result = await server.process(payload, {"request": request})
@@ -45,28 +41,10 @@ async def chatkit_endpoint(
     return JSONResponse(result)
 
 
-@app.get("/facts")
-async def list_facts() -> dict[str, Any]:
-    facts = await fact_store.list_saved()
-    return {"facts": [fact.as_dict() for fact in facts]}
-
-
-@app.post("/facts/{fact_id}/save")
-async def save_fact(fact_id: str) -> dict[str, Any]:
-    fact = await fact_store.mark_saved(fact_id)
-    if fact is None:
-        raise HTTPException(status_code=404, detail="Fact not found")
-    return {"fact": fact.as_dict()}
-
-
-@app.post("/facts/{fact_id}/discard")
-async def discard_fact(fact_id: str) -> dict[str, Any]:
-    fact = await fact_store.discard(fact_id)
-    if fact is None:
-        raise HTTPException(status_code=404, detail="Fact not found")
-    return {"fact": fact.as_dict()}
-
-
-@app.get("/health")
-async def health_check() -> dict[str, str]:
-    return {"status": "healthy"}
+@app.get("/cats/{thread_id}")
+async def read_cat_state(
+    thread_id: str,
+    server: CatAssistantServer = Depends(get_chatkit_server),
+) -> dict[str, Any]:
+    state = await server.cat_store.load(thread_id)
+    return {"cat": state.to_payload(thread_id)}
