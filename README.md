@@ -1,107 +1,49 @@
-# OpenAI ChatKit Advanced Samples
+# OpenAI ChatKit Examples
 
-This repository contains a few advanced examples, which serve a complete [ChatKit](https://github.com/openai/chatkit-js) playground that pairs a FastAPI backend with a Vite + React frontend.
+This repository collects scenario-driven ChatKit demos. Each example pairs a FastAPI backend with a Vite + React frontend, implementing a custom backend using ChatKit Python SDK and wiring it up with ChatKit.js client-side.
 
-The top-level [**backend**](backend) and [**frontend**](frontend) directories provide a basic project template that demonstrates ChatKit UI, widgets, and client tools.
+You can run the following examples:
 
-- It runs a custom ChatKit server built with [ChatKit Python SDK](https://github.com/openai/chatkit-python) and [OpenAI Agents SDK for Python](https://github.com/openai/openai-agents-python).
-- Available agent tools focus on caring for the virtual cat: status checks, feeding, playtime,
-  cleaning, name selection, and a profile widget, plus client tools for switching the UI theme,
-  updating the dashboard stats, and triggering cat speech bubbles.
-
-The Vite server proxies all `/chatkit` traffic straight to the local FastAPI service so you can develop the client and server in tandem without extra wiring.
+- [**Cat Lounge**](examples/cat-lounge) - caretaker for a virtual cat that helps improve energy, happiness, and cleanliness stats.
+- [**Customer Support**](examples/customer-support) – airline concierge with live itinerary data, timeline syncing, and domain-specific tools.
 
 ## Quickstart
 
-1. Start FastAPI backend API.
-2. Configure the frontend's domain key and launch the Vite app.
-3. Explore the demo flow.
+1. Export `OPENAI_API_KEY`.
+2. Make sure `uv` is installed.
+3. Launch an example from the repo root, or with `npm run start` from the project directory:
 
-Each step is detailed below.
+| Example          | Command for repo root      | Command for project directory                              | URL                   |
+| ---------------- | -------------------------- | ---------------------------------------------------------- | --------------------- |
+| Cat Lounge       | `npm run cat-lounge`       | `cd examples/cat-lounge && npm install && npm run start`   | http://localhost:5170 |
+| Customer Support | `npm run customer-support` | `cd examples/customer-support && npm install && npm start` | http://localhost:5171 |
 
-### 1. Start FastAPI backend API
+## Feature index
 
-From the repository root you can bootstrap the backend in one step:
+### Server tool calls to retrieve application data for inference
 
-```bash
-npm run backend
-```
+- **Cat Lounge**:
+  - Function tool `get_cat_status` ([cat_agent.py](examples/cat-lounge/backend/app/cat_agent.py)) pulls the latest cat stats for the agent.
 
-This command runs `uv sync` for `backend/` and launches Uvicorn on `http://127.0.0.1:8000`. Make sure [uv](https://docs.astral.sh/uv/getting-started/installation/) is installed and `OPENAI_API_KEY` is exported beforehand.
+### Client tool calls that mutate UI state
 
-If you prefer running the backend from inside `backend/`, follow the manual steps:
+- **Cat Lounge**:
+  - Client tool `update_cat_status` is invoked by server tools `feed_cat`, `play_with_cat`, `clean_cat`, and `speak_as_cat` to sync UI state.
+  - When invoked, it is handled client-side with the `handleClientToolCall` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
 
-```bash
-cd backend
-uv sync
-export OPENAI_API_KEY=sk-proj-...
-uv run uvicorn app.main:app --reload --port 8000
-```
+### Widgets without actions
 
-If you don't have uv, you can do the same with:
+- **Cat Lounge**:
+  - Server tool `show_cat_profile` streams a presentation widget defined in [profile_card_widget.py](examples/cat-lounge/backend/app/profile_card_widget.py).
 
-```bash
-cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
-export OPENAI_API_KEY=sk-proj-...
-uvicorn app.main:app --reload
-```
+### Widgets with actions
 
-The development API listens on `http://127.0.0.1:8000`.
+- **Cat Lounge**:
+  - Server tool `suggest_cat_names` streams a widget with action configs that specify `cats.select_name` and `cats.more_names` client-handled actions.
+  - When the user clicks the widget, these actions are handled with the `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
 
-### 2. Run Vite + React frontend
+### Server-handled widget actions
 
-From the repository root you can start the frontend directly:
-
-```bash
-npm run frontend
-```
-
-This script launches Vite on `http://127.0.0.1:5170`.
-
-To configure and run the frontend manually:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Optional configuration hooks live in [`frontend/src/lib/config.ts`](frontend/src/lib/config.ts) if you want to tweak API URLs or UI defaults.
-
-To launch both the backend and frontend together from the repository root, you can use `npm start`. This command also requires `uv` plus the necessary environment variables (for example `OPENAI_API_KEY`) to be set beforehand.
-
-The Vite dev server runs at `http://127.0.0.1:5170`, and this works fine for local development. However, for production deployments:
-
-1. Host the frontend on infrastructure you control behind a managed domain.
-2. Register that domain on the [domain allowlist page](https://platform.openai.com/settings/organization/security/domain-allowlist) and add it to [`frontend/vite.config.ts`](frontend/vite.config.ts) under `server.allowedHosts`.
-3. Set `VITE_CHATKIT_API_DOMAIN_KEY` to the value returned by the allowlist page.
-
-If you want to verify this remote access during development, temporarily expose the app with a tunnel (e.g. `ngrok http 5170` or `cloudflared tunnel --url http://localhost:5170`) and add that hostname to your domain allowlist before testing.
-
-### 3. Explore the demo flow
-
-With the app reachable locally or via a tunnel, open it in the browser and try a few interactions. Each ChatKit thread maintains its own cat state (energy, happiness, cleanliness, name, and age), so switching threads gives every conversation a unique pet without leaking stats between them. That per-thread state is what powers the meters, flash messages, and widgets on the dashboard.
-
-Try these prompts:
-
-- `Please give the cat a snack` or `Play with the cat for a few minutes` - invokes the `feed_cat` or `play_with_cat` server tool calls followed by the `update_cat_status` client tool call to update the cat's stats and render the new values.
-- `I want to name the cat` - if you don't specify a name, the agent calls `suggest_cat_names` to render an interactive widget; picking an option fires the `cats.select_name` action, persists the name on the server, and retitles the thread for that cat going forward.
-- `Name the cat Mr. Whiskers` - invokes the `set_cat_name` server tool call to update the cat's profile and the thread title, followed by the `update_cat_status` client tool call to reflect the changes client-side.
-- `Show me the cat's profile card` - the `show_cat_profile` tool renders a static widget using the current cat name.
-- `Hi, cat!` - the `speak_as_cat` tool invokes the `cat_say` client tool call to render a speech bubble for the cat.
-
-Quick actions:
-
-- Quick action buttons will send prompts on the user's behalf using ChatKit's `sendUserMessage` command.
-
-## What's next
-
-Under the [`examples`](examples) directory, you'll find three more sample apps that ground the starter kit in real-world scenarios:
-
-1. [**Customer Support**](examples/customer-support): airline customer support workflow.
-2. [**Knowledge Assistant**](examples/knowledge-assistant): knowledge-base agent backed by OpenAI's File Search tool.
-3. [**Marketing Assets**](examples/marketing-assets): marketing creative workflow.
-
-Each example under [`examples/`](examples) includes the helper scripts (`npm start`, `npm run frontend`, `npm run backend`) pre-configured with its dedicated ports, so you can `cd` into an example and run `npm start` to boot its backend and frontend together. Please note that when you run `npm start`, `uv` must already be installed and all required environment variables should be exported.
+- **Cat Lounge**:
+  - The `cats.select_name` action is also handled server-side to reflect updates to data and stream back an updated version of the name suggestions widget in [server.py](examples/cat-lounge/backend/app/server.py).
+  - It is invoked using `chatkit.sendAction()` from `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).

@@ -2,9 +2,8 @@
   "name": "openai-chatkit-sample-apps",
   "private": true,
   "scripts": {
-    "start": "concurrently --kill-others-on-fail --names backend,frontend \"npm run backend\" \"npm run frontend\"",
-    "frontend": "npm --prefix frontend install && npm --prefix frontend run dev",
-    "backend": "uv sync --directory backend && uv run --directory backend uvicorn app.main:app --reload --port 8000"
+    "cat-lounge": "npm --prefix examples/cat-lounge install && npm --prefix examples/cat-lounge start",
+    "customer-support": "npm --prefix examples/customer-support install && npm --prefix examples/customer-support start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

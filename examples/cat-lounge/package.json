@@ -1,5 +1,5 @@
 {
-  "name": "customer-support-stack",
+  "name": "cat-lounge",
   "private": true,
   "scripts": {
     "start": "concurrently --kill-others-on-fail --names backend,frontend \"npm run backend\" \"npm run frontend\"",
