@@ -5,7 +5,7 @@ This widget wires up two client action configs.
 
 from __future__ import annotations
 
-from typing import Literal, Sequence
+from typing import Literal
 
 from chatkit.actions import Action as WidgetAction
 from chatkit.widgets import Button, Col, Icon, ListView, ListViewItem, Row, Text
