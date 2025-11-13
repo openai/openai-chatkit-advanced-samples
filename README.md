@@ -20,10 +20,9 @@ You can run the following examples:
 
 ## Feature index
 
-| ChatKit capability                                                 | Example reference                                                                                              |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Server tool calls to retrieve application data for inference       | Cat Lounge:<br>- `get_cat_status`                                                                              |
-| Client tool calls that mutate UI state                             | Cat Lounge:<br>- `feed_cat`<br>- `play_with_cat`<br>- `clean_cat`<br>- `speak_as_cat`<br>- `update_cat_status` |
-| Widget + action flows (interactive cards, follow-up actions)       | Cat Lounge widgets/actions:<br>- `suggest_cat_names`<br>- `cats.select_name`<br>- `show_cat_profile`           |
-| Domain-integrated workflows (seat changes, cancellations, baggage) | Customer Support tools:<br>- `change_seat`<br>- `cancel_trip`<br>- `add_checked_bag`<br>- `request_assistance` |
-| Agent-triggered widgets streaming into an existing UI panel        | Customer Support widget tool:<br>- `meal_preference_list`                                                      |
+| ChatKit capability                                           | Cat Lounge                                                                                                                                              | Customer Support |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Server tool calls to retrieve application data for inference | Function tool:<br>- `get_cat_status`                                                                                                                    |                  |
+| Client tool calls that mutate UI state                       | The client tool `update_cat_status` is invoked by the following server tools:<br>- `feed_cat`<br>- `play_with_cat`<br>- `clean_cat`<br>- `speak_as_cat` |                  |
+| Interactive widgets, follow-up actions                       | The `suggest_cat_names` tool call outputs a widget with action handlers.<br><br>The `cats.select_name` action is handled client-side.                   |                  |
+| Presentation widgets                                         | The `show_cat_profile` tool call outputs a non-interactive widget to present application data.                                                          |                  |
