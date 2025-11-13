@@ -76,7 +76,7 @@ export function CatStatusPanel({
   }, [cat.colorPattern]);
 
   return (
-    <div className="w-full relative flex flex-col h-full items-center gap-8 p-8 text-center">
+    <div className="w-full relative flex flex-col h-full items-center justify-between gap-8 p-8 text-center">
       <header className="space-y-2">
         <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">
           {cat.name}
@@ -118,7 +118,8 @@ export function CatStatusPanel({
         ) : null}
       </div>
 
-      <dl className="w-full space-y-4">
+      <div className="w-full space-y-5">
+        <div>
         {STATUS_CONFIG.map((status) => (
           <StatusMeter
             key={status.key}
@@ -126,9 +127,9 @@ export function CatStatusPanel({
             value={cat[status.key as keyof CatStatePayload] as number}
           />
         ))}
-      </dl>
+        </div>
 
-      <div className="mt-auto w-full border-t border-slate-200/80 pt-4 text-left dark:border-slate-800/60">
+        <div className="mt-auto w-full border-t border-slate-200/80 pt-4 text-left dark:border-slate-800/60">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
           Quick actions
         </p>
@@ -153,6 +154,8 @@ export function CatStatusPanel({
           })}
         </div>
       </div>
+      </div>
+
     </div>
   );
 }
