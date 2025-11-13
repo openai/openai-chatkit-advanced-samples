@@ -9,8 +9,8 @@ You can run the following examples:
 
 ## Quickstart
 
-1. Export `OPENAI_API_KEY` and `VITE_CHATKIT_API_DOMAIN_KEY` (any non-empty placeholder works locally).
-2. Make sure `uv` is installed
+1. Export `OPENAI_API_KEY`.
+2. Make sure `uv` is installed.
 3. Launch an example from the repo root, or with `npm run start` from the project directory:
 
 | Example          | Command for repo root      | Command for project directory                              | URL                   |
@@ -20,9 +20,30 @@ You can run the following examples:
 
 ## Feature index
 
-| ChatKit capability                                           | Cat Lounge                                                                                                                                              | Customer Support |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Server tool calls to retrieve application data for inference | Function tool:<br>- `get_cat_status`                                                                                                                    |                  |
-| Client tool calls that mutate UI state                       | The client tool `update_cat_status` is invoked by the following server tools:<br>- `feed_cat`<br>- `play_with_cat`<br>- `clean_cat`<br>- `speak_as_cat` |                  |
-| Interactive widgets, follow-up actions                       | The `suggest_cat_names` tool call outputs a widget with action handlers.<br><br>The `cats.select_name` action is handled client-side.                   |                  |
-| Presentation widgets                                         | The `show_cat_profile` tool call outputs a non-interactive widget to present application data.                                                          |                  |
+### Server tool calls to retrieve application data for inference
+
+- **Cat Lounge**:
+  - Function tool `get_cat_status` ([cat_agent.py](examples/cat-lounge/backend/app/cat_agent.py)) pulls the latest cat stats for the agent.
+
+### Client tool calls that mutate UI state
+
+- **Cat Lounge**:
+  - Client tool `update_cat_status` is invoked by server tools `feed_cat`, `play_with_cat`, `clean_cat`, and `speak_as_cat` to sync UI state.
+  - When invoked, it is handled client-side with the `handleClientToolCall` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
+
+### Widgets without actions
+
+- **Cat Lounge**:
+  - Server tool `show_cat_profile` streams a presentation widget defined in [profile_card_widget.py](examples/cat-lounge/backend/app/profile_card_widget.py).
+
+### Widgets with actions
+
+- **Cat Lounge**:
+  - Server tool `suggest_cat_names` streams a widget with action configs that specify `cats.select_name` and `cats.more_names` client-handled actions.
+  - When the user clicks the widget, these actions are handled with the `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
+
+### Server-handled widget actions
+
+- **Cat Lounge**:
+  - The `cats.select_name` action is also handled server-side to reflect updates to data and stream back an updated version of the name suggestions widget in [server.py](examples/cat-lounge/backend/app/server.py).
+  - It is invoked using `chatkit.sendAction()` from `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).

@@ -9,7 +9,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from starlette.responses import JSONResponse
 
-from .chat import CatAssistantServer, create_chatkit_server
+from .server import CatAssistantServer, create_chatkit_server
 
 app = FastAPI(title="ChatKit API")
 
