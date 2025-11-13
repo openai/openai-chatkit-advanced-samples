@@ -5,7 +5,7 @@ This Vite + React client wraps the ChatKit web component in a slim list UI so yo
 ## Quick Reference
 - App entry point: `src/main.tsx`
 - ChatKit config helper: `src/lib/config.ts`
-- Fact list UI: `src/App.tsx` and `src/components`
+- Cat dashboard UI: `src/App.tsx` and `src/components`
 - Styling: `src/index.css` (Tailwind layers)
 
 ## Requirements
@@ -14,7 +14,7 @@ This Vite + React client wraps the ChatKit web component in a slim list UI so yo
 
 ## Environment Variables
 
-Optional overrides include `VITE_CHATKIT_API_URL` and `VITE_FACTS_API_URL`. If you change them, restart `npm run dev` so Vite reloads the new values.
+Optional overrides include `VITE_CHATKIT_API_URL`, `VITE_CAT_STATE_API_URL`, and `VITE_CHATKIT_API_DOMAIN_KEY`. If you change them, restart `npm run dev` so Vite reloads the new values.
 
 ## Install & Run
 

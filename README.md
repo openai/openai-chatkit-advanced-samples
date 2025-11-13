@@ -5,7 +5,9 @@ This repository contains a few advanced examples, which serve a complete [ChatKi
 The top-level [**backend**](backend) and [**frontend**](frontend) directories provide a basic project template that demonstrates ChatKit UI, widgets, and client tools.
 
 - It runs a custom ChatKit server built with [ChatKit Python SDK](https://github.com/openai/chatkit-python) and [OpenAI Agents SDK for Python](https://github.com/openai/openai-agents-python).
-- Available agent tools: `get_weather` for rendering a widget, `switch_theme` and `record_fact` as client tools
+- Available agent tools focus on caring for the virtual cat: status checks, feeding, playtime,
+  cleaning, name selection, and a profile widget, plus client tools for switching the UI theme,
+  updating the dashboard stats, and triggering cat speech bubbles.
 
 The Vite server proxies all `/chatkit` traffic straight to the local FastAPI service so you can develop the client and server in tandem without extra wiring.
 
@@ -80,11 +82,19 @@ If you want to verify this remote access during development, temporarily expose 
 
 ### 3. Explore the demo flow
 
-With the app reachable locally or via a tunnel, open it in the browser and try a few interactions. The sample ChatKit UI ships with three tools that trigger visible actions in the pane:
+With the app reachable locally or via a tunnel, open it in the browser and try a few interactions. Each ChatKit thread maintains its own cat state (energy, happiness, cleanliness, name, and age), so switching threads gives every conversation a unique pet without leaking stats between them. That per-thread state is what powers the meters, flash messages, and widgets on the dashboard.
 
-1. **Fact Recording** - prompt: `My name is Kaz`
-2. **Weather Info** - prompt: `What's the weather in San Francisco today?`
-3. **Theme Switcher** - prompt: `Change the theme to dark mode` 
+Try these prompts:
+
+- `Please give the cat a snack` or `Play with the cat for a few minutes` - invokes the `feed_cat` or `play_with_cat` server tool calls followed by the `update_cat_status` client tool call to update the cat's stats and render the new values.
+- `I want to name the cat` - if you don't specify a name, the agent calls `suggest_cat_names` to render an interactive widget; picking an option fires the `cats.select_name` action, persists the name on the server, and retitles the thread for that cat going forward.
+- `Name the cat Mr. Whiskers` - invokes the `set_cat_name` server tool call to update the cat's profile and the thread title, followed by the `update_cat_status` client tool call to reflect the changes client-side.
+- `Show me the cat's profile card` - the `show_cat_profile` tool renders a static widget using the current cat name.
+- `Hi, cat!` - the `speak_as_cat` tool invokes the `cat_say` client tool call to render a speech bubble for the cat.
+
+Quick actions:
+
+- Quick action buttons will send prompts on the user's behalf using ChatKit's `sendUserMessage` command.
 
 ## What's next
 
