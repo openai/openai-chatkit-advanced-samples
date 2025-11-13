@@ -14,10 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         project:
-          - backend
+          - examples/cat-lounge/backend
           - examples/customer-support/backend
-          - examples/knowledge-assistant/backend
-          - examples/marketing-assets/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,10 +61,8 @@ jobs:
       fail-fast: false
       matrix:
         project:
-          - frontend
+          - examples/cat-lounge/frontend
           - examples/customer-support/frontend
-          - examples/knowledge-assistant/frontend
-          - examples/marketing-assets/frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
