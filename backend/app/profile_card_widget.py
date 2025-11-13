@@ -31,7 +31,7 @@ def _detail_row(label: str, value: str) -> Row:
         children=[
             Caption(value=label),
             Spacer(),
-            Text(value=value, size="sm", text_align="right"),
+            Text(value=value, size="sm", textAlign="end"),
         ],
     )
 
@@ -79,7 +79,7 @@ def render_profile_card(state: CatState, favorite_toy: str | None = None) -> Car
             Box(
                 background="linear-gradient(135deg, #fff6d9 0%, #ceb0fb 100%)",
                 radius="3xl",
-                items="center",
+                align="center",
                 justify="center",
                 children=[
                     Image(

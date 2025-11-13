@@ -5,14 +5,17 @@ This widget wires up two client action configs.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Final, Literal, TypeAlias
 
 from chatkit.actions import Action as WidgetAction
 from chatkit.widgets import Button, Col, Icon, ListView, ListViewItem, Row, Text
 from pydantic import BaseModel, Field
 
-SELECT_CAT_NAME_ACTION_TYPE = "cats.select_name"
-REQUEST_MORE_CAT_NAMES_ACTION_TYPE = "cats.more_names"
+SelectCatNameActionType: TypeAlias = Literal["cats.select_name"]
+RequestMoreNamesActionType: TypeAlias = Literal["cats.more_names"]
+
+SELECT_CAT_NAME_ACTION_TYPE: Final[SelectCatNameActionType] = "cats.select_name"
+REQUEST_MORE_CAT_NAMES_ACTION_TYPE: Final[RequestMoreNamesActionType] = "cats.more_names"
 
 
 class CatNameSuggestion(BaseModel):
@@ -29,8 +32,8 @@ class CatNameSelectionPayload(BaseModel):
     options: list[CatNameSuggestion] = Field(default_factory=list)
 
 
-SelectCatNameAction = WidgetAction[Literal[SELECT_CAT_NAME_ACTION_TYPE], CatNameSelectionPayload]
-RequestMoreNamesAction = WidgetAction[Literal[REQUEST_MORE_CAT_NAMES_ACTION_TYPE], None]
+SelectCatNameAction = WidgetAction[SelectCatNameActionType, CatNameSelectionPayload]
+RequestMoreNamesAction = WidgetAction[RequestMoreNamesActionType, None]
 
 
 def _name_suggestion_item(
@@ -85,7 +88,6 @@ def _request_more_names_item(disabled: bool) -> ListViewItem:
                 size="lg",
                 pill=True,
                 block=True,
-                align="center",
                 label="Suggest more names",
                 iconEnd="sparkle",
                 disabled=disabled,
