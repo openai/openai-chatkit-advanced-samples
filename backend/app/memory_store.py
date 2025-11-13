@@ -23,7 +23,7 @@ class MemoryStore(Store[dict[str, Any]]):
 
     @staticmethod
     def _coerce_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
-        """Return thread metadata without any embedded items (openai-chatkit>=1.0)."""
+        """Return thread metadata without any embedded items."""
         has_items = isinstance(thread, Thread) or "items" in getattr(
             thread, "model_fields_set", set()
         )
@@ -85,7 +85,7 @@ class MemoryStore(Store[dict[str, Any]]):
         self._threads.pop(thread_id, None)
 
     # -- Thread items ----------------------------------------------------
-    def _items(self, thread_id: str) -> List[ThreadItem]:
+    def _thread_state(self, thread_id: str) -> _ThreadState:
         state = self._threads.get(thread_id)
         if state is None:
             state = _ThreadState(
@@ -93,6 +93,10 @@ class MemoryStore(Store[dict[str, Any]]):
                 items=[],
             )
             self._threads[thread_id] = state
+        return state
+
+    def _items(self, thread_id: str) -> List[ThreadItem]:
+        state = self._thread_state(thread_id)
         return state.items
 
     async def load_thread_items(
