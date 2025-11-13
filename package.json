@@ -2,7 +2,8 @@
   "name": "openai-chatkit-sample-apps",
   "private": true,
   "scripts": {
-    "cat-lounge": "npm --prefix examples/cat-lounge install && npm --prefix examples/cat-lounge start"
+    "cat-lounge": "npm --prefix examples/cat-lounge install && npm --prefix examples/cat-lounge start",
+    "customer-support": "npm --prefix examples/customer-support install && npm --prefix examples/customer-support start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
