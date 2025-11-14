@@ -46,7 +46,7 @@ export function ChatKitPanel({
         fontFamily: "Lora, serif",
         fontSources: LORA_SOURCES,
       },
-      radius: "round",
+      radius: "sharp",
     },
     startScreen: {
       greeting: GREETING,
