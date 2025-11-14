@@ -31,7 +31,7 @@
     "filename": "community-fridge-apple-pies.md",
     "url": "/community-fridge-apple-pies",
     "date": "2025-02-03",
-    "tags": ["food", "community"],
+    "tags": ["food", "community", "featured"],
     "keywords": [
       "mystery baker",
       "apple pie drop-off",
@@ -54,7 +54,7 @@
     "filename": "missed-connection-reunion.md",
     "url": "/missed-connection-reunion",
     "date": "2025-02-12",
-    "tags": ["bulletin", "community", "farmers-market"],
+    "tags": ["bulletin", "community", "farmers-market", "featured"],
     "keywords": [
       "missed connections drama",
       "bulletin board romance",
@@ -148,7 +148,7 @@
     "heroImageUrl": "https://i.imgur.com/0BzHbtw.jpeg",
     "url": "/articles/unscheduled-parade-formation",
     "date": "2025-02-15",
-    "tags": ["community", "parks", "events"],
+    "tags": ["community", "parks", "events", "featured"],
     "keywords": [
       "impromptu parade",
       "community event drama",
@@ -196,7 +196,7 @@
     "heroImageUrl": "https://i.imgur.com/xIjYKOV.jpeg",
     "url": "/articles/transit-pass-machine-updated",
     "date": "2025-02-12",
-    "tags": ["transit", "infrastructure"],
+    "tags": ["transit", "infrastructure", "featured"],
     "keywords": [
       "ticket machine update",
       "transit tech news",

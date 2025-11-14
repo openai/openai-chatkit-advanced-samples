@@ -33,7 +33,11 @@ async def chatkit_endpoint(
     request: Request, server: NewsAssistantServer = Depends(get_chatkit_server)
 ) -> Response:
     payload = await request.body()
-    result = await server.process(payload, {"request": request})
+    article_id = request.headers.get("article-id")
+    context: dict[str, Any] = {"request": request}
+    if article_id:
+        context["article_id"] = article_id.strip()
+    result = await server.process(payload, context)
     if isinstance(result, StreamingResult):
         return StreamingResponse(result, media_type="text/event-stream")
     if hasattr(result, "json"):

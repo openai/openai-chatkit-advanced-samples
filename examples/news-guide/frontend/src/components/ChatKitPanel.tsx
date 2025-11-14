@@ -1,5 +1,5 @@
 import { ChatKit, useChatKit, Widgets } from "@openai/chatkit-react";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -27,14 +27,36 @@ export function ChatKitPanel({
   const theme = useAppStore((state) => state.scheme);
   const activeThread = useAppStore((state) => state.threadId);
   const setThreadId = useAppStore((state) => state.setThreadId);
+  const articleId = useAppStore((state) => state.articleId);
+
+  const activeArticleRef = useRef<string | null>(articleId);
+  useEffect(() => {
+    activeArticleRef.current = articleId ?? "featured";
+  }, [articleId]);
+
+  const customFetch = useMemo(() => {
+    return async (input: RequestInfo | URL, init?: RequestInit) => {
+      const headers = new Headers(init?.headers ?? {});
+      const articleId = activeArticleRef.current;
+      if (articleId) {
+        headers.set("article-id", articleId);
+      } else {
+        headers.delete("article-id");
+      }
+      return fetch(input, {
+        ...init,
+        headers,
+      });
+    };
+  }, []);
 
   const handleWidgetAction = useCallback(
     async (action: { type: string; payload?: Record<string, unknown>}, widgetItem: { id: string; widget: Widgets.Card | Widgets.ListView }) => {
       switch (action.type) {
         case "open_article":
-          const articleId = action.payload?.id
-          if (articleId) {
-            navigate(`/article/${articleId}`);
+          const targetArticleId = action.payload?.id
+          if (targetArticleId) {
+            navigate(`/article/${targetArticleId}`);
           }
           break;
       }
@@ -43,7 +65,7 @@ export function ChatKitPanel({
   );
 
   const chatkit = useChatKit({
-    api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY },
+    api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY, fetch: customFetch },
     theme: {
       density: "spacious",
       colorScheme: theme,

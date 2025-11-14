@@ -9,6 +9,8 @@ type AppState = {
   setScheme: (scheme: ColorScheme) => void;
   threadId: string | null;
   setThreadId: (threadId: string | null) => void;
+  articleId: string | null;
+  setArticleId: (articleId: string | null) => void;
 };
 
 function getInitialScheme(): ColorScheme {
@@ -47,5 +49,7 @@ export const useAppStore = create<AppState>((set) => {
     },
     threadId: null,
     setThreadId: (threadId) => set({ threadId }),
+    articleId: "featured",
+    setArticleId: (articleId) => set({ articleId }),
   };
 });

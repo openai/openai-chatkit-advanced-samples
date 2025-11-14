@@ -25,7 +25,6 @@ def _article_item(article: ArticleMetadata) -> ListViewItem:
     return ListViewItem(
         children=[
             Box(
-                height=200,
                 maxWidth=450,
                 minWidth=300,
                 padding=0,

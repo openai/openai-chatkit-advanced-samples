@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Any, List
 
-from agents import Agent, RunContextWrapper, StopAtTools, function_tool
+from agents import Agent, RunContextWrapper, Runner, StopAtTools, function_tool
 from chatkit.agents import AgentContext
 from chatkit.types import (
     AssistantMessageContent,
@@ -23,29 +23,56 @@ INSTRUCTIONS = """
     each story serves the reader, and keep answers concise with skimmable structure.
 
     Before recommending or summarizing, always consult the latest article metadata via
-    the available tools. When summarizing, cite the article title and give a one-line takeaway
-    that explains why it matters to the reader right now.
+    the available tools. When summarizing, cite the article title and give a one-line takeaway.
 
     If the reader provides desired topics, locations, or tags, filter results before responding
     and call out any notable gaps.
-    
+
     Unless the reader explicitly asks for a set number of articles, default to suggesting 2 articles.
+
+    When the reader references "this article," "this story," or "this page," treat that as a request about the
+    currently open article. Load it with `get_current_page`, review the content, and answer their question directly
+    using specific details instead of asking them to copy anything over.
+
+    Default to italicizing article titles when you mention them, and wrap any direct excerpts from the article content in
+    Markdown blockquotes so they stand out.
 
     Use the tools deliberately:
       - Call `list_available_tags_and_keywords` to get a list of all unique tags and keywords available to search by.
-      - Use `list_articles_for_tags` only when the reader explicitly references tags/sections (e.g., "show me everything tagged parks"); otherwise skip it.
+      - Use `get_current_page` to fetch the full article the reader currently has open whenever they need deeper details
+        or ask questions about "this page".
+      - Use `search_articles_by_tags` only when the reader explicitly references tags/sections (e.g., "show me everything tagged parks"); otherwise skip it.
       - Default to `search_articles_by_keywords` to match metadata (titles, subtitles, tags, keywords) to the reader's asks.
       - Use `search_articles_by_exact_text` when the reader quote a phrase or wants an exact content match.
       - After fetching story candidates, prefer `show_article_list_widget` with the returned articles fetched using
-        `list_articles_for_tags` or `search_articles_by_keywords` or `search_articles_by_exact_text` and a message
+        `search_articles_by_tags` or `search_articles_by_keywords` or `search_articles_by_exact_text` and a message
         that explains why these articles were selected for the reader right now.
-
-        so readers can skim quickly.
 
     Suggest a next step—such as related articles or follow-up angles—whenever it adds value.
 """
 
 MODEL = "gpt-4.1-mini"
+FEATURED_PAGE_ID = "featured"
+FEATURED_SUMMARY_LIMIT = 4
+SUMMARY_AGENT_INSTRUCTIONS = """
+    You are Foxhollow Dispatch's summary specialist. You receive one or more news
+    articles (title, author, tags, markdown content) and must provide short recaps.
+
+    - Mention each article title, italicized.
+    - Use bullet points when listing items in the summary.
+    - For a single article, respond with 2-3 sentences.
+    - For multiple articles, respond with a bullet list and keep each
+      entry to 1-2 sentences, then close with a single sentence tying the set together.
+
+    Input:
+    - includes the page type, article count, and each article under a Content block.
+
+    Output:
+    - The summary should be smart, concise, and engaging. Avoid repetitive language.
+    - When it is not repetitive, add a one-sentence commentary about the Foxhollow town and its community
+      as it relates to the article(s).
+    - Always ask the user if they have any questions about the article.
+"""
 
 
 class NewsAgentContext(AgentContext):
@@ -56,11 +83,11 @@ class NewsAgentContext(AgentContext):
 
 
 @function_tool(description_override="List newsroom articles, optionally filtered by tags.")
-async def list_articles_for_tags(
+async def search_articles_by_tags(
     ctx: RunContextWrapper[NewsAgentContext],
     tags: List[str] | None = None,
 ) -> dict[str, Any]:
-    print("[TOOL CALL] list_articles_for_tags", tags)
+    print("[TOOL CALL] search_articles_by_tags", tags)
     if tags:
         tag_label = ", ".join(tags)
     else:
@@ -114,15 +141,36 @@ async def search_articles_by_exact_text(
 
 
 @function_tool(description_override="Fetch the markdown content for a specific article.")
-async def get_article(
+async def get_article_by_id(
     ctx: RunContextWrapper[NewsAgentContext],
     article_id: str,
 ) -> dict[str, Any]:
-    print("[TOOL CALL] get_article", article_id)
+    print("[TOOL CALL] get_article_by_id", article_id)
     record = ctx.context.articles.get_article(article_id)
     if not record:
         raise ValueError(f"Article '{article_id}' does not exist.")
     return {"article": record}
+
+
+@function_tool(
+    description_override="Load the full content for the page the reader currently has open."
+)
+async def get_current_page(
+    ctx: RunContextWrapper[NewsAgentContext],
+) -> dict[str, Any]:
+    normalized_id = _require_article_id(ctx.context.request_context)
+    page_type, articles = _load_current_page_records(ctx.context.articles, normalized_id)
+    payload = {
+        "page": page_type,
+        "articles": [_article_payload(record) for record in articles],
+    }
+    if page_type == FEATURED_PAGE_ID:
+        await ctx.context.stream(ProgressUpdateEvent(text="Page contents retrieved"))
+    else:
+        await ctx.context.stream(ProgressUpdateEvent(text="Full article retrieved"))
+        payload["articleId"] = normalized_id
+
+    return payload
 
 
 @function_tool(
@@ -172,17 +220,83 @@ async def show_article_list_widget(
         raise
 
 
+def _load_featured_articles(store: ArticleStore, limit: int) -> list[dict[str, Any]]:
+    """
+    Load up to `limit` featured articles using tag-based filtering.
+    """
+    metadata_entries = store.list_metadata_for_tags([FEATURED_PAGE_ID])
+    articles: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    for entry in metadata_entries:
+        article_id = entry.get("id")
+        if not article_id or article_id in seen:
+            continue
+
+        record = store.get_article(article_id)
+        if record:
+            articles.append(record)
+            seen.add(article_id)
+
+        if len(articles) >= limit:
+            break
+
+    return articles
+
+
+def _load_current_page_records(
+    store: ArticleStore, normalized_id: str
+) -> tuple[str, list[dict[str, Any]]]:
+    if normalized_id == FEATURED_PAGE_ID:
+        articles = _load_featured_articles(store, FEATURED_SUMMARY_LIMIT)
+        if not articles:
+            raise ValueError("Unable to locate any featured articles to load.")
+        return FEATURED_PAGE_ID, articles
+
+    record = store.get_article(normalized_id)
+    if not record:
+        raise ValueError(f"Article '{normalized_id}' does not exist.")
+    return "article", [record]
+
+
+def _require_article_id(request_context: dict[str, Any]) -> str:
+    article_id = request_context.get("article_id")
+    if not article_id:
+        raise ValueError("No article id is available in the current request context.")
+
+    normalized_id = article_id.strip()
+    if not normalized_id:
+        raise ValueError("The provided article id is empty.")
+    return normalized_id
+
+
+def _article_payload(record: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "id": record.get("id"),
+        "title": record.get("title"),
+        "author": record.get("author"),
+        "date": record.get("date"),
+        "tags": record.get("tags", []),
+        "content": record.get("content", ""),
+    }
+
+
 news_agent = Agent[NewsAgentContext](
     model=MODEL,
-    name="News Guide",
+    name="Foxhollow Dispatch News Guide",
     instructions=INSTRUCTIONS,
     tools=[
-        list_articles_for_tags,
+        # Simple retrieval tools
         list_available_tags_and_keywords,
+        get_article_by_id,
+        get_current_page,
+        # Search tools
+        search_articles_by_tags,
         search_articles_by_keywords,
         search_articles_by_exact_text,
-        get_article,
+        # Presentation tools
         show_article_list_widget,
     ],
+    # Stop after showing the article list widget to prevent content from being repeated in a continued response.
     tool_use_behavior=StopAtTools(stop_at_tool_names=[show_article_list_widget.name]),
 )

@@ -13,6 +13,7 @@ import {
   fetchArticles,
   formatArticleDate,
 } from "../lib/articles";
+import { useAppStore } from "../store/useAppStore";
 
 const markdownComponents: Components = {
   h1: (props) => (
@@ -52,6 +53,7 @@ function getTagModifierClass(tag: string): string {
 export function NewsroomPanel() {
   const navigate = useNavigate();
   const { articleId } = useParams<{ articleId?: string }>();
+  const setArticleId = useAppStore((state) => state.setArticleId);
 
   const [articles, setArticles] = useState<ArticleMetadata[]>([]);
   const [listError, setListError] = useState<string | null>(null);
@@ -60,6 +62,10 @@ export function NewsroomPanel() {
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [articleError, setArticleError] = useState<string | null>(null);
   const [loadingArticle, setLoadingArticle] = useState(false);
+
+  useEffect(() => {
+    setArticleId(articleId ?? "featured");
+  }, [articleId, setArticleId]);
 
   useEffect(() => {
     let cancelled = false;
