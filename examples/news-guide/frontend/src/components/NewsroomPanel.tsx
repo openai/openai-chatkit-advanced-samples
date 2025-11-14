@@ -199,11 +199,9 @@ function LandingGrid({ articles, loading, error, lastUpdated, onSelect }: Landin
   }
 
   return (
-    <section className="flex h-full flex-col overflow-y-auto">
-      <div className="h-full flex flex-col gap-6 px-6 py-8 lg:px-10">
-        {content}
-      </div>
-    </section>
+    <div className="flex h-full flex-col overflow-y-auto">
+      <div className="flex h-full flex-col gap-6 px-6 py-8 lg:px-10">{content}</div>
+    </div>
   );
 }
 
@@ -287,7 +285,15 @@ function ArticleDetail({ article, loading, error, onBack }: ArticleDetailProps) 
       <button
           type="button"
           onClick={onBack}
-          className="absolute top-3 left-3 text-xs font-semibold text-slate-900 underline-offset-4 hover:underline dark:text-slate-100"
+          className="
+            absolute top-3 left-3
+            text-xs font-semibold text-slate-900 dark:text-slate-100
+            underline-offset-4 hover:underline
+            bg-white/70 dark:bg-white/20   /* semi-transparent */
+            backdrop-blur-sm               /* optional: glassy look */
+            px-3 py-1.5                    /* padding to form the pill */
+            rounded-full                   /* pill shape */
+          "
         >
           ← Back to landing
       </button>

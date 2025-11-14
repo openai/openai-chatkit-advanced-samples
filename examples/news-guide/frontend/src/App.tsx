@@ -25,31 +25,29 @@ function AppShell() {
 
   return (
     <div className={containerClass}>
-      <header className={headerBarClass}>
+      <div className={headerBarClass}>
         <div className="relative flex w-full flex-col gap-4 px-6 py-6 pr-24 sm:flex-row sm:items-center sm:gap-8">
-          <div>
-            <Link
-              to="/"
-              className="text-xl font-semibold uppercase tracking-[0.45em] text-slate-900 dark:text-slate-100"
-            >
-              The Foxhollow Dispatch
-            </Link>
-          </div>
-            <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-200">
-              Daily field reports routed through the newsroom agent.
-            </p>
+          <span
+            className="text-xl font-semibold uppercase tracking-[0.45em] text-slate-900 dark:text-slate-100"
+          >
+            The Foxhollow Dispatch
+          </span>
+          <p className="mt-1 text-sm font-normal tracking-wide text-slate-800 dark:text-slate-200">
+            Daily field reports routed through the newsroom agent.
+          </p>
           <div className="absolute right-6 top-5">
             <ThemeToggle />
           </div>
         </div>
-      </header>
-      <div className="h-full flex flex-1 min-h-0 flex-col md:flex-row">
-        <div className="flex basis-full flex-col border-b border-slate-800 bg-white dark:border-slate-200 dark:bg-slate-950 md:basis-[32%] md:border-b-0 md:border-r">
-          <div className="h-full flex-1 min-h-[320px] md:min-h-0">
-            <ChatKitPanel onChatKitReady={(chatkit) => (chatkitRef.current = chatkit)} />
-          </div>
+      </div>
+      <div className="flex flex-1 min-h-0 flex-col md:flex-row">
+        <div className="flex basis-full min-h-[320px] flex-col border-b border-slate-800 bg-white dark:border-slate-200 dark:bg-slate-950 md:basis-[32%] md:min-h-0 md:border-b-0 md:border-r">
+          <ChatKitPanel
+            className="flex-1"
+            onChatKitReady={(chatkit) => (chatkitRef.current = chatkit)}
+          />
         </div>
-        <div className="h-full flex flex-1 min-h-0 bg-white dark:bg-slate-900">
+        <div className="flex flex-1 min-h-0 bg-white dark:bg-slate-900">
           <Outlet />
         </div>
       </div>

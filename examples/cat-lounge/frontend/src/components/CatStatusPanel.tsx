@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import blackCatImage from "../assets/black-cat.png";
 import calicoCatImage from "../assets/calico-cat.png";
@@ -18,6 +18,7 @@ const STATUS_CONFIG = [
 
 type CatStatusPanelProps = {
   onQuickAction?: (message: string) => Promise<void> | void;
+  className?: string;
 };
 
 type QuickAction = {
@@ -56,9 +57,7 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
 ];
 
-export function CatStatusPanel({
-  onQuickAction,
-}: CatStatusPanelProps) {
+export function CatStatusPanel({ onQuickAction, className }: CatStatusPanelProps) {
   const speech = useAppStore((state) => state.speech);
   const flashMessage = useAppStore((state) => state.flashMessage);
   const cat = useAppStore((state) => state.cat);
@@ -76,12 +75,17 @@ export function CatStatusPanel({
   }, [cat.colorPattern]);
 
   return (
-    <div className="w-full relative flex flex-col h-full items-center justify-between gap-8 p-8 text-center">
-      <header className="space-y-2">
+    <div
+      className={clsx(
+        "relative flex h-full w-full flex-col items-center justify-between gap-8 p-8 text-center",
+        className,
+      )}
+    >
+      <div className="space-y-2">
         <h2 className="text-3xl font-semibold text-slate-900 dark:text-white">
           {cat.name}
         </h2>
-      </header>
+      </div>
 
       <div className="relative w-full flex items-center justify-center">
         <img
@@ -119,43 +123,42 @@ export function CatStatusPanel({
       </div>
 
       <div className="w-full space-y-5">
-        <div>
-        {STATUS_CONFIG.map((status) => (
-          <StatusMeter
-            key={status.key}
-            label={status.label}
-            value={cat[status.key as keyof CatStatePayload] as number}
-          />
-        ))}
+        <div className="space-y-3">
+          {STATUS_CONFIG.map((status) => (
+            <StatusMeter
+              key={status.key}
+              label={status.label}
+              value={cat[status.key as keyof CatStatePayload] as number}
+            />
+          ))}
         </div>
 
         <div className="mt-auto w-full border-t border-slate-200/80 pt-4 text-left dark:border-slate-800/60">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-          Quick actions
-        </p>
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-          {QUICK_ACTIONS.map((action) => {
-            return (
-              <button
-                key={action.id}
-                type="button"
-                onClick={() => handleQuickAction(action)}
-                className={clsx(
-                  "flex-1 rounded-2xl border px-4 py-3 text-left shadow-sm transition-colors",
-                  "border-slate-200 bg-white/80 text-slate-800 hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-slate-600",
-                )}
-              >
-                <div className="text-sm font-semibold">
-                  {action.label}
-                </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">{action.description}</div>
-              </button>
-            );
-          })}
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            Quick actions
+          </p>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+            {QUICK_ACTIONS.map((action) => {
+              return (
+                <button
+                  key={action.id}
+                  type="button"
+                  onClick={() => handleQuickAction(action)}
+                  className={clsx(
+                    "flex-1 rounded-2xl border px-4 py-3 text-left shadow-sm transition-colors",
+                    "border-slate-200 bg-white/80 text-slate-800 hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-slate-600",
+                  )}
+                >
+                  <div className="text-sm font-semibold">{action.label}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    {action.description}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-      </div>
-
     </div>
   );
 }
