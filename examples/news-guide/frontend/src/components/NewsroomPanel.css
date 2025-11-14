@@ -1,0 +1,180 @@
+.newsroom-tag {
+  font-family: var(--font-sans, "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  cursor: default;
+}
+
+.newsroom-tag.tag-animals {
+  background-color: #fef3c7;
+  color: #78350f;
+  border-color: #fde68a;
+}
+.dark .newsroom-tag.tag-animals {
+  background-color: rgba(217, 119, 6, 0.2);
+  color: #fde68a;
+  border-color: rgba(217, 119, 6, 0.4);
+}
+
+.newsroom-tag.tag-cafe {
+  background-color: #ffedd5;
+  color: #9a3412;
+  border-color: #fdba74;
+}
+.dark .newsroom-tag.tag-cafe {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: #fdba74;
+  border-color: rgba(249, 115, 22, 0.4);
+}
+
+.newsroom-tag.tag-community {
+  background-color: #e0e7ff;
+  color: #312e81;
+  border-color: #c7d2fe;
+}
+.dark .newsroom-tag.tag-community {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.newsroom-tag.tag-events {
+  background-color: #ffe4e6;
+  color: #9d174d;
+  border-color: #fecdd3;
+}
+.dark .newsroom-tag.tag-events {
+  background-color: rgba(236, 72, 153, 0.2);
+  color: #fecdd3;
+  border-color: rgba(236, 72, 153, 0.4);
+}
+
+.newsroom-tag.tag-food {
+  background-color: #ffe4e1;
+  color: #7f1d1d;
+  border-color: #fecaca;
+}
+.dark .newsroom-tag.tag-food {
+  background-color: rgba(248, 113, 113, 0.2);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+.newsroom-tag.tag-infrastructure {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+  border-color: #bfdbfe;
+}
+.dark .newsroom-tag.tag-infrastructure {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #bfdbfe;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.newsroom-tag.tag-local-business {
+  background-color: #ede9fe;
+  color: #5b21b6;
+  border-color: #ddd6fe;
+}
+.dark .newsroom-tag.tag-local-business {
+  background-color: rgba(139, 92, 246, 0.2);
+  color: #ddd6fe;
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.newsroom-tag.tag-market-street {
+  background-color: #cffafe;
+  color: #115e59;
+  border-color: #a5f3fc;
+}
+.dark .newsroom-tag.tag-market-street {
+  background-color: rgba(45, 212, 191, 0.2);
+  color: #a5f3fc;
+  border-color: rgba(45, 212, 191, 0.4);
+}
+
+.newsroom-tag.tag-farmers-market {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5f5;
+}
+.dark .newsroom-tag.tag-farmers-market {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.newsroom-tag.tag-parks {
+  background-color: #dcfce7;
+  color: #14532d;
+  border-color: #bbf7d0;
+}
+.dark .newsroom-tag.tag-parks {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #bbf7d0;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.newsroom-tag.tag-plants {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+.dark .newsroom-tag.tag-plants {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #a7f3d0;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.newsroom-tag.tag-bulletin {
+  background-color: #f5f3ff;
+  color: #4c1d95;
+  border-color: #ddd6fe;
+}
+.dark .newsroom-tag.tag-bulletin {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: #ddd6fe;
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+.newsroom-tag.tag-traffic {
+  background-color: #fee2e2;
+  color: #7f1d1d;
+  border-color: #fecaca;
+}
+.dark .newsroom-tag.tag-traffic {
+  background-color: rgba(248, 113, 113, 0.2);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+.newsroom-tag.tag-transit {
+  background-color: #e0f2fe;
+  color: #0c4a6e;
+  border-color: #bae6fd;
+}
+.dark .newsroom-tag.tag-transit {
+  background-color: rgba(14, 165, 233, 0.2);
+  color: #bae6fd;
+  border-color: rgba(14, 165, 233, 0.4);
+}
+
+.newsroom-tag.tag-wellness {
+  background-color: #fae8ff;
+  color: #86198f;
+  border-color: #f5d0fe;
+}
+.dark .newsroom-tag.tag-wellness {
+  background-color: rgba(217, 70, 239, 0.2);
+  color: #f5d0fe;
+  border-color: rgba(217, 70, 239, 0.4);
+}

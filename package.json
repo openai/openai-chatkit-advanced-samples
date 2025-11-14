@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "cat-lounge": "npm --prefix examples/cat-lounge install && npm --prefix examples/cat-lounge start",
-    "customer-support": "npm --prefix examples/customer-support install && npm --prefix examples/customer-support start"
+    "customer-support": "npm --prefix examples/customer-support install && npm --prefix examples/customer-support start",
+    "news-guide": "npm --prefix examples/news-guide install && npm --prefix examples/news-guide start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
