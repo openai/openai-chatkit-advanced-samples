@@ -18,6 +18,7 @@ SEARCH_SYNONYMS: dict[str, list[str]] = {
     "town drama": ["neighborhood drama"],
     "drama": ["controversy", "debate", "feud", "saga", "gossip", "dispute"],
     "gossip": ["drama", "rumor"],
+    "trending": ["popular", "top", "hot", "new", "fresh"],
 }
 
 
@@ -205,9 +206,7 @@ class ArticleStore:
                 if phrase and any(phrase in field for field in metadata_fields)
             )
             term_hits = {
-                term
-                for term in expanded_terms
-                if any(term in field for field in metadata_fields)
+                term for term in expanded_terms if any(term in field for field in metadata_fields)
             }
             phrase_hits = {term for term in term_hits if " " in term}
             single_hits = term_hits - phrase_hits

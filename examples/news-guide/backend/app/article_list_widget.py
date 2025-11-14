@@ -8,7 +8,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Iterable, List
 
-from chatkit.widgets import Box, Col, Image, ListView, ListViewItem, Row, Text
+from chatkit.actions import ActionConfig
+from chatkit.widgets import Box, Button, Col, Image, ListView, ListViewItem, Row, Spacer, Text
 
 from .article_store import ArticleMetadata
 
@@ -22,15 +23,17 @@ def _format_date(value: datetime) -> str:
 
 def _article_item(article: ArticleMetadata) -> ListViewItem:
     return ListViewItem(
-        height=180,
         children=[
             Box(
+                height=200,
+                maxWidth=450,
+                minWidth=300,
                 padding=0,
                 variant="surface",
                 border={"color": "gray-900", "size": 1},
                 children=[
                     Row(
-                        align="start",
+                        align="stretch",
                         gap=0,
                         children=[
                             Image(
@@ -38,7 +41,7 @@ def _article_item(article: ArticleMetadata) -> ListViewItem:
                                 alt=article.title,
                                 fit="cover",
                                 position="top",
-                                height=180,
+                                height=200,
                                 width=160,
                                 radius="none",
                                 frame=True,
@@ -46,22 +49,50 @@ def _article_item(article: ArticleMetadata) -> ListViewItem:
                             Col(
                                 padding={"x": 4, "y": 3},
                                 gap=2,
+                                flex=1,
+                                align="stretch",
+                                justify="between",
                                 children=[
-                                    Text(
-                                        value=_format_date(article.date),
-                                        color="tertiary",
-                                        size="xs",
+                                    Col(
+                                        gap=2,
+                                        flex=1,
+                                        children=[
+                                            Text(
+                                                value=_format_date(article.date),
+                                                color="tertiary",
+                                                size="xs",
+                                            ),
+                                            Text(
+                                                value=article.title,
+                                                size="sm",
+                                                weight="semibold",
+                                                maxLines=4,
+                                            ),
+                                            Text(
+                                                value=f"by {article.author}",
+                                                color="tertiary",
+                                                size="xs",
+                                            ),
+                                        ],
                                     ),
-                                    Text(
-                                        value=article.title,
-                                        size="md",
-                                        weight="semibold",
-                                        maxLines=4,
-                                    ),
-                                    Text(
-                                        value=f"by {article.author}",
-                                        color="tertiary",
-                                        size="xs",
+                                    Row(
+                                        justify="end",
+                                        children=[
+                                            Button(
+                                                label="View",
+                                                size="sm",
+                                                iconSize="sm",
+                                                pill=True,
+                                                variant="ghost",
+                                                color="discovery",
+                                                iconEnd="chevron-right",
+                                                onClickAction=ActionConfig(
+                                                    type="open_article",
+                                                    payload={"id": article.id},
+                                                    handler="client",
+                                                ),
+                                            )
+                                        ],
                                     ),
                                 ],
                             ),

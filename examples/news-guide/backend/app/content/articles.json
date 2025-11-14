@@ -100,7 +100,7 @@
     "filename": "cafe-emotional-support-espresso.md",
     "url": "/articles/cafe-emotional-support-espresso",
     "date": "2025-02-05",
-    "tags": ["cafe", "food", "local-business", "wellness"],
+    "tags": ["cafe", "food", "local-business", "wellness", "trending"],
     "keywords": [
       "affirmation espresso",
       "feel-good cafe story",
@@ -111,7 +111,9 @@
       "positive vibes latte",
       "cozy hangout",
       "foodie destination",
-      "comfort drink spotlight"
+      "comfort drink spotlight",
+      "local business spotlight",
+      "support local businesses"
     ]
   },
   {
@@ -180,7 +182,9 @@
       "menu update",
       "eating out recommendations",
       "local business loyalty",
-      "wholesome dining news"
+      "wholesome dining news",
+      "local business feature",
+      "supporting local businesses"
     ]
   },
   {
@@ -210,7 +214,7 @@
     "id": "neighborhood-dog-newspapers",
     "title": "Neighborhood Dog Keeps Accidentally Fetching the Wrong Newspaper; Residents Don’t Mind",
     "author": "Member of Technical Staff",
-    "heroImage": "hero-dog-newspapers.png",
+    "heroImage": "neighborhood-dog-newspapers.png",
     "heroImageUrl": "https://i.imgur.com/CMN2EAl.jpeg",
     "filename": "neighborhood-dog-newspapers.md",
     "url": "/articles/transit-pass-machine-updated",
@@ -238,7 +242,7 @@
     "filename": "plant-babysitting.md",
     "url": "/articles/plant-babysitting",
     "date": "2025-02-19",
-    "tags": ["community", "plants"],
+    "tags": ["community", "plants", "trending"],
     "keywords": [
       "plant care service",
       "community center program",

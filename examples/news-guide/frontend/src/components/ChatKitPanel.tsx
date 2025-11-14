@@ -1,5 +1,6 @@
-import { ChatKit, useChatKit } from "@openai/chatkit-react";
-import { useRef } from "react";
+import { ChatKit, useChatKit, Widgets } from "@openai/chatkit-react";
+import { useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   CHATKIT_API_DOMAIN_KEY,
@@ -21,10 +22,25 @@ export function ChatKitPanel({
   onChatKitReady,
 }: ChatKitPanelProps) {
   const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
+  const navigate = useNavigate();
 
   const theme = useAppStore((state) => state.scheme);
   const activeThread = useAppStore((state) => state.threadId);
   const setThreadId = useAppStore((state) => state.setThreadId);
+
+  const handleWidgetAction = useCallback(
+    async (action: { type: string; payload?: Record<string, unknown>}, widgetItem: { id: string; widget: Widgets.Card | Widgets.ListView }) => {
+      switch (action.type) {
+        case "open_article":
+          const articleId = action.payload?.id
+          if (articleId) {
+            navigate(`/article/${articleId}`);
+          }
+          break;
+      }
+    },
+    [navigate]
+  );
 
   const chatkit = useChatKit({
     api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY },
@@ -57,6 +73,9 @@ export function ChatKitPanel({
     },
     threadItemActions: {
       feedback: false,
+    },
+    widgets: {
+      onAction: handleWidgetAction,
     },
     onThreadChange: ({ threadId }) => setThreadId(threadId),
     onError: ({ error }) => {
