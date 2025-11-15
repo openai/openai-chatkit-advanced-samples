@@ -8,6 +8,7 @@ import {
   CHATKIT_API_URL,
   GREETING,
   STARTER_PROMPTS,
+  TOOL_CHOICES,
   getPlaceholder,
 } from "../lib/config";
 import { LORA_SOURCES } from "../lib/fonts";
@@ -25,6 +26,7 @@ export function ChatKitPanel({
   className,
 }: ChatKitPanelProps) {
   const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
+  const actionedWidgetsRef = useRef<Set<string>>(new Set());
   const navigate = useNavigate();
 
   const theme = useAppStore((state) => state.scheme);
@@ -60,14 +62,20 @@ export function ChatKitPanel({
     ) => {
       switch (action.type) {
         case "open_article": {
-          const articleIdValue = action.payload?.id;
-          if (typeof articleIdValue === "string" && articleIdValue) {
-            navigate(`/article/${articleIdValue}`);
+          const id = action.payload?.id;
+          if (typeof id === "string" && id) {
+            navigate(`/article/${id}`);
             const chatkit = chatkitRef.current;
 
-            // Prompt server to stream back a follow-up message
             if (chatkit) {
-              await chatkit.sendCustomAction(action, widgetItem.id);
+              // `open_article` can be invoked as many times as the user wants and we'll always
+              // navigate to the article, BUT we only want to stream back a follow-up message
+              // once per actioned article (otherwise it looks spammy).
+              const key = `${widgetItem.id}:${id}`;
+              if (!actionedWidgetsRef.current.has(key)) {
+                await chatkit.sendCustomAction(action, widgetItem.id);
+                actionedWidgetsRef.current.add(key);
+              }
             }
           }
           break;
@@ -90,7 +98,7 @@ export function ChatKitPanel({
         },
         accent: {
           primary: "#ff5f42",
-          level: theme === "dark" ? 1 : 2,
+          level: 1,
         },
       },
       typography: {
@@ -105,6 +113,7 @@ export function ChatKitPanel({
     },
     composer: {
       placeholder: getPlaceholder(Boolean(activeThread)),
+      tools: TOOL_CHOICES,
     },
     threadItemActions: {
       feedback: false,

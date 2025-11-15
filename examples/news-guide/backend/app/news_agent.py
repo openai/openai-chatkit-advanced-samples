@@ -15,6 +15,7 @@ from pydantic import ConfigDict, Field
 
 from .article_list_widget import build_article_list_widget
 from .article_store import ArticleMetadata, ArticleStore
+from .event_finder_agent import event_finder_agent
 from .memory_store import MemoryStore
 
 INSTRUCTIONS = """
@@ -55,6 +56,8 @@ INSTRUCTIONS = """
       - After fetching story candidates, prefer `show_article_list_widget` with the returned articles fetched using
         `search_articles_by_tags` or `search_articles_by_keywords` or `search_articles_by_exact_text` and a message
         that explains why these articles were selected for the reader right now.
+      - If the reader explicitly asks about events, happenings, or things to do, call `delegate_to_event_finder`
+        with their request so the Foxhollow Event Finder agent can take over.
 
     Suggest a next step—such as related articles or follow-up angles—whenever it adds value.
 """
@@ -200,9 +203,8 @@ async def show_article_list_widget(
                 for article in articles
             ],
         }
-
-    except Exception as e:
-        print(f"Error building article list widget: {e}")
+    except Exception as exc:
+        print(f"[ERROR] show_article_list_widget: {exc}")
         raise
 
 
@@ -276,7 +278,16 @@ news_agent = Agent[NewsAgentContext](
         search_articles_by_exact_text,
         # Presentation tools
         show_article_list_widget,
+        event_finder_agent.as_tool(
+            tool_name="delegate_to_event_finder",
+            tool_description="Delegate event-specific requests to the Foxhollow Event Finder agent.",
+        ),
     ],
     # Stop after showing the article list widget to prevent content from being repeated in a continued response.
-    tool_use_behavior=StopAtTools(stop_at_tool_names=[show_article_list_widget.name]),
+    tool_use_behavior=StopAtTools(
+        stop_at_tool_names=[
+            show_article_list_widget.name,
+            "delegate_to_event_finder",
+        ]
+    ),
 )
