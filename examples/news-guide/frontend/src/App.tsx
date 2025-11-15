@@ -14,12 +14,12 @@ function AppShell() {
 
   const containerClass = clsx(
     "h-full flex min-h-screen flex-col transition-colors duration-300",
-    scheme === "dark" ? "bg-slate-900 text-slate-100" : "bg-slate-100 text-slate-900"
+    scheme === "dark" ? "bg-[#1c1c1c] text-slate-100" : "bg-slate-100 text-slate-900"
   );
   const headerBarClass = clsx(
     "sticky top-0 z-30 w-full border-b shadow-sm",
     scheme === "dark"
-      ? "border-slate-200 bg-slate-900 text-slate-100"
+      ? "border-slate-200 bg-[#1c1c1c] text-slate-100"
       : "border-slate-800 bg-white text-slate-900"
   );
 
@@ -47,7 +47,7 @@ function AppShell() {
             onChatKitReady={(chatkit) => (chatkitRef.current = chatkit)}
           />
         </div>
-        <div className="flex flex-1 min-h-0 bg-white dark:bg-slate-900">
+        <div className="flex flex-1 min-h-0 bg-white dark:bg-[#1c1c1c]">
           <Outlet />
         </div>
       </div>

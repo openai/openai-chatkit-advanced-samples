@@ -141,7 +141,7 @@ export function NewsroomPanel() {
   const showLanding = !articleId;
 
   return (
-    <div className="h-full w-full min-h-0 bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+    <div className="h-full w-full min-h-0 bg-white text-slate-900 dark:bg-[#1c1c1c] dark:text-slate-100">
       {showLanding ? (
         <LandingGrid
           articles={articles}
@@ -215,7 +215,7 @@ function FeaturedArticleCard({ article, onSelect }: ArticleCardProps) {
     <button
       type="button"
       onClick={() => onSelect(article.id)}
-      className="group flex w-full flex-col gap-0 overflow-hidden border border-slate-800 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-300 dark:bg-slate-900 dark:hover:border-slate-200 dark:focus-visible:outline-slate-100 md:flex-row md:items-stretch md:min-h-[20rem]"
+      className="group flex w-full flex-col gap-0 overflow-hidden border border-slate-800 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-300 dark:hover:border-slate-200 dark:focus-visible:outline-slate-100 md:flex-row md:items-stretch md:min-h-[20rem]"
     >
       <img
         src={article.heroImage}
@@ -241,7 +241,7 @@ function SecondaryArticleCard({ article, onSelect }: ArticleCardProps) {
     <button
       type="button"
       onClick={() => onSelect(article.id)}
-      className="group flex flex-col overflow-hidden border border-slate-800 bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-300 dark:bg-slate-900 dark:hover:border-slate-200 dark:focus-visible:outline-slate-100"
+      className="group flex flex-col overflow-hidden border border-slate-800 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 dark:border-slate-300 dark:hover:border-slate-200 dark:focus-visible:outline-slate-100"
     >
       <img src={article.heroImage} alt="" className="h-36 w-full object-cover object-top" />
       <div className="flex flex-1 flex-col gap-2 px-4 pb-4 pt-4">

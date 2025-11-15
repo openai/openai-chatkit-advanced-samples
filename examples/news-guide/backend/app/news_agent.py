@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Any, List
 
-from agents import Agent, RunContextWrapper, Runner, StopAtTools, function_tool
+from agents import Agent, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext
 from chatkit.types import (
     AssistantMessageContent,
@@ -23,7 +23,7 @@ INSTRUCTIONS = """
     each story serves the reader, and keep answers concise with skimmable structure.
 
     Before recommending or summarizing, always consult the latest article metadata via
-    the available tools. When summarizing, cite the article title and give a one-line takeaway.
+    the available tools.
 
     If the reader provides desired topics, locations, or tags, filter results before responding
     and call out any notable gaps.
@@ -34,8 +34,16 @@ INSTRUCTIONS = """
     currently open article. Load it with `get_current_page`, review the content, and answer their question directly
     using specific details instead of asking them to copy anything over.
 
-    Default to italicizing article titles when you mention them, and wrap any direct excerpts from the article content in
-    Markdown blockquotes so they stand out.
+    When summarizing:
+      - Cite the article title.
+      - The summary should be 2-4 sentences long.
+      - Do NOT explicitly mention the word "summary" in your response.
+      - After summarizing, ask the reader if they have any questions about the article.
+
+    Formatting output:
+      - Default to italicizing article titles when you mention them, and wrap any direct excerpts from the article content in
+        Markdown blockquotes so they stand out.
+      - Add generous paragraph breaks for readability.
 
     Use the tools deliberately:
       - Call `list_available_tags_and_keywords` to get a list of all unique tags and keywords available to search by.
@@ -53,26 +61,6 @@ INSTRUCTIONS = """
 
 MODEL = "gpt-4.1-mini"
 FEATURED_PAGE_ID = "featured"
-FEATURED_SUMMARY_LIMIT = 4
-SUMMARY_AGENT_INSTRUCTIONS = """
-    You are Foxhollow Dispatch's summary specialist. You receive one or more news
-    articles (title, author, tags, markdown content) and must provide short recaps.
-
-    - Mention each article title, italicized.
-    - Use bullet points when listing items in the summary.
-    - For a single article, respond with 2-3 sentences.
-    - For multiple articles, respond with a bullet list and keep each
-      entry to 1-2 sentences, then close with a single sentence tying the set together.
-
-    Input:
-    - includes the page type, article count, and each article under a Content block.
-
-    Output:
-    - The summary should be smart, concise, and engaging. Avoid repetitive language.
-    - When it is not repetitive, add a one-sentence commentary about the Foxhollow town and its community
-      as it relates to the article(s).
-    - Always ask the user if they have any questions about the article.
-"""
 
 
 class NewsAgentContext(AgentContext):
@@ -87,6 +75,7 @@ async def search_articles_by_tags(
     ctx: RunContextWrapper[NewsAgentContext],
     tags: List[str] | None = None,
 ) -> dict[str, Any]:
+    tags = [tag.strip().lower() for tag in tags if tag and tag.strip()]
     print("[TOOL CALL] search_articles_by_tags", tags)
     if tags:
         tag_label = ", ".join(tags)
@@ -115,7 +104,7 @@ async def search_articles_by_keywords(
     ctx: RunContextWrapper[NewsAgentContext],
     keywords: List[str],
 ) -> dict[str, Any]:
-    cleaned = [keyword.strip() for keyword in keywords if keyword and keyword.strip()]
+    cleaned = [keyword.strip().lower() for keyword in keywords if keyword and keyword.strip()]
     print("[TOOL CALL] search_articles_by_keywords", cleaned)
     if not cleaned:
         raise ValueError("Please provide at least one non-empty keyword to search for.")
@@ -220,10 +209,7 @@ async def show_article_list_widget(
         raise
 
 
-def _load_featured_articles(store: ArticleStore, limit: int) -> list[dict[str, Any]]:
-    """
-    Load up to `limit` featured articles using tag-based filtering.
-    """
+def _load_featured_articles(store: ArticleStore) -> list[dict[str, Any]]:
     metadata_entries = store.list_metadata_for_tags([FEATURED_PAGE_ID])
     articles: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -238,9 +224,6 @@ def _load_featured_articles(store: ArticleStore, limit: int) -> list[dict[str, A
             articles.append(record)
             seen.add(article_id)
 
-        if len(articles) >= limit:
-            break
-
     return articles
 
 
@@ -248,7 +231,7 @@ def _load_current_page_records(
     store: ArticleStore, normalized_id: str
 ) -> tuple[str, list[dict[str, Any]]]:
     if normalized_id == FEATURED_PAGE_ID:
-        articles = _load_featured_articles(store, FEATURED_SUMMARY_LIMIT)
+        articles = _load_featured_articles(store)
         if not articles:
             raise ValueError("Unable to locate any featured articles to load.")
         return FEATURED_PAGE_ID, articles

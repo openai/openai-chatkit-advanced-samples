@@ -21,24 +21,24 @@ export const GREETING = "I’m here to help you find the latest news from Foxhol
 
 export const STARTER_PROMPTS: StartScreenPrompt[] = [
   {
-    label: "Morning rundown",
-    prompt: "Give me the top newsroom stories ready for editors.",
-    icon: "book-open",
-  },
-  {
-    label: "Ops briefing",
-    prompt: "Summarize anything operations teams need to know right now.",
+    label: "Browse trending stories",
+    prompt: "What's trending right now?",
     icon: "globe",
   },
   {
-    label: "Find a feature",
-    prompt: "Which article has the most compelling narrative for a lead story?",
+    label: "Read some gossip",
+    prompt: "Any small-town drama lately?",
     icon: "sparkle",
   },
   {
-    label: "Tag search",
-    prompt: "Show me articles tagged with infrastructure.",
-    icon: "globe",
+    label: "Get public works updates",
+    prompt: "What's the latest on public infrastructure projects?",
+    icon: "sparkle",
+  },
+  {
+    label: "Summarize this page",
+    prompt: "Give me a summary of this page.",
+    icon: "book-open",
   },
 ];
 

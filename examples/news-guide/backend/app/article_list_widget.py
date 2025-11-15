@@ -83,7 +83,7 @@ def _article_item(article: ArticleMetadata) -> ListViewItem:
                                                 iconSize="sm",
                                                 pill=True,
                                                 variant="ghost",
-                                                color="discovery",
+                                                color="warning",
                                                 iconEnd="chevron-right",
                                                 onClickAction=ActionConfig(
                                                     type="open_article",

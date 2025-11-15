@@ -74,13 +74,13 @@ export function ChatKitPanel({
       colorScheme: theme,
       color: {
         grayscale: {
-          hue: 210,
-          tint: 6,
-          shade: theme === "dark" ? -1 : -4,
+          hue: 0,
+          tint: 0,
+          shade: theme === "dark" ? -1 : 0,
         },
         accent: {
-          primary: theme === "dark" ? "#f8fafc" : "#020817",
-          level: 2,
+          primary: "#ff5f42",
+          level: theme === "dark" ? 1 : 2,
         },
       },
       typography: {
