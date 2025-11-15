@@ -16,6 +16,7 @@ jobs:
         project:
           - examples/cat-lounge/backend
           - examples/customer-support/backend
+          - examples/news-guide/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,6 +64,7 @@ jobs:
         project:
           - examples/cat-lounge/frontend
           - examples/customer-support/frontend
+          - examples/news-guide/frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v4

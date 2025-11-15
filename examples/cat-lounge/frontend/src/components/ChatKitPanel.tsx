@@ -1,4 +1,5 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import clsx from "clsx";
 import type { Widgets } from "@openai/chatkit";
 import { useCallback, useRef } from "react";
 
@@ -16,10 +17,12 @@ export type ChatKit = ReturnType<typeof useChatKit>;
 
 type ChatKitPanelProps = {
   onChatKitReady: (chatkit: ChatKit) => void;
+  className?: string;
 };
 
 export function ChatKitPanel({
   onChatKitReady,
+  className,
 }: ChatKitPanelProps) {
   const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
 
@@ -149,7 +152,7 @@ export function ChatKitPanel({
   chatkitRef.current = chatkit;
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className={clsx("relative h-full w-full overflow-hidden", className)}>
       <ChatKit control={chatkit.control} className="block h-full w-full" />
     </div>
   );
