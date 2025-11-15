@@ -1,4 +1,4 @@
-The Maple Ridge Community Center has introduced a new service that has quickly become one of the town’s most unexpectedly heartwarming amenities: **plant babysitting**.
+The Foxhollow Community Center has introduced a new service that has quickly become one of the town’s most unexpectedly heartwarming amenities: **plant babysitting**.
 
 Vacation-bound residents may drop off houseplants of all shapes and personalities, which volunteers then sort by height, species, and “general vibe.” Once arranged, the plants receive hand-written name tags and are placed in the sunny multipurpose room for their stay.
 
