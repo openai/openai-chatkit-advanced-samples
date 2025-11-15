@@ -4,6 +4,7 @@ NewsAssistantServer implements the ChatKitServer interface for the News Guide de
 
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Any, AsyncIterator
@@ -33,7 +34,9 @@ from .event_list_widget import build_event_list_widget
 from .event_store import EventStore
 from .memory_store import MemoryStore
 from .news_agent import NewsAgentContext, news_agent
+from .puzzle_agent import PuzzleAgentContext, puzzle_agent
 from .thread_item_converter import BasicThreadItemConverter
+from .title_agent import title_agent
 
 
 class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
@@ -47,6 +50,7 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         self.article_store = ArticleStore(data_dir)
         self.event_store = EventStore(data_dir)
         self.thread_item_converter = BasicThreadItemConverter()
+        self.title_agent = title_agent
 
     # -- Required overrides ----------------------------------------------------
     async def action(
@@ -75,6 +79,9 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         item: UserMessageItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
+        updating_thread_title = asyncio.create_task(
+            self.maybe_update_thread_title(thread, item)
+        )
         items_page = await self.store.load_thread_items(
             thread.id,
             after=None,
@@ -91,7 +98,22 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
 
         async for event in stream_agent_response(agent_context, result):
             yield event
+        await updating_thread_title
         return
+
+    async def maybe_update_thread_title(
+        self, thread: ThreadMetadata, user_message: UserMessageItem | None
+    ) -> None:
+        if user_message is None or thread.title is not None:
+            return
+
+        run = await Runner.run(
+            self.title_agent,
+            input=await self.thread_item_converter.to_agent_input(user_message),
+        )
+        model_result: str = run.final_output
+        model_result = model_result[:1].upper() + model_result[1:]
+        thread.title = model_result.strip(".")
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
@@ -239,7 +261,7 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         context: dict[str, Any],
     ) -> tuple[
         Agent,
-        NewsAgentContext | EventFinderContext,
+        NewsAgentContext | EventFinderContext | PuzzleAgentContext,
     ]:
         tool_choice = self._resolve_tool_choice(item)
         if tool_choice == "event_finder":
@@ -250,6 +272,13 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
                 request_context=context,
             )
             return event_finder_agent, event_context
+        if tool_choice == "puzzle":
+            puzzle_context = PuzzleAgentContext(
+                thread=thread,
+                store=self.store,
+                request_context=context,
+            )
+            return puzzle_agent, puzzle_context
 
         news_context = NewsAgentContext(
             thread=thread,

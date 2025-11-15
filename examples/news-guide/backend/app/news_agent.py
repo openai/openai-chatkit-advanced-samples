@@ -17,6 +17,7 @@ from .article_list_widget import build_article_list_widget
 from .article_store import ArticleMetadata, ArticleStore
 from .event_finder_agent import event_finder_agent
 from .memory_store import MemoryStore
+from .puzzle_agent import puzzle_agent
 
 INSTRUCTIONS = """
     You are News Guide, a service-forward assistant focused on helping readers quickly
@@ -58,6 +59,8 @@ INSTRUCTIONS = """
         that explains why these articles were selected for the reader right now.
       - If the reader explicitly asks about events, happenings, or things to do, call `delegate_to_event_finder`
         with their request so the Foxhollow Event Finder agent can take over.
+      - If the reader wants a Foxhollow-flavored puzzle, coffee-break brain teaser, or mentions the puzzle tool,
+        call `delegate_to_puzzle_keeper` so the Foxhollow Puzzle Keeper can lead with Two Truths and the mini crossword.
 
     Suggest a next step—such as related articles or follow-up angles—whenever it adds value.
 """
@@ -282,12 +285,17 @@ news_agent = Agent[NewsAgentContext](
             tool_name="delegate_to_event_finder",
             tool_description="Delegate event-specific requests to the Foxhollow Event Finder agent.",
         ),
+        puzzle_agent.as_tool(
+            tool_name="delegate_to_puzzle_keeper",
+            tool_description="Delegate coffee break puzzle requests to the Foxhollow Puzzle Keeper agent.",
+        ),
     ],
     # Stop after showing the article list widget to prevent content from being repeated in a continued response.
     tool_use_behavior=StopAtTools(
         stop_at_tool_names=[
             show_article_list_widget.name,
             "delegate_to_event_finder",
+            "delegate_to_puzzle_keeper",
         ]
     ),
 )

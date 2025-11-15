@@ -59,11 +59,11 @@ export const TOOL_CHOICES: ToolOption[] = [
     persistent: true,
   },
   {
-    id: "reading_list_generator",
-    label: "Reading list generator",
-    shortLabel: "Reading list",
-    icon: "book-open",
-    placeholderOverride: "Give me feel-good stories for my commute",
+    id: "puzzle",
+    label: "Coffee break puzzle",
+    shortLabel: "Puzzle",
+    icon: "atom",
+    placeholderOverride: "Give me a puzzle to solve",
     // @ts-ignore
     persistent: true,
   },
