@@ -49,15 +49,12 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         sender: WidgetItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        # TODO: handle server actions
-        yield ThreadItemDoneEvent(
-            item=AssistantMessageItem(
-                thread_id=thread.id,
-                id=self.store.generate_item_id("message", thread, context),
-                created_at=datetime.now(),
-                content=[AssistantMessageContent(text="")],
-            ),
-        )
+        if action.type == "open_article":
+            async for event in self._handle_open_article_action(thread, action, context):
+                yield event
+            return
+
+        return
 
     async def respond(
         self,
@@ -94,6 +91,40 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")
+
+    async def _handle_open_article_action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        context: dict[str, Any],
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        article_id = self._extract_article_id(action)
+        if not article_id:
+            return
+
+        metadata = self.article_store.get_metadata(article_id)
+        title = metadata["title"] if metadata else None
+        message = (
+            f'Want a quick summary of "{title}" or have any questions about it?'
+            if title
+            else "Want a quick summary or have any questions about this article?"
+        )
+
+        message_item = AssistantMessageItem(
+            thread_id=thread.id,
+            id=self.store.generate_item_id("message", thread, context),
+            created_at=datetime.now(),
+            content=[AssistantMessageContent(text=message)],
+        )
+        yield ThreadItemDoneEvent(item=message_item)
+
+    def _extract_article_id(self, action: Action[str, Any]) -> str | None:
+        payload = action.payload
+        if isinstance(payload, dict):
+            article_id = payload.get("id")
+            if isinstance(article_id, str) and article_id.strip():
+                return article_id
+        return None
 
 
 def create_chatkit_server() -> NewsAssistantServer | None:

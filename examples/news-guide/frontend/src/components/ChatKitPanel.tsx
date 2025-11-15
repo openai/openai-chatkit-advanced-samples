@@ -54,14 +54,24 @@ export function ChatKitPanel({
   }, []);
 
   const handleWidgetAction = useCallback(
-    async (action: { type: string; payload?: Record<string, unknown>}, widgetItem: { id: string; widget: Widgets.Card | Widgets.ListView }) => {
+    async (
+      action: { type: string; payload?: Record<string, unknown> },
+      widgetItem: { id: string; widget: Widgets.Card | Widgets.ListView }
+    ) => {
       switch (action.type) {
-        case "open_article":
-          const targetArticleId = action.payload?.id
-          if (targetArticleId) {
-            navigate(`/article/${targetArticleId}`);
+        case "open_article": {
+          const articleIdValue = action.payload?.id;
+          if (typeof articleIdValue === "string" && articleIdValue) {
+            navigate(`/article/${articleIdValue}`);
+            const chatkit = chatkitRef.current;
+
+            // Prompt server to stream back a follow-up message
+            if (chatkit) {
+              await chatkit.sendCustomAction(action, widgetItem.id);
+            }
           }
           break;
+        }
       }
     },
     [navigate]
