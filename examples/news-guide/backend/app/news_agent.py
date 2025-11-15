@@ -73,14 +73,11 @@ class NewsAgentContext(AgentContext):
 @function_tool(description_override="List newsroom articles, optionally filtered by tags.")
 async def search_articles_by_tags(
     ctx: RunContextWrapper[NewsAgentContext],
-    tags: List[str] | None = None,
+    tags: List[str],
 ) -> dict[str, Any]:
     tags = [tag.strip().lower() for tag in tags if tag and tag.strip()]
     print("[TOOL CALL] search_articles_by_tags", tags)
-    if tags:
-        tag_label = ", ".join(tags)
-    else:
-        tag_label = "all tags"
+    tag_label = ", ".join(tags)
     await ctx.context.stream(ProgressUpdateEvent(text=f"Searching for tags: {tag_label}"))
     records = ctx.context.articles.list_metadata_for_tags(tags)
     return {"articles": records}

@@ -4,6 +4,7 @@ NewsAssistantServer implements the ChatKitServer interface for the News Guide de
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Any, AsyncIterator
 
@@ -12,7 +13,10 @@ from chatkit.agents import stream_agent_response
 from chatkit.server import ChatKitServer
 from chatkit.types import (
     Action,
+    AssistantMessageContent,
+    AssistantMessageItem,
     Attachment,
+    ThreadItemDoneEvent,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
@@ -45,8 +49,15 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         sender: WidgetItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        # This demo does not include interactive widgets yet.
-        return
+        # TODO: handle server actions
+        yield ThreadItemDoneEvent(
+            item=AssistantMessageItem(
+                thread_id=thread.id,
+                id=self.store.generate_item_id("message", thread, context),
+                created_at=datetime.now(),
+                content=[AssistantMessageContent(text="")],
+            ),
+        )
 
     async def respond(
         self,

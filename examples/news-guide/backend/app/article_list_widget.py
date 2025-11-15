@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Iterable, List
 
 from chatkit.actions import ActionConfig
-from chatkit.widgets import Box, Button, Col, Image, ListView, ListViewItem, Row, Spacer, Text
+from chatkit.widgets import Box, Button, Col, Image, ListView, ListViewItem, Row, Text
 
 from .article_store import ArticleMetadata
 
@@ -28,7 +28,6 @@ def _article_item(article: ArticleMetadata) -> ListViewItem:
                 maxWidth=450,
                 minWidth=300,
                 padding=0,
-                variant="surface",
                 border={"color": "gray-900", "size": 1},
                 children=[
                     Row(
