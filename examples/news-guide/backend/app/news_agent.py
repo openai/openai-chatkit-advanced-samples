@@ -36,6 +36,9 @@ INSTRUCTIONS = """
     currently open article. Load it with `get_current_page`, review the content, and answer their question directly
     using specific details instead of asking them to copy anything over.
 
+    When you see an <ARTICLE_REFERENCE>{article_id}</ARTICLE_REFERENCE> tag in the context, call `get_article_by_id`
+    with that id before citing details so your answer can reference the tagged article accurately.
+
     When summarizing:
       - Cite the article title.
       - The summary should be 2-4 sentences long.

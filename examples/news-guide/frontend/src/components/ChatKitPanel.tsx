@@ -1,4 +1,4 @@
-import { ChatKit, useChatKit, Widgets } from "@openai/chatkit-react";
+import { ChatKit, useChatKit, Widgets, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   getPlaceholder,
 } from "../lib/config";
 import { LORA_SOURCES } from "../lib/fonts";
+import { useTags } from "../hooks/useTags";
 import { useAppStore } from "../store/useAppStore";
 
 export type ChatKit = ReturnType<typeof useChatKit>;
@@ -28,6 +29,7 @@ export function ChatKitPanel({
   const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
   const actionedWidgetsRef = useRef<Set<string>>(new Set());
   const navigate = useNavigate();
+  const { search, getPreview } = useTags();
 
   const theme = useAppStore((state) => state.scheme);
   const activeThread = useAppStore((state) => state.threadId);
@@ -85,6 +87,17 @@ export function ChatKitPanel({
     [navigate]
   );
 
+  const handleEntityClick = useCallback(
+    (entity: Entity) => {
+      const rawId = entity.data?.["article_id"] ?? entity.id;
+      const articleId = typeof rawId === "string" ? rawId.trim() : "";
+      if (articleId) {
+        navigate(`/article/${articleId}`);
+      }
+    },
+    [navigate]
+  );
+
   const chatkit = useChatKit({
     api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY, fetch: customFetch },
     theme: {
@@ -114,6 +127,11 @@ export function ChatKitPanel({
     composer: {
       placeholder: getPlaceholder(Boolean(activeThread)),
       tools: TOOL_CHOICES,
+    },
+    entities: {
+      onTagSearch: search,
+      onRequestPreview: getPreview,
+      onClick: handleEntityClick,
     },
     threadItemActions: {
       feedback: false,

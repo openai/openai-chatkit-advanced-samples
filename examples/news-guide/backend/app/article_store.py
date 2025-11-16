@@ -102,14 +102,12 @@ class ArticleStore:
             )
         return markdown_path.read_text(encoding="utf-8")
 
-    def list_metadata(self) -> List[Dict[str, Any]]:
+    def list_metadata(self) -> List[ArticleMetadata]:
         """Return metadata for all articles in list order."""
-        payload: List[Dict[str, Any]] = []
+        payload: List[ArticleMetadata] = []
         for article_id in self._order:
             record = self._articles[article_id]
-            data = record.model_dump(exclude={"content"})
-            data["date"] = record.date.isoformat()
-            payload.append(data)
+            payload.append(record)
         return payload
 
     def list_metadata_for_tags(self, tags: List[str] | None = None) -> List[Dict[str, Any]]:

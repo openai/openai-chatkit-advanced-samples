@@ -9,6 +9,8 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from starlette.responses import JSONResponse
 
+from .article_preview_widget import build_article_preview_widget
+from .article_store import ArticleMetadata
 from .server import NewsAssistantServer, create_chatkit_server
 
 app = FastAPI(title="ChatKit API")
@@ -62,6 +64,37 @@ async def list_featured_articles(
             server.article_store.get_metadata(article_id) for article_id in FEATURED_ARTICLE_IDS
         ]
     }
+
+
+@app.get("/articles/tags")
+async def list_article_tags(
+    server: NewsAssistantServer = Depends(get_chatkit_server),
+) -> dict[str, Any]:
+    def _truncate_title(value: str, max_length: int = 30) -> str:
+        if len(value) <= max_length:
+            return value
+        cutoff = max_length - 3
+        if cutoff <= 0:
+            return "..."[:max_length]
+        return value[:cutoff].rstrip() + "..."
+
+    def _build_article_tag(article: ArticleMetadata) -> dict[str, Any]:
+        return {
+            "entity": {
+                "title": _truncate_title(article.title),
+                "id": article.id,
+                "icon": "document",
+                "interactive": True,
+                "group": "Articles",
+                "data": {
+                    "article_id": article.id,
+                    "url": article.url,
+                },
+            },
+            "preview": build_article_preview_widget(article).model_dump(),
+        }
+
+    return {"tags": [_build_article_tag(entry) for entry in server.article_store.list_metadata()]}
 
 
 @app.get("/articles/{article_id}")

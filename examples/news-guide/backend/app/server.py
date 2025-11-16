@@ -35,7 +35,7 @@ from .event_store import EventStore
 from .memory_store import MemoryStore
 from .news_agent import NewsAgentContext, news_agent
 from .puzzle_agent import PuzzleAgentContext, puzzle_agent
-from .thread_item_converter import BasicThreadItemConverter
+from .thread_item_converter import NewsGuideThreadItemConverter
 from .title_agent import title_agent
 
 
@@ -49,7 +49,7 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         data_dir = Path(__file__).resolve().parent / "content"
         self.article_store = ArticleStore(data_dir)
         self.event_store = EventStore(data_dir)
-        self.thread_item_converter = BasicThreadItemConverter()
+        self.thread_item_converter = NewsGuideThreadItemConverter()
         self.title_agent = title_agent
 
     # -- Required overrides ----------------------------------------------------
