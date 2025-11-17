@@ -99,9 +99,7 @@ class EventStore:
         if not target:
             return []
         return [
-            record
-            for event_id in self._order
-            if (record := self._events[event_id]).time == target
+            record for event_id in self._order if (record := self._events[event_id]).time == target
         ]
 
     def search_by_keyword(self, terms: str | Sequence[str]) -> List[EventRecord]:

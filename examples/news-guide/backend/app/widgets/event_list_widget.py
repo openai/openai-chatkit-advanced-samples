@@ -153,7 +153,11 @@ def _event_header(
                 color=None if is_selected else "warning",
                 onClickAction=ActionConfig(
                     type="view_event_details",
-                    payload={"id": record.id, "event_ids": list(event_ids), "is_selected": is_selected},
+                    payload={
+                        "id": record.id,
+                        "event_ids": list(event_ids),
+                        "is_selected": is_selected,
+                    },
                     handler="server",
                 ),
             ),
