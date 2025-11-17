@@ -20,6 +20,7 @@ from chatkit.widgets import (
     Spacer,
     Text,
     Title,
+    WidgetComponent,
 )
 
 from ..data.event_store import EventRecord
@@ -93,7 +94,7 @@ def _event_card(
 ) -> Box:
     category = (record.category or "").strip().lower()
     color = CATEGORY_COLORS.get(category, DEFAULT_CATEGORY_COLOR)
-    children = [
+    children: list[WidgetComponent] = [
         _event_header(record, color, is_selected=is_selected, event_ids=event_ids or []),
         Title(value=record.title, size="sm"),
         Text(value=_format_location(record), color="alpha-70", size="xs"),
