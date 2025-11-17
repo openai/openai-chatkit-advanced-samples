@@ -141,7 +141,8 @@ async def search_articles_by_author(
     print("[TOOL CALL] search_articles_by_author", author)
     if not author:
         raise ValueError("Please provide an author name to search for.")
-    await ctx.context.stream(ProgressUpdateEvent(text=f"Looking for articles by {author}..."))
+    display_name = " ".join(author.split("-")).title()
+    await ctx.context.stream(ProgressUpdateEvent(text=f"Looking for articles by {display_name}..."))
     records = ctx.context.articles.search_metadata_by_author(author)
     articles = [ArticleMetadata.model_validate(record) for record in records]
     return AuthorSearchResult(author=author, articles=articles)
