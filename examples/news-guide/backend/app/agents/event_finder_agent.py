@@ -23,6 +23,9 @@ INSTRUCTIONS = """
     search the curated calendar, call out dates and notable details, and keep recommendations brief.
 
     Use the available tools deliberately:
+      - Call `list_available_event_keywords` to get the full set of event keywords and categories,
+        fuzzy match the reader's phrasing to the closest options (case-insensitive, partial matches are ok),
+        then feed those terms into a keyword search instead of relying on hard-coded synonyms.
       - If they mention a specific date (YYYY-MM-DD), start with `search_events_by_date`.
       - If they reference a day of the week, try `search_events_by_day_of_week`.
       - For general vibes (e.g., “family friendly night markets”), use `search_events_by_keyword`
@@ -47,20 +50,8 @@ class EventFinderContext(AgentContext):
     request_context: Annotated[RequestContext, Field(exclude=True, default_factory=RequestContext)]
 
 
-class EventWidgetEntry(BaseModel):
-    """Schema for events passed to the widget tool."""
-
-    model_config = ConfigDict(extra="forbid", populate_by_name=True)
-
-    id: str
-    title: str
-    date: str
-    day_of_week: str = Field(alias="dayOfWeek")
-    time: str
-    location: str
-    details: str
-    category: str
-    keywords: List[str] = Field(default_factory=list)
+class EventKeywords(BaseModel):
+    keywords: List[str]
 
 
 @function_tool(
@@ -71,12 +62,11 @@ async def search_events_by_date(
     date: str,
 ) -> dict[str, Any]:
     print("[TOOL CALL] search_events_by_date", date)
-    normalized = date.strip()
-    if not normalized:
+    if not date:
         raise ValueError("Provide a valid date in YYYY-MM-DD format.")
-    await ctx.context.stream(ProgressUpdateEvent(text=f"Looking up events on {normalized}"))
-    records = ctx.context.events.search_by_date(normalized)
-    return {"events": records}
+    await ctx.context.stream(ProgressUpdateEvent(text=f"Looking up events on {date}"))
+    records = ctx.context.events.search_by_date(date)
+    return {"events": _events_to_json(records)}
 
 
 @function_tool(description_override="List events occurring on a given day of the week.")
@@ -85,12 +75,11 @@ async def search_events_by_day_of_week(
     day: str,
 ) -> dict[str, Any]:
     print("[TOOL CALL] search_events_by_day_of_week", day)
-    normalized = day.strip()
-    if not normalized:
+    if not day:
         raise ValueError("Provide a day of the week to search for (e.g., Saturday).")
-    await ctx.context.stream(ProgressUpdateEvent(text=f"Checking {normalized} events"))
-    records = ctx.context.events.search_by_day_of_week(normalized)
-    return {"events": records}
+    await ctx.context.stream(ProgressUpdateEvent(text=f"Checking {day} events"))
+    records = ctx.context.events.search_by_day_of_week(day)
+    return {"events": _events_to_json(records)}
 
 
 @function_tool(
@@ -107,24 +96,45 @@ async def search_events_by_keyword(
     label = ", ".join(tokens)
     await ctx.context.stream(ProgressUpdateEvent(text=f"Searching for: {label}"))
     records = ctx.context.events.search_by_keyword(tokens)
-    return {"events": records}
+    return {"events": _events_to_json(records)}
+
+
+@function_tool(description_override="List all unique event keywords and categories.")
+async def list_available_event_keywords(
+    ctx: RunContextWrapper[EventFinderContext],
+) -> EventKeywords:
+    print("[TOOL CALL] list_available_event_keywords")
+    await ctx.context.stream(ProgressUpdateEvent(text="Referencing available event keywords..."))
+    return EventKeywords(keywords=ctx.context.events.list_available_keywords())
 
 
 @function_tool(description_override="Show a timeline-styled widget for a provided set of events.")
 async def show_event_list_widget(
     ctx: RunContextWrapper[EventFinderContext],
-    events: List[EventWidgetEntry],
+    events: List[EventRecord],
     message: str | None = None,
-) -> dict[str, Any]:
+):
     print("[TOOL CALL] show_event_list_widget", events)
-    normalized: List[dict[str, Any]] = [
-        event.model_dump(by_alias=True) for event in events if event
-    ]
-    if not normalized:
-        raise ValueError("Provide at least one event before calling this tool.")
+    records: List[EventRecord] = [event for event in events if event]
 
-    widget = build_event_list_widget(normalized)
-    copy_text = ", ".join(filter(None, (_event_title(event) for event in normalized)))
+    # Gracefully handle case where agent mistakenly calls this tool with no events.
+    # Otherewise, since the agent is configured to stop running after this tool call, the user
+    # will never see further output.
+    if not records:
+        fallback = message or "I couldn't find any events that match that search."
+        await ctx.context.stream(
+            ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=ctx.context.thread.id,
+                    id=ctx.context.generate_id("message"),
+                    created_at=datetime.now(),
+                    content=[AssistantMessageContent(text=fallback)],
+                ),
+            )
+        )
+
+    widget = build_event_list_widget(records)
+    copy_text = ", ".join(filter(None, (event.title for event in records)))
     await ctx.context.stream_widget(widget, copy_text=copy_text or "Local events")
 
     summary = message or "Here are the events that match your request."
@@ -138,15 +148,11 @@ async def show_event_list_widget(
             ),
         )
     )
-    return {"events": normalized}
 
 
-def _event_title(event: EventRecord | dict[str, Any]) -> str | None:
-    if isinstance(event, EventRecord):
-        return event.title
-    if isinstance(event, dict):
-        title = event.get("title")
-        return str(title) if title else None
+def _events_to_json(events: List[EventRecord]) -> List[dict[str, Any]]:
+    """Convert EventRecord models to JSON-safe dicts for tool responses."""
+    return [event.model_dump(mode="json", by_alias=True) for event in events]
 
 
 class EventSummaryContext(AgentContext):
@@ -164,6 +170,7 @@ event_finder_agent = Agent[EventFinderContext](
         search_events_by_date,
         search_events_by_day_of_week,
         search_events_by_keyword,
+        list_available_event_keywords,
         show_event_list_widget,
     ],
     # Stop inference after showing the event list widget to prevent content from being repeated in a continued response.

@@ -8,7 +8,7 @@ import json
 import re
 from datetime import date, datetime, time
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Sequence
+from typing import Dict, Iterable, List, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -69,47 +69,42 @@ class EventStore:
         self._events = events
         self._order = order
 
-    def list_events(self) -> List[Dict[str, Any]]:
+    def list_events(self) -> List[EventRecord]:
         """Return all events in list order."""
-        return [self._serialize_event(self._events[event_id]) for event_id in self._order]
+        return [self._events[event_id] for event_id in self._order]
 
-    def get_event(self, event_id: str) -> Dict[str, Any] | None:
-        record = self._events.get(event_id)
-        if not record:
-            return None
-        return self._serialize_event(record)
+    def get_event(self, event_id: str) -> EventRecord | None:
+        return self._events.get(event_id)
 
-    def search_by_date(self, value: str | date | datetime) -> List[Dict[str, Any]]:
+    def search_by_date(self, value: str | date | datetime) -> List[EventRecord]:
         target = self._parse_date(value)
         if not target:
             return []
         return [
-            self._serialize_event(self._events[event_id])
-            for event_id in self._order
-            if self._events[event_id].date == target
+            record for event_id in self._order if (record := self._events[event_id]).date == target
         ]
 
-    def search_by_day_of_week(self, day: str) -> List[Dict[str, Any]]:
+    def search_by_day_of_week(self, day: str) -> List[EventRecord]:
         normalized = day.strip().lower()
         if not normalized:
             return []
         return [
-            self._serialize_event(self._events[event_id])
+            record
             for event_id in self._order
-            if self._events[event_id].day_of_week.strip().lower() == normalized
+            if (record := self._events[event_id]).day_of_week.strip().lower() == normalized
         ]
 
-    def search_by_time(self, value: str | time | datetime) -> List[Dict[str, Any]]:
+    def search_by_time(self, value: str | time | datetime) -> List[EventRecord]:
         target = self._parse_time(value)
         if not target:
             return []
         return [
-            self._serialize_event(self._events[event_id])
+            record
             for event_id in self._order
-            if self._events[event_id].time == target
+            if (record := self._events[event_id]).time == target
         ]
 
-    def search_by_keyword(self, terms: str | Sequence[str]) -> List[Dict[str, Any]]:
+    def search_by_keyword(self, terms: str | Sequence[str]) -> List[EventRecord]:
         normalized_terms = self._normalize_keywords(terms)
         if not normalized_terms:
             return []
@@ -126,22 +121,30 @@ class EventStore:
                 combined_keywords,
             ]
 
-        matches: List[Dict[str, Any]] = []
+        matches: List[EventRecord] = []
         for event_id in self._order:
             record = self._events[event_id]
             haystack = [field.lower() for field in _fields(record)]
             if any(term in field for term in normalized_terms for field in haystack):
-                matches.append(self._serialize_event(record))
+                matches.append(record)
 
         return matches
 
-    # -- Helpers ---------------------------------------------------------
-    def _serialize_event(self, record: EventRecord) -> Dict[str, Any]:
-        payload = record.model_dump(by_alias=True)
-        payload["date"] = record.date.isoformat()
-        payload["time"] = record.time.strftime("%H:%M")
-        return payload
+    def list_available_keywords(self) -> List[str]:
+        """Return unique keywords and categories to guide fuzzy matching in the agent."""
+        keywords: dict[str, None] = {}
+        for event_id in self._order:
+            record = self._events[event_id]
+            for keyword in record.keywords:
+                text = keyword.strip()
+                if text:
+                    keywords[text.lower()] = None
+            category = record.category.strip()
+            if category:
+                keywords[category.lower()] = None
+        return sorted(keywords.keys())
 
+    # -- Helpers ---------------------------------------------------------
     def _parse_date(self, value: str | date | datetime) -> date | None:
         if isinstance(value, datetime):
             return value.date()

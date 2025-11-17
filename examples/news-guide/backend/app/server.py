@@ -33,7 +33,7 @@ from .agents.news_agent import NewsAgentContext, news_agent
 from .agents.puzzle_agent import PuzzleAgentContext, puzzle_agent
 from .agents.title_agent import title_agent
 from .data.article_store import ArticleStore
-from .data.event_store import EventStore
+from .data.event_store import EventRecord, EventStore
 from .memory_store import MemoryStore
 from .request_context import RequestContext
 from .thread_item_converter import NewsGuideThreadItemConverter
@@ -155,7 +155,7 @@ class NewsAssistantServer(ChatKitServer[RequestContext]):
         ]
         is_selected = bool(action.payload.get("is_selected"))
         record = self.event_store.get_event(selected_event_id) if selected_event_id else None
-        description = record.get("details") if record else None
+        description = record.details if record else None
 
         # If the event is already selected, no need to show the details again.
         if (
@@ -167,7 +167,7 @@ class NewsAssistantServer(ChatKitServer[RequestContext]):
         ):
             return
 
-        records: list[dict[str, Any]] = []
+        records: list[EventRecord] = []
         for event_id in event_ids:
             record = self.event_store.get_event(event_id)
             if record:
