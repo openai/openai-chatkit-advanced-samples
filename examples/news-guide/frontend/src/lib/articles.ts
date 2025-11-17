@@ -1,3 +1,5 @@
+import { Entity, Widgets } from "@openai/chatkit";
+
 import { ARTICLES_API_URL } from "./config";
 
 export type ArticleMetadata = {
@@ -13,6 +15,11 @@ export type ArticleMetadata = {
 
 export type Article = ArticleMetadata & {
   content: string;
+};
+
+export type TagResult = {
+  entity: Entity;
+  preview: Widgets.BasicRoot;
 };
 
 export async function fetchArticles(): Promise<ArticleMetadata[]> {
@@ -34,6 +41,15 @@ export async function fetchArticle(articleId: string): Promise<Article> {
     throw new Error("Article payload missing in response.");
   }
   return data.article;
+}
+
+export async function fetchArticleTags(): Promise<TagResult[]> {
+  const response = await fetch(`${ARTICLES_API_URL}/tags`);
+  if (!response.ok) {
+    throw new Error(`Failed to load article tags (${response.status})`);
+  }
+  const data = (await response.json()) as { tags?: TagResult[] };
+  return data.tags ?? [];
 }
 
 export function formatArticleDate(value: string): string {

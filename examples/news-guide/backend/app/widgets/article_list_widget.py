@@ -11,7 +11,7 @@ from typing import Iterable, List
 from chatkit.actions import ActionConfig
 from chatkit.widgets import Box, Button, Col, Image, ListView, ListViewItem, Row, Text
 
-from .article_store import ArticleMetadata
+from ..data.article_store import ArticleMetadata
 
 DEFAULT_TAG = "dispatch"
 

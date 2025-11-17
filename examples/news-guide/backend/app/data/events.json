@@ -1,0 +1,134 @@
+[
+  {
+    "id": "council-coffee-briefing",
+    "date": "2025-02-20",
+    "dayOfWeek": "Thursday",
+    "time": "08:00",
+    "location": "Foxhollow Press Club",
+    "title": "Council Coffee Briefing",
+    "details": "City beat reporters host a breezy drop-in with council members previewing the night's zoning votes; Corner Hearth pastries mysteriously vanish faster than anyone can refill them.",
+    "category": "civics",
+    "keywords": ["council", "zoning", "reporters", "coffee", "briefing", "local government", "morning"]
+  },
+  {
+    "id": "loft-gallery-preview",
+    "date": "2025-02-20",
+    "dayOfWeek": "Thursday",
+    "time": "18:30",
+    "location": "Mill Row Art Loft",
+    "title": "Dispatch Photo Archive Preview",
+    "details": "A softly lit walk-through of never-before-seen Dispatch negatives, where curator Simone Reyes shares behind-the-lens stories that feel almost like Foxhollow folklore.",
+    "category": "arts",
+    "keywords": ["photography", "archive", "gallery", "Dispatch", "curator", "art", "evening"]
+  },
+  {
+    "id": "winter-night-market",
+    "date": "2025-02-21",
+    "dayOfWeek": "Friday",
+    "time": "18:00",
+    "location": "Depot Hall, Downtown Foxhollow",
+    "title": "Winter Night Market",
+    "details": "Artists, growers, and food trucks turn Depot Hall into a glowing twilight bazaar, complete with warm cider tastings and letterpress demos that leave your fingers dusted with inky wonder.",
+    "category": "community",
+    "keywords": ["market", "vendors", "food trucks", "cider", "crafts", "winter", "bazaar"]
+  },
+  {
+    "id": "blue-heron-cleanup",
+    "date": "2025-02-22",
+    "dayOfWeek": "Saturday",
+    "time": "09:30",
+    "location": "Blue Heron Riverside Trailhead",
+    "title": "Blue Heron Trail Cleanup",
+    "details": "Park rangers lead a spruce-up after last week’s winds; gloves, bags, and an improbably cheerful coffee truck await volunteers along the river’s morning mist.",
+    "category": "outdoors",
+    "keywords": ["cleanup", "volunteering", "trail", "riverside", "nature", "park", "morning"]
+  },
+  {
+    "id": "lantern-walk-session",
+    "date": "2025-02-22",
+    "dayOfWeek": "Saturday",
+    "time": "19:00",
+    "location": "Foxhollow Arboretum",
+    "title": "Lantern Walk & Folk Session",
+    "details": "A twilight lantern stroll through winding arboretum paths ends with an acoustic trio debuting tunes inspired by quirky Dispatch archive moments.",
+    "category": "music",
+    "keywords": ["lanterns", "folk music", "arboretum", "acoustic", "stroll", "evening", "nature"]
+  },
+  {
+    "id": "kids-maker-lab",
+    "date": "2025-02-23",
+    "dayOfWeek": "Sunday",
+    "time": "10:30",
+    "location": "Patchwork Library Makerspace",
+    "title": "Kids Maker Lab: Mini Rovers",
+    "details": "Engineers help young builders assemble mini rovers that attempt heroic climbs across the library’s cardboard canyon, often with theatrical sound effects.",
+    "category": "family",
+    "keywords": ["kids", "STEM", "robots", "makerspace", "engineering", "crafts", "learning"]
+  },
+  {
+    "id": "story-brunch-panel",
+    "date": "2025-02-23",
+    "dayOfWeek": "Sunday",
+    "time": "11:00",
+    "location": "The Marigold Cafe",
+    "title": "Sunday Story Brunch",
+    "details": "Over a cozy prix fixe brunch, Dispatch reporters share the funniest—and strangely heartwarming—reader tips that landed in the inbox this winter.",
+    "category": "food",
+    "keywords": ["brunch", "stories", "reporters", "food", "cafe", "community", "discussion"]
+  },
+  {
+    "id": "gardeners-seed-swap",
+    "date": "2025-02-24",
+    "dayOfWeek": "Monday",
+    "time": "17:30",
+    "location": "Foxhollow Community Greenhouse",
+    "title": "Evening Seed Swap & Soil Chat",
+    "details": "Master gardeners host a seed swap among warm greenhouse lights, offering soil tips while everyone trades envelopes labeled in increasingly fanciful handwriting.",
+    "category": "community",
+    "keywords": ["gardening", "seeds", "greenhouse", "swap", "plants", "community event", "spring prep"]
+  },
+  {
+    "id": "dispatch-audio-lab",
+    "date": "2025-02-25",
+    "dayOfWeek": "Tuesday",
+    "time": "19:00",
+    "location": "Dispatch Recording Room, Mill Row",
+    "title": "Local Voices Audio Lab",
+    "details": "Residents digitize old family tapes with gentle help from Dispatch audio producers; unexpected snippets of Foxhollow history often emerge between rewinds.",
+    "category": "arts",
+    "keywords": ["audio", "digitization", "recordings", "history", "Dispatch", "workshop", "sound editing"]
+  },
+  {
+    "id": "sunrise-bird-outing",
+    "date": "2025-02-26",
+    "dayOfWeek": "Wednesday",
+    "time": "06:45",
+    "location": "North Marsh Lookout",
+    "title": "Sunrise Bird Outing",
+    "details": "Naturalists guide a dawn walk where wintering waterfowl glide through the calm marsh; binocular loaners and hushed excitement are both plentiful.",
+    "category": "outdoors",
+    "keywords": ["birding", "sunrise", "nature walk", "marsh", "wildlife", "outdoors", "naturalists"]
+  },
+  {
+    "id": "baby-social-hour",
+    "date": "2025-02-27",
+    "dayOfWeek": "Thursday",
+    "time": "17:00",
+    "location": "Patchwork Library Community Room",
+    "title": "Baby Social Hour & Stroller Swap",
+    "details": "Babies and toddlers convene for an early-evening babble session while caregivers swap lightly used gear and compare notes on Foxhollow’s smoothest stroller-friendly shortcuts.",
+    "category": "family",
+    "keywords": ["babies", "toddlers", "parents", "strollers", "swap", "family event", "caregivers"]
+  },
+  {
+    "id": "ramen-night-workshop",
+    "date": "2025-02-28",
+    "dayOfWeek": "Friday",
+    "time": "18:30",
+    "location": "Corner Hearth Test Kitchen",
+    "title": "Winter Ramen Night",
+    "details": "Chef Marcus Wei teaches broth magic while guests assemble steaming bowls; a side tasting of house-made pickles provides tangy comic relief.",
+    "category": "food",
+    "keywords": ["ramen", "cooking", "workshop", "broth", "chef", "food event", "dinner"]
+  }
+]

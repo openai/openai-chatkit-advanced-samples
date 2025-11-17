@@ -12,14 +12,13 @@ from typing import Any, Dict, Iterable, List
 
 from pydantic import BaseModel, Field, ValidationError
 
-SEARCH_SYNONYMS: dict[str, list[str]] = {
-    "small town": ["neighborhood", "community"],
-    "small town drama": ["neighborhood drama", "community drama"],
-    "town drama": ["neighborhood drama"],
-    "drama": ["controversy", "debate", "feud", "saga", "gossip", "dispute"],
-    "gossip": ["drama", "rumor"],
-    "trending": ["popular", "top", "hot", "new", "fresh"],
-}
+
+def slugify(value: str) -> str:
+    """
+    Lightweight slugification for matching ids in a predictable, URL-friendly way.
+    """
+    normalized = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    return normalized
 
 
 class ArticleMetadata(BaseModel):
@@ -102,17 +101,15 @@ class ArticleStore:
             )
         return markdown_path.read_text(encoding="utf-8")
 
-    def list_metadata(self) -> List[Dict[str, Any]]:
+    def list_metadata(self) -> List[ArticleMetadata]:
         """Return metadata for all articles in list order."""
-        payload: List[Dict[str, Any]] = []
+        payload: List[ArticleMetadata] = []
         for article_id in self._order:
             record = self._articles[article_id]
-            data = record.model_dump(exclude={"content"})
-            data["date"] = record.date.isoformat()
-            payload.append(data)
+            payload.append(record)
         return payload
 
-    def list_metadata_for_tags(self, tags: List[str] | None = None) -> List[Dict[str, Any]]:
+    def list_metadata_for_tags(self, tags: List[str] | None = None) -> List[ArticleMetadata]:
         """
         Return ordered metadata filtered to articles that share any of the requested tags.
         """
@@ -123,16 +120,12 @@ class ArticleStore:
         if not normalized:
             return self.list_metadata()
 
-        payload: List[Dict[str, Any]] = []
+        payload: List[ArticleMetadata] = []
         for article_id in self._order:
             record = self._articles[article_id]
-            record_tags = {tag.lower() for tag in record.tags}
-            if not record_tags.intersection(normalized):
+            if not set(record.tags).intersection(normalized):
                 continue
-            metadata = record.model_dump(exclude={"content"})
-            metadata["date"] = record.date.isoformat()
-            metadata["matchedTags"] = sorted(record_tags.intersection(normalized))
-            payload.append(metadata)
+            payload.append(record)
 
         return payload
 
@@ -151,6 +144,23 @@ class ArticleStore:
         data = record.model_dump(exclude={"content"})
         data["date"] = record.date.isoformat()
         return data
+
+    def list_authors(self) -> list[dict[str, Any]]:
+        """
+        Return unique authors with a stable slug and article count, sorted by name.
+        """
+        authors: dict[str, dict[str, Any]] = {}
+        for article_id in self._order:
+            record = self._articles[article_id]
+            if not record.author:
+                continue
+            author_slug = slugify(record.author)
+            entry = authors.setdefault(
+                author_slug,
+                {"id": author_slug, "name": record.author, "articleCount": 0},
+            )
+            entry["articleCount"] += 1
+        return sorted(authors.values(), key=lambda item: item["name"])
 
     def tags_index(self) -> Dict[str, List[str]]:
         """Return a map of tag -> ordered article ids containing that tag."""
@@ -177,67 +187,30 @@ class ArticleStore:
     def search_metadata_by_keywords(self, keywords: List[str]) -> List[Dict[str, Any]]:
         """
         Return ordered article metadata for records whose metadata fields contain any of the provided keywords.
+        Simple substring matching; no scoring or clever weighting.
         """
         sanitized = [keyword.strip().lower() for keyword in keywords if keyword and keyword.strip()]
         if not sanitized:
             return []
 
-        phrases: List[str] = sanitized.copy()
+        search_terms: set[str] = set(sanitized)
         combined_phrase = " ".join(sanitized).strip()
-        if combined_phrase and combined_phrase not in phrases:
-            phrases.append(combined_phrase)
+        if combined_phrase:
+            search_terms.add(combined_phrase)
+        for term in list(search_terms):
+            tokens = [token for token in re.split(r"[^a-z0-9]+", term) if token]
+            search_terms.update(tokens)
 
-        expanded_terms: set[str] = set()
-        tokens: List[str] = []
-        multi_word_query = any(" " in phrase for phrase in phrases)
-        for phrase in phrases:
-            expanded_terms.update(self._expanded_search_terms(phrase))
-            tokens.extend(token for token in re.split(r"[^a-z0-9]+", phrase) if token)
-
-        token_count = len(tokens)
-        matches: List[tuple[int, int, Dict[str, Any]]] = []
-
-        for order_idx, article_id in enumerate(self._order):
+        matches: List[Dict[str, Any]] = []
+        for article_id in self._order:
             record = self._articles[article_id]
             metadata_fields = self._metadata_search_fields(record)
-            base_hits = sum(
-                1
-                for phrase in phrases
-                if phrase and any(phrase in field for field in metadata_fields)
-            )
-            term_hits = {
-                term for term in expanded_terms if any(term in field for field in metadata_fields)
-            }
-            phrase_hits = {term for term in term_hits if " " in term}
-            single_hits = term_hits - phrase_hits
-            if not base_hits and not term_hits:
-                continue
-            if (
-                (multi_word_query or token_count > 1)
-                and not base_hits
-                and not phrase_hits
-                and len(single_hits) < 2
-            ):
-                continue
+            if any(term in field for term in search_terms for field in metadata_fields):
+                metadata = record.model_dump(exclude={"content"})
+                metadata["date"] = record.date.isoformat()
+                matches.append(metadata)
 
-            score = base_hits * 100
-            for term in term_hits:
-                score += 5 if " " in term else 1
-
-            metadata = record.model_dump(exclude={"content"})
-            metadata["date"] = record.date.isoformat()
-            matches.append((score, order_idx, metadata))
-
-        matches.sort(key=lambda item: (-item[0], item[1]))
-        return [metadata for _, _, metadata in matches]
-
-    def search_metadata_by_keyword(self, keyword: str) -> List[Dict[str, Any]]:
-        """
-        Backward-compatible wrapper for single keyword searches.
-        """
-        if not keyword:
-            return []
-        return self.search_metadata_by_keywords([keyword])
+        return matches
 
     def search_content_by_exact_text(self, text: str) -> List[Dict[str, Any]]:
         """
@@ -256,32 +229,6 @@ class ArticleStore:
             metadata["date"] = record.date.isoformat()
             matches.append(metadata)
         return matches
-
-    def _expanded_search_terms(self, keyword: str) -> List[str]:
-        """
-        Break multi-word queries into tokens and enrich them with lightweight synonyms.
-        """
-        normalized = keyword.strip().lower()
-        if not normalized:
-            return []
-
-        tokens = [token for token in re.split(r"[^a-z0-9]+", normalized) if token]
-        phrases: List[str] = []
-        for start in range(len(tokens)):
-            for end in range(start + 2, len(tokens) + 1):
-                phrases.append(" ".join(tokens[start:end]))
-
-        terms = set(tokens)
-        if normalized:
-            terms.add(normalized)
-        terms.update(phrases)
-
-        for term in list(terms):
-            for variant in SEARCH_SYNONYMS.get(term, []):
-                if variant:
-                    terms.add(variant.lower())
-
-        return [term for term in terms if term]
 
     def _metadata_search_fields(self, record: ArticleRecord) -> List[str]:
         """
@@ -313,3 +260,28 @@ class ArticleStore:
             "tags": sorted(tags),
             "keywords": sorted(keywords),
         }
+
+    def search_metadata_by_author(self, author: str) -> List[Dict[str, Any]]:
+        """
+        Return ordered article metadata for records whose author matches the provided string.
+        """
+        normalized = author.strip().lower()
+        if not normalized:
+            return []
+
+        normalized_slug = slugify(normalized)
+        matches: List[Dict[str, Any]] = []
+        for article_id in self._order:
+            record = self._articles[article_id]
+            author_name = record.author.lower()
+            author_slug = slugify(record.author)
+            if (
+                normalized in author_name
+                or normalized_slug == author_slug
+                or normalized in author_slug
+            ):
+                metadata = record.model_dump(exclude={"content"})
+                metadata["date"] = record.date.isoformat()
+                matches.append(metadata)
+
+        return matches

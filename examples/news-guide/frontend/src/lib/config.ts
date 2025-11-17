@@ -1,4 +1,4 @@
-import { StartScreenPrompt } from "@openai/chatkit";
+import { StartScreenPrompt, ToolOption } from "@openai/chatkit";
 
 export const CHATKIT_API_URL =
   import.meta.env.VITE_CHATKIT_API_URL ?? "/chatkit";
@@ -33,12 +33,12 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
   {
     label: "Get public works updates",
     prompt: "What's the latest on public infrastructure projects?",
-    icon: "sparkle",
+    icon: "lightbulb",
   },
   {
     label: "Summarize this page",
     prompt: "Give me a summary of this page.",
-    icon: "book-open",
+    icon: "document",
   },
 ];
 
@@ -47,3 +47,24 @@ export const getPlaceholder = (hasThread: boolean) => {
     ? "Ask for related stories"
     : "Any small-town drama this week?";
 };
+
+export const TOOL_CHOICES: ToolOption[] = [
+  {
+    id: "event_finder",
+    label: "Event finder",
+    icon: "calendar",
+    placeholderOverride: "Anything happening this weekend?",
+    // @ts-ignore
+    // TODO: add to public API
+    persistent: true,
+  },
+  {
+    id: "puzzle",
+    label: "Coffee break puzzle",
+    shortLabel: "Puzzle",
+    icon: "atom",
+    placeholderOverride: "Give me a puzzle to solve",
+    // @ts-ignore
+    persistent: true,
+  },
+];

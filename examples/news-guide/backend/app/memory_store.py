@@ -7,10 +7,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from chatkit.store import NotFoundError, Store
 from chatkit.types import Attachment, Page, Thread, ThreadItem, ThreadMetadata
+
+from .request_context import RequestContext
 
 
 @dataclass
@@ -19,7 +21,7 @@ class _ThreadState:
     items: List[ThreadItem]
 
 
-class MemoryStore(Store[dict[str, Any]]):
+class MemoryStore(Store[RequestContext]):
     """Simple in-memory store compatible with the ChatKit Store interface."""
 
     def __init__(self) -> None:
@@ -40,13 +42,13 @@ class MemoryStore(Store[dict[str, Any]]):
         return ThreadMetadata(**data).model_copy(deep=True)
 
     # -- Thread metadata -------------------------------------------------
-    async def load_thread(self, thread_id: str, context: dict[str, Any]) -> ThreadMetadata:
+    async def load_thread(self, thread_id: str, context: RequestContext) -> ThreadMetadata:
         state = self._threads.get(thread_id)
         if not state:
             raise NotFoundError(f"Thread {thread_id} not found")
         return self._coerce_thread_metadata(state.thread)
 
-    async def save_thread(self, thread: ThreadMetadata, context: dict[str, Any]) -> None:
+    async def save_thread(self, thread: ThreadMetadata, context: RequestContext) -> None:
         metadata = self._coerce_thread_metadata(thread)
         state = self._threads.get(thread.id)
         if state:
@@ -62,7 +64,7 @@ class MemoryStore(Store[dict[str, Any]]):
         limit: int,
         after: str | None,
         order: str,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> Page[ThreadMetadata]:
         threads = sorted(
             (self._coerce_thread_metadata(state.thread) for state in self._threads.values()),
@@ -86,7 +88,7 @@ class MemoryStore(Store[dict[str, Any]]):
             after=next_after,
         )
 
-    async def delete_thread(self, thread_id: str, context: dict[str, Any]) -> None:
+    async def delete_thread(self, thread_id: str, context: RequestContext) -> None:
         self._threads.pop(thread_id, None)
 
     # -- Thread items ----------------------------------------------------
@@ -110,7 +112,7 @@ class MemoryStore(Store[dict[str, Any]]):
         after: str | None,
         limit: int,
         order: str,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> Page[ThreadItem]:
         items = [item.model_copy(deep=True) for item in self._items(thread_id)]
         items.sort(
@@ -131,11 +133,11 @@ class MemoryStore(Store[dict[str, Any]]):
         return Page(data=slice_items, has_more=has_more, after=next_after)
 
     async def add_thread_item(
-        self, thread_id: str, item: ThreadItem, context: dict[str, Any]
+        self, thread_id: str, item: ThreadItem, context: RequestContext
     ) -> None:
         self._items(thread_id).append(item.model_copy(deep=True))
 
-    async def save_item(self, thread_id: str, item: ThreadItem, context: dict[str, Any]) -> None:
+    async def save_item(self, thread_id: str, item: ThreadItem, context: RequestContext) -> None:
         items = self._items(thread_id)
         for idx, existing in enumerate(items):
             if existing.id == item.id:
@@ -143,14 +145,14 @@ class MemoryStore(Store[dict[str, Any]]):
                 return
         items.append(item.model_copy(deep=True))
 
-    async def load_item(self, thread_id: str, item_id: str, context: dict[str, Any]) -> ThreadItem:
+    async def load_item(self, thread_id: str, item_id: str, context: RequestContext) -> ThreadItem:
         for item in self._items(thread_id):
             if item.id == item_id:
                 return item.model_copy(deep=True)
         raise NotFoundError(f"Item {item_id} not found")
 
     async def delete_thread_item(
-        self, thread_id: str, item_id: str, context: dict[str, Any]
+        self, thread_id: str, item_id: str, context: RequestContext
     ) -> None:
         items = self._items(thread_id)
         self._threads[thread_id].items = [item for item in items if item.id != item_id]
@@ -161,7 +163,7 @@ class MemoryStore(Store[dict[str, Any]]):
     async def save_attachment(
         self,
         attachment: Attachment,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> None:
         raise NotImplementedError(
             "MemoryStore does not persist attachments. Provide a Store implementation "
@@ -171,14 +173,14 @@ class MemoryStore(Store[dict[str, Any]]):
     async def load_attachment(
         self,
         attachment_id: str,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> Attachment:
         raise NotImplementedError(
             "MemoryStore does not load attachments. Provide a Store implementation "
             "that enforces authentication and authorization before enabling uploads."
         )
 
-    async def delete_attachment(self, attachment_id: str, context: dict[str, Any]) -> None:
+    async def delete_attachment(self, attachment_id: str, context: RequestContext) -> None:
         raise NotImplementedError(
             "MemoryStore does not delete attachments because they are never stored."
         )

@@ -18,6 +18,10 @@ export default defineConfig({
         target: backendTarget,
         changeOrigin: true,
       },
+      "/tags": {
+        target: backendTarget,
+        changeOrigin: true,
+      },
     },
     // For production deployments, you need to add your public domains to this list
     allowedHosts: [
