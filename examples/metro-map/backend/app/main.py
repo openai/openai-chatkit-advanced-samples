@@ -7,8 +7,10 @@ from typing import Any
 from chatkit.server import StreamingResult
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
+from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
+from .data.metro_map_store import MetroMap
 from .request_context import RequestContext
 from .server import MetroMapServer, create_chatkit_server
 
@@ -47,3 +49,18 @@ async def chatkit_endpoint(
 @app.get("/map")
 async def read_map(server: MetroMapServer = Depends(get_chatkit_server)) -> dict[str, Any]:
     return {"map": server.metro_map_store.dump_for_client()}
+
+
+class MapUpdatePayload(BaseModel):
+    map: MetroMap
+
+
+@app.post("/map")
+async def write_map(
+    payload: MapUpdatePayload, server: MetroMapServer = Depends(get_chatkit_server)
+) -> dict[str, Any]:
+    try:
+        updated = server.metro_map_store.update_map(payload.map)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+    return {"map": updated.model_dump(mode="json")}

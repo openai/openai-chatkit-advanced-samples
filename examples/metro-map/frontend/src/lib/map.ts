@@ -37,3 +37,23 @@ export async function fetchMetroMap(): Promise<MetroMap> {
   }
   return data.map;
 }
+
+export async function updateMetroMap(map: MetroMap): Promise<MetroMap> {
+  const response = await fetch(MAP_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ map }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update metro map (${response.status})`);
+  }
+
+  const data = (await response.json()) as { map?: MetroMap };
+  if (!data.map) {
+    throw new Error("Metro map payload missing in response.");
+  }
+  return data.map;
+}
