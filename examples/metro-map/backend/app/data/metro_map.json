@@ -1,0 +1,27 @@
+{
+  "id": "orbital-transit",
+  "name": "Orbital Transit",
+  "summary": "Three stellar corridors linking planets and systems with crossovers at Vega Reach and Orionis Gate for easy transfers.",
+  "stations": [
+    { "id": "helios-prime", "name": "Helios Prime", "x": 0, "y": -1, "lines": ["aurora"] },
+    { "id": "cinderia", "name": "Cinderia", "x": 1, "y": -1, "lines": ["aurora"] },
+    { "id": "vega-reach", "name": "Vega Reach", "x": 2, "y": 0, "lines": ["aurora", "nebula"] },
+    { "id": "orionis-gate", "name": "Orionis Gate", "x": 3, "y": 0, "lines": ["aurora", "nebula", "rift"] },
+    { "id": "titan-border", "name": "Titan Border", "x": 4, "y": 0, "lines": ["aurora"] },
+    { "id": "cygnus-way", "name": "Cygnus Way", "x": 5, "y": 0, "lines": ["aurora"] },
+    { "id": "kepler-forge", "name": "Kepler Forge", "x": -1, "y": 1, "lines": ["nebula"] },
+    { "id": "arcturus-drift", "name": "Arcturus Drift", "x": 0, "y": 1, "lines": ["nebula"] },
+    { "id": "sagan-halo", "name": "Sagan Halo", "x": 4, "y": 1, "lines": ["nebula"] },
+    { "id": "lyra-verge", "name": "Lyra Verge", "x": 5, "y": 1, "lines": ["nebula"] },
+    { "id": "lumen-cradle", "name": "Lumen Cradle", "x": 3, "y": -3, "lines": ["rift"] },
+    { "id": "proxima-step", "name": "Proxima Step", "x": 3, "y": -2, "lines": ["rift"] },
+    { "id": "zephyr-system", "name": "Zephyr System", "x": 3, "y": -1, "lines": ["rift"] },
+    { "id": "altair-rim", "name": "Altair Rim", "x": 3, "y": 1, "lines": ["rift"] },
+    { "id": "farpoint-prime", "name": "Farpoint Prime", "x": 3, "y": 2, "lines": ["rift"] }
+  ],
+  "lines": [
+    { "id": "aurora", "name": "Blue Line", "color": "#06b6d4", "stations": ["helios-prime", "cinderia", "vega-reach", "orionis-gate", "titan-border", "cygnus-way"] },
+    { "id": "nebula", "name": "Purple Line", "color": "#a855f7", "stations": ["kepler-forge", "arcturus-drift", "vega-reach", "orionis-gate", "sagan-halo", "lyra-verge"] },
+    { "id": "rift", "name": "Orange Line", "color": "#f59e0b", "stations": ["lumen-cradle", "proxima-step", "zephyr-system", "orionis-gate", "altair-rim", "farpoint-prime"] }
+  ]
+}
