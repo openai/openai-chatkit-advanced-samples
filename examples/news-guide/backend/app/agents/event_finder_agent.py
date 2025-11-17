@@ -13,9 +13,10 @@ from chatkit.types import (
 )
 from pydantic import BaseModel, ConfigDict, Field
 
-from .event_list_widget import build_event_list_widget
-from .event_store import EventRecord, EventStore
-from .memory_store import MemoryStore
+from ..data.event_store import EventRecord, EventStore
+from ..memory_store import MemoryStore
+from ..request_context import RequestContext
+from ..widgets.event_list_widget import build_event_list_widget
 
 INSTRUCTIONS = """
     You help Foxhollow residents discover local happenings. When a reader asks for events,
@@ -43,7 +44,7 @@ class EventFinderContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     store: Annotated[MemoryStore, Field(exclude=True)]
     events: Annotated[EventStore, Field(exclude=True)]
-    request_context: Annotated[dict[str, Any], Field(exclude=True, default_factory=dict)]
+    request_context: Annotated[RequestContext, Field(exclude=True, default_factory=RequestContext)]
 
 
 class EventWidgetEntry(BaseModel):
@@ -152,7 +153,7 @@ class EventSummaryContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     store: Annotated[MemoryStore, Field(exclude=True)]
     events: Annotated[EventStore, Field(exclude=True)]
-    request_context: Annotated[dict[str, Any], Field(exclude=True, default_factory=dict)]
+    request_context: Annotated[RequestContext, Field(exclude=True, default_factory=RequestContext)]
 
 
 event_finder_agent = Agent[EventFinderContext](

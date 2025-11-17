@@ -17,7 +17,7 @@ export type Article = ArticleMetadata & {
   content: string;
 };
 
-export type ArticleTag = {
+export type TagResult = {
   entity: Entity;
   preview: Widgets.BasicRoot;
 };
@@ -43,12 +43,12 @@ export async function fetchArticle(articleId: string): Promise<Article> {
   return data.article;
 }
 
-export async function fetchArticleTags(): Promise<ArticleTag[]> {
+export async function fetchArticleTags(): Promise<TagResult[]> {
   const response = await fetch(`${ARTICLES_API_URL}/tags`);
   if (!response.ok) {
     throw new Error(`Failed to load article tags (${response.status})`);
   }
-  const data = (await response.json()) as { tags?: ArticleTag[] };
+  const data = (await response.json()) as { tags?: TagResult[] };
   return data.tags ?? [];
 }
 

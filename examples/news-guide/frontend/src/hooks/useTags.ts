@@ -1,56 +1,50 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Entity } from "@openai/chatkit";
 
-import { fetchArticleTags, type ArticleTag } from "../lib/articles";
+import { fetchArticleTags, type TagResult } from "../lib/articles";
 
 export function useTags() {
-  const tagsRef = useRef<ArticleTag[] | null>(null);
-  const loadingRef = useRef<Promise<ArticleTag[]> | null>(null);
+  const [tags, setTags] = useState<TagResult[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
-  const loadTags = useCallback(async () => {
-    if (tagsRef.current) {
-      return tagsRef.current;
-    }
-
-    if (!loadingRef.current) {
-      loadingRef.current = fetchArticleTags()
-        .then((tags) => {
-          tagsRef.current = tags;
-          return tags;
-        })
-        .catch((error) => {
-          console.error("Failed to fetch article tags", error);
-          tagsRef.current = [];
-          return [];
-        });
-    }
-
-    return loadingRef.current;
+  useEffect(() => {
+    fetchArticleTags()
+      .then(setTags)
+      .catch((error) => {
+        console.error("Failed to fetch article tags", error);
+        setTags([]);
+      })
+      .finally(() => setLoaded(true));
   }, []);
 
   const search = useCallback(
     async (query: string) => {
-      const tags = await loadTags();
+      if (!loaded) {
+        return [];
+      }
       const normalized = query.trim().toLowerCase();
       const matchingTags = normalized
         ? tags.filter(({ entity }) => {
             const titleMatch = entity.title.toLowerCase().includes(normalized);
             const idMatch = entity.id.toLowerCase().includes(normalized);
-            return titleMatch || idMatch;
+            const groupMatch = entity.group?.toLowerCase().includes(normalized);
+            return titleMatch || idMatch || groupMatch;
           })
         : tags;
       return matchingTags.map((tag) => tag.entity);
     },
-    [loadTags]
+    [loaded, tags]
   );
 
   const getPreview = useCallback(
     async (entity: Entity) => {
-      const tags = await loadTags();
+      if (!loaded) {
+        return { preview: null };
+      }
       const match = tags.find((tag) => tag.entity.id === entity.id);
       return { preview: match?.preview ?? null };
     },
-    [loadTags]
+    [loaded, tags]
   );
 
   return { search, getPreview };

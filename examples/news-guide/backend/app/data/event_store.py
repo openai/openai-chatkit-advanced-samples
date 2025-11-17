@@ -8,7 +8,7 @@ import json
 import re
 from datetime import date, datetime, time
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Sequence, Set
+from typing import Any, Dict, Iterable, List, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
@@ -39,7 +39,6 @@ class EventStore:
         self.data_dir = Path(data_dir)
         self._events: Dict[str, EventRecord] = {}
         self._order: List[str] = []
-        self._token_index: Dict[str, Set[str]] = {}
         self.reload()
 
     @property
@@ -59,7 +58,6 @@ class EventStore:
 
         events: Dict[str, EventRecord] = {}
         order: List[str] = []
-        tokens: Dict[str, Set[str]] = {}
         for idx, entry in enumerate(raw):
             try:
                 record = EventRecord.model_validate(entry)
@@ -67,11 +65,9 @@ class EventStore:
                 raise ValueError(f"Invalid event metadata at index {idx}: {exc}") from exc
             events[record.id] = record
             order.append(record.id)
-            tokens[record.id] = self._build_token_set(record)
 
         self._events = events
         self._order = order
-        self._token_index = tokens
 
     def list_events(self) -> List[Dict[str, Any]]:
         """Return all events in list order."""
@@ -114,16 +110,30 @@ class EventStore:
         ]
 
     def search_by_keyword(self, terms: str | Sequence[str]) -> List[Dict[str, Any]]:
-        tokens = self._normalize_keywords(terms)
-        if not tokens:
+        normalized_terms = self._normalize_keywords(terms)
+        if not normalized_terms:
             return []
 
-        matching_ids = []
+        def _fields(record: EventRecord) -> List[str]:
+            combined_keywords = " ".join(record.keywords)
+            return [
+                record.id,
+                record.day_of_week,
+                record.location,
+                record.title,
+                record.details,
+                record.category,
+                combined_keywords,
+            ]
+
+        matches: List[Dict[str, Any]] = []
         for event_id in self._order:
-            event_tokens = self._token_index.get(event_id, set())
-            if any(term in event_tokens for term in tokens):
-                matching_ids.append(event_id)
-        return [self._serialize_event(self._events[event_id]) for event_id in matching_ids]
+            record = self._events[event_id]
+            haystack = [field.lower() for field in _fields(record)]
+            if any(term in field for term in normalized_terms for field in haystack):
+                matches.append(self._serialize_event(record))
+
+        return matches
 
     # -- Helpers ---------------------------------------------------------
     def _serialize_event(self, record: EventRecord) -> Dict[str, Any]:
@@ -163,36 +173,16 @@ class EventStore:
                 return None
         return None
 
-    def _normalize_keywords(self, terms: str | Sequence[str]) -> Set[str]:
+    def _normalize_keywords(self, terms: str | Sequence[str]) -> List[str]:
         values: Iterable[str]
         if isinstance(terms, str):
             values = [terms]
         else:
             values = terms
-        tokens: Set[str] = set()
+        normalized: List[str] = []
         for value in values:
             text = value.strip().lower()
-            if not text:
-                continue
-            tokens.update(self._tokenize(text))
-        return tokens
-
-    def _build_token_set(self, record: EventRecord) -> Set[str]:
-        components: List[str] = [
-            record.id,
-            record.date.isoformat(),
-            record.day_of_week,
-            record.time.strftime("%H:%M"),
-            record.location,
-            record.title,
-            record.details,
-            record.category,
-            " ".join(record.keywords),
-        ]
-        tokens: Set[str] = set()
-        for value in components:
-            tokens.update(self._tokenize(value.lower()))
-        return tokens
-
-    def _tokenize(self, value: str) -> Set[str]:
-        return {token for token in re.split(r"[^a-z0-9]+", value) if token}
+            if text:
+                normalized.append(text)
+                normalized.extend(token for token in re.split(r"[^a-z0-9]+", text) if token)
+        return list(dict.fromkeys(normalized))  # dedupe while preserving order

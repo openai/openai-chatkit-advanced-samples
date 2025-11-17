@@ -4,9 +4,9 @@ Widget helpers for presenting a list of events with timeline styling.
 
 from __future__ import annotations
 
-from datetime import datetime, date
+from datetime import date, datetime
 from itertools import groupby
-from typing import Any, Iterable, Mapping
+from typing import Any, Iterable, Mapping, Sequence
 
 from chatkit.actions import ActionConfig
 from chatkit.widgets import (
@@ -22,7 +22,7 @@ from chatkit.widgets import (
     Title,
 )
 
-from .event_store import EventRecord
+from ..data.event_store import EventRecord
 
 CATEGORY_COLORS: dict[str, str] = {
     "community": "purple-400",
@@ -48,9 +48,9 @@ def build_event_list_widget(
     """Render an event list widget grouped by date."""
     records = [_coerce_event(event) for event in events]
     records.sort(key=lambda rec: rec.date)
+    event_ids: list[str] = [record.id for record in records]
 
     items = []
-    header_indices = []
 
     for event_date, group in groupby(records, key=lambda rec: rec.date):
         group_records = list(group)
@@ -66,7 +66,10 @@ def build_event_list_widget(
                 ListViewItem(
                     children=[
                         _event_card(
-                            record, is_selected=is_selected, description_value=description_value
+                            record,
+                            is_selected=is_selected,
+                            description_value=description_value,
+                            event_ids=event_ids,
                         )
                     ]
                 )
@@ -83,12 +86,15 @@ def _coerce_event(event: EventLike) -> EventRecord:
 
 
 def _event_card(
-    record: EventRecord, is_selected: bool, description_value: str | None = None
+    record: EventRecord,
+    is_selected: bool,
+    description_value: str | None = None,
+    event_ids: Sequence[str] | None = None,
 ) -> Box:
     category = (record.category or "").strip().lower()
     color = CATEGORY_COLORS.get(category, DEFAULT_CATEGORY_COLOR)
     children = [
-        _event_header(record, color, is_selected=is_selected),
+        _event_header(record, color, is_selected=is_selected, event_ids=event_ids or []),
         Title(value=record.title, size="sm"),
         Text(value=_format_location(record), color="alpha-70", size="xs"),
     ]
@@ -130,7 +136,9 @@ def _group_header(event_date: date) -> Box:
     )
 
 
-def _event_header(record: EventRecord, color: str, is_selected: bool) -> Row:
+def _event_header(
+    record: EventRecord, color: str, is_selected: bool, event_ids: Sequence[str]
+) -> Row:
     return Row(
         align="center",
         children=[
@@ -138,15 +146,14 @@ def _event_header(record: EventRecord, color: str, is_selected: bool) -> Row:
             Spacer(),
             Button(
                 label="Show details ↓",
-                disabled=is_selected,
                 size="sm",
                 iconSize="sm",
                 pill=True,
                 variant="ghost",
-                color="warning",
+                color=None if is_selected else "warning",
                 onClickAction=ActionConfig(
                     type="view_event_details",
-                    payload={"id": record.id},
+                    payload={"id": record.id, "event_ids": list(event_ids), "is_selected": is_selected},
                     handler="server",
                 ),
             ),

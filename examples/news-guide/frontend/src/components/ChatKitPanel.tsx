@@ -1,6 +1,6 @@
 import { ChatKit, useChatKit, Widgets, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -27,7 +27,7 @@ export function ChatKitPanel({
   className,
 }: ChatKitPanelProps) {
   const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
-  const actionedWidgetsRef = useRef<Set<string>>(new Set());
+  const [lastActionedArticle, setLastActionedArticle] = useState<string | null>(null);
   const navigate = useNavigate();
   const { search, getPreview } = useTags();
 
@@ -36,17 +36,12 @@ export function ChatKitPanel({
   const setThreadId = useAppStore((state) => state.setThreadId);
   const articleId = useAppStore((state) => state.articleId);
 
-  const activeArticleRef = useRef<string | null>(articleId);
-  useEffect(() => {
-    activeArticleRef.current = articleId ?? "featured";
-  }, [articleId]);
-
   const customFetch = useMemo(() => {
     return async (input: RequestInfo | URL, init?: RequestInit) => {
       const headers = new Headers(init?.headers ?? {});
-      const articleId = activeArticleRef.current;
-      if (articleId) {
-        headers.set("article-id", articleId);
+      const currentArticleId = articleId ?? "featured";
+      if (currentArticleId) {
+        headers.set("article-id", currentArticleId);
       } else {
         headers.delete("article-id");
       }
@@ -55,7 +50,7 @@ export function ChatKitPanel({
         headers,
       });
     };
-  }, []);
+  }, [articleId]);
 
   const handleWidgetAction = useCallback(
     async (
@@ -69,27 +64,23 @@ export function ChatKitPanel({
             navigate(`/article/${id}`);
             const chatkit = chatkitRef.current;
 
-            if (chatkit) {
-              // `open_article` can be invoked as many times as the user wants and we'll always
-              // navigate to the article, BUT we only want to stream back a follow-up message
-              // once per actioned article (otherwise it looks spammy).
-              const key = `${widgetItem.id}:${id}`;
-              if (!actionedWidgetsRef.current.has(key)) {
-                await chatkit.sendCustomAction(action, widgetItem.id);
-                actionedWidgetsRef.current.add(key);
+              if (chatkit) {
+                if (id !== lastActionedArticle) {
+                  await chatkit.sendCustomAction(action, widgetItem.id);
+                  setLastActionedArticle(id);
+                }
               }
             }
-          }
-          break;
+            break;
         }
       }
     },
-    [navigate]
+    [navigate, lastActionedArticle]
   );
 
   const handleEntityClick = useCallback(
     (entity: Entity) => {
-      const rawId = entity.data?.["article_id"] ?? entity.id;
+      const rawId = entity.data?.["article_id"];
       const articleId = typeof rawId === "string" ? rawId.trim() : "";
       if (articleId) {
         navigate(`/article/${articleId}`);

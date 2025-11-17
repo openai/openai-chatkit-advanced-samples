@@ -25,63 +25,42 @@ from chatkit.types import (
     WidgetItem,
     WidgetRootUpdated,
 )
-from chatkit.widgets import Button, ListView, WidgetComponentBase
+from chatkit.widgets import ListView
 from openai.types.responses import ResponseInputContentParam
 
-from .article_store import ArticleStore
-from .event_finder_agent import EventFinderContext, event_finder_agent
-from .event_list_widget import build_event_list_widget
-from .event_store import EventStore
+from .agents.event_finder_agent import EventFinderContext, event_finder_agent
+from .agents.news_agent import NewsAgentContext, news_agent
+from .agents.puzzle_agent import PuzzleAgentContext, puzzle_agent
+from .agents.title_agent import title_agent
+from .data.article_store import ArticleStore
+from .data.event_store import EventStore
 from .memory_store import MemoryStore
-from .news_agent import NewsAgentContext, news_agent
-from .puzzle_agent import PuzzleAgentContext, puzzle_agent
+from .request_context import RequestContext
 from .thread_item_converter import NewsGuideThreadItemConverter
-from .title_agent import title_agent
+from .widgets.event_list_widget import build_event_list_widget
 
 
-class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
+class NewsAssistantServer(ChatKitServer[RequestContext]):
     """ChatKit server wired up with the News Guide editorial assistant."""
 
     def __init__(self) -> None:
         self.store: MemoryStore = MemoryStore()
         super().__init__(self.store)
 
-        data_dir = Path(__file__).resolve().parent / "content"
+        data_dir = Path(__file__).resolve().parent / "data"
         self.article_store = ArticleStore(data_dir)
         self.event_store = EventStore(data_dir)
         self.thread_item_converter = NewsGuideThreadItemConverter()
         self.title_agent = title_agent
 
     # -- Required overrides ----------------------------------------------------
-    async def action(
-        self,
-        thread: ThreadMetadata,
-        action: Action[str, Any],
-        sender: WidgetItem | None,
-        context: dict[str, Any],
-    ) -> AsyncIterator[ThreadStreamEvent]:
-        if action.type == "open_article":
-            async for event in self._handle_open_article_action(thread, action, context):
-                yield event
-            return
-        if action.type == "view_event_details":
-            async for event in self._handle_view_event_details_action(
-                thread, action, sender, context
-            ):
-                yield event
-            return
-
-        return
-
     async def respond(
         self,
         thread: ThreadMetadata,
         item: UserMessageItem | None,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        updating_thread_title = asyncio.create_task(
-            self.maybe_update_thread_title(thread, item)
-        )
+        updating_thread_title = asyncio.create_task(self._maybe_update_thread_title(thread, item))
         items_page = await self.store.load_thread_items(
             thread.id,
             after=None,
@@ -101,7 +80,29 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         await updating_thread_title
         return
 
-    async def maybe_update_thread_title(
+    async def action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        sender: WidgetItem | None,
+        context: RequestContext,
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        if action.type == "open_article":
+            async for event in self._handle_open_article_action(thread, action, context):
+                yield event
+            return
+        if action.type == "view_event_details":
+            async for event in self._handle_view_event_details_action(action, sender):
+                yield event
+            return
+
+        return
+
+    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
+        raise RuntimeError("File attachments are not supported in this demo.")
+
+    # -- Helpers ----------------------------------------------------
+    async def _maybe_update_thread_title(
         self, thread: ThreadMetadata, user_message: UserMessageItem | None
     ) -> None:
         if user_message is None or thread.title is not None:
@@ -115,16 +116,13 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         model_result = model_result[:1].upper() + model_result[1:]
         thread.title = model_result.strip(".")
 
-    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
-        raise RuntimeError("File attachments are not supported in this demo.")
-
     async def _handle_open_article_action(
         self,
         thread: ThreadMetadata,
         action: Action[str, Any],
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        article_id = self._extract_article_id(action)
+        article_id = action.payload.get("id")
         if not article_id:
             return
 
@@ -144,121 +142,56 @@ class NewsAssistantServer(ChatKitServer[dict[str, Any]]):
         )
         yield ThreadItemDoneEvent(item=message_item)
 
-    def _extract_article_id(self, action: Action[str, Any]) -> str | None:
-        payload = action.payload
-        if isinstance(payload, dict):
-            article_id = payload.get("id")
-            if isinstance(article_id, str) and article_id.strip():
-                return article_id
-        return None
-
     async def _handle_view_event_details_action(
         self,
-        thread: ThreadMetadata,
         action: Action[str, Any],
         sender: WidgetItem | None,
-        context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        event_id = self._extract_event_id(action)
-        if not event_id:
-            return
-
-        record = self.event_store.get_event(event_id)
-        if not record or not sender or not isinstance(sender.widget, ListView):
-            message_item = AssistantMessageItem(
-                thread_id=thread.id,
-                id=self.store.generate_item_id("message", thread, context),
-                created_at=datetime.now(),
-                content=[
-                    AssistantMessageContent(
-                        text="I couldn't find details for that event, but feel free to ask about another one."
-                    )
-                ],
-            )
-            yield ThreadItemDoneEvent(item=message_item)
-            return
-
+        event_id = action.payload.get("id")
+        event_ids = [
+            event
+            for event in (action.payload.get("event_ids") or [])
+            if isinstance(event, str) and event
+        ]
+        is_selected = bool(action.payload.get("is_selected"))
+        record = self.event_store.get_event(event_id) if event_id else None
         description = record.get("details")
-        updated_widget = self._build_widget_with_description(
-            sender.widget,
-            event_id,
-            description,
+
+        # If the event is already selected, no need to show the details again.
+        if (
+            is_selected
+            or not record
+            or not event_ids
+            or not sender
+            or not isinstance(sender.widget, ListView)
+        ):
+            return
+
+        records: list[dict[str, Any]] = []
+        for event_id in event_ids:
+            record = self.event_store.get_event(event_id)
+            if record:
+                records.append(record)
+
+        updated_widget = build_event_list_widget(
+            records,
+            selected_event_id=event_id,
+            selected_event_description=description,
         )
+
+        if not updated_widget:
+            return
+
         yield ThreadItemUpdated(
             item_id=sender.id,
             update=WidgetRootUpdated(widget=updated_widget),
         )
 
-    def _extract_event_id(self, action: Action[str, Any]) -> str | None:
-        payload = action.payload
-        if isinstance(payload, dict):
-            event_id = payload.get("id")
-            if isinstance(event_id, str) and event_id.strip():
-                return event_id
-        return None
-
-    def _build_widget_with_description(
-        self,
-        widget: ListView,
-        selected_event_id: str,
-        description: str,
-    ) -> ListView | None:
-        records = self._load_widget_event_records(widget)
-        if not records:
-            return None
-        ids = {record.get("id") for record in records}
-        if selected_event_id not in ids:
-            return None
-        return build_event_list_widget(
-            records,
-            selected_event_id=selected_event_id,
-            selected_event_description=description,
-        )
-
-    def _load_widget_event_records(self, widget: ListView) -> list[dict[str, Any]]:
-        records: list[dict[str, Any]] = []
-        for event_id in self._collect_event_ids(widget):
-            record = self.event_store.get_event(event_id)
-            if record:
-                records.append(record)
-        return records
-
-    def _collect_event_ids(self, component: WidgetComponentBase) -> list[str]:
-        ids: list[str] = []
-        self._gather_event_ids(component, ids)
-        return ids
-
-    def _gather_event_ids(
-        self,
-        component: WidgetComponentBase,
-        output: list[str],
-    ) -> None:
-        action = getattr(component, "onClickAction", None)
-        if isinstance(component, Button) and action:
-            payload = getattr(action, "payload", None)
-            if isinstance(payload, dict):
-                event_id = payload.get("id")
-                if isinstance(event_id, str):
-                    normalized = event_id.strip()
-                    if normalized:
-                        output.append(normalized)
-
-        children = getattr(component, "children", None)
-        if not children:
-            return
-
-        if isinstance(children, list):
-            for child in children:
-                if isinstance(child, WidgetComponentBase):
-                    self._gather_event_ids(child, output)
-        elif isinstance(children, WidgetComponentBase):
-            self._gather_event_ids(children, output)
-
     def _select_agent(
         self,
         thread: ThreadMetadata,
         item: UserMessageItem | None,
-        context: dict[str, Any],
+        context: RequestContext,
     ) -> tuple[
         Agent,
         NewsAgentContext | EventFinderContext | PuzzleAgentContext,

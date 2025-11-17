@@ -9,9 +9,10 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from starlette.responses import JSONResponse
 
-from .article_preview_widget import build_article_preview_widget
-from .article_store import ArticleMetadata
+from .data.article_store import ArticleMetadata
+from .request_context import RequestContext
 from .server import NewsAssistantServer, create_chatkit_server
+from .widgets.preview_widgets import build_article_preview_widget, build_author_preview_widget
 
 app = FastAPI(title="ChatKit API")
 
@@ -36,9 +37,7 @@ async def chatkit_endpoint(
 ) -> Response:
     payload = await request.body()
     article_id = request.headers.get("article-id")
-    context: dict[str, Any] = {"request": request}
-    if article_id:
-        context["article_id"] = article_id.strip()
+    context = RequestContext(request=request, article_id=article_id)
     result = await server.process(payload, context)
     if isinstance(result, StreamingResult):
         return StreamingResponse(result, media_type="text/event-stream")
@@ -66,6 +65,9 @@ async def list_featured_articles(
     }
 
 
+# Because this is a demo with a small number of articles and authors,
+# we are returning all tags and authors in a single request to power
+# entity tag search and preview requests within the client.
 @app.get("/articles/tags")
 async def list_article_tags(
     server: NewsAssistantServer = Depends(get_chatkit_server),
@@ -94,7 +96,35 @@ async def list_article_tags(
             "preview": build_article_preview_widget(article).model_dump(),
         }
 
-    return {"tags": [_build_article_tag(entry) for entry in server.article_store.list_metadata()]}
+    def _build_author_tag(author: dict[str, Any]) -> dict[str, Any]:
+        author_id = author["id"]
+        author_name = author["name"]
+        article_count = author.get("articleCount")
+        data = {
+            "author": author_name,
+            "author_id": author_id,
+            "type": "author",
+        }
+        return {
+            "entity": {
+                "title": author_name,
+                "id": f"author:{author_id}",
+                "icon": "profile-card",
+                "interactive": True,
+                "group": "Authors",
+                "data": data,
+            },
+            "preview": build_author_preview_widget(
+                author_name=author_name,
+                author_slug=author_id,
+                article_count=article_count,
+            ).model_dump(),
+        }
+
+    articles = [_build_article_tag(entry) for entry in server.article_store.list_metadata()]
+    authors = [_build_author_tag(entry) for entry in server.article_store.list_authors()]
+
+    return {"tags": articles + authors}
 
 
 @app.get("/articles/{article_id}")
