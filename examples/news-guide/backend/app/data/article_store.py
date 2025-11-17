@@ -109,7 +109,7 @@ class ArticleStore:
             payload.append(record)
         return payload
 
-    def list_metadata_for_tags(self, tags: List[str] | None = None) -> List[Dict[str, Any]]:
+    def list_metadata_for_tags(self, tags: List[str] | None = None) -> List[ArticleMetadata]:
         """
         Return ordered metadata filtered to articles that share any of the requested tags.
         """
@@ -120,16 +120,12 @@ class ArticleStore:
         if not normalized:
             return self.list_metadata()
 
-        payload: List[Dict[str, Any]] = []
+        payload: List[ArticleMetadata] = []
         for article_id in self._order:
             record = self._articles[article_id]
-            record_tags = {tag.lower() for tag in record.tags}
-            if not record_tags.intersection(normalized):
+            if not set(record.tags).intersection(normalized):
                 continue
-            metadata = record.model_dump(exclude={"content"})
-            metadata["date"] = record.date.isoformat()
-            metadata["matchedTags"] = sorted(record_tags.intersection(normalized))
-            payload.append(metadata)
+            payload.append(record)
 
         return payload
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import textwrap
 from datetime import datetime
 from typing import Annotated, List
 
@@ -269,7 +268,7 @@ def _load_featured_articles(store: ArticleStore) -> list[ArticleRecord]:
     seen: set[str] = set()
 
     for entry in metadata_entries:
-        article_id = entry.get("id")
+        article_id = entry.id
         if not article_id or article_id in seen:
             continue
 

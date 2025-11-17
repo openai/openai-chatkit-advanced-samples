@@ -41,7 +41,7 @@ function AppShell() {
         </div>
       </div>
       <div className="flex flex-1 min-h-0 flex-col md:flex-row">
-        <div className="flex basis-full min-h-[320px] flex-col border-b border-slate-800 bg-white dark:border-slate-200 dark:bg-slate-950 md:basis-[32%] md:min-h-0 md:border-b-0 md:border-r">
+        <div className="flex basis-full min-h-[320px] flex-col border-b border-slate-800 bg-white dark:border-slate-200 dark:bg-[#1c1c1c] md:basis-[32%] md:min-h-0 md:border-b-0 md:border-r">
           <ChatKitPanel
             className="flex-1"
             onChatKitReady={(chatkit) => (chatkitRef.current = chatkit)}
