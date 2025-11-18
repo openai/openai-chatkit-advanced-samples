@@ -44,6 +44,8 @@ INSTRUCTIONS = """
     Custom tags:
     - <LINE_SELECTED>{line_id}</LINE_SELECTED> - when the user has selected a line, you can use this tag to reference the line id.
       When this is the latest message, acknowledge the selection.
+    - <STATION_TAG>...</STATION_TAG> - contains a tagged station's details (id, name, line list, coordinates). Use the id inside this
+      tag when looking up stations or planning routes.
 """
 
 

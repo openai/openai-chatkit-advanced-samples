@@ -20,7 +20,8 @@ type MetroMapCanvasProps = {
 };
 
 type StationNodeData = Station & {
-  connections: string[];
+  isFirst: boolean;
+  isLast: boolean;
   lineColors: Record<string, string>;
 };
 
@@ -29,7 +30,7 @@ const NODE_TYPES = {
 };
 
 function StationNode({ data }: NodeProps<StationNodeData>) {
-  const { name, lines, connections, lineColors } = data;
+  const { name, lines, lineColors } = data;
   const dotColors = lines
     .map((lineId) => lineColors[lineId])
     .filter((color): color is string => Boolean(color));
@@ -96,21 +97,20 @@ function buildNodes(map: MetroMap): Node<StationNodeData>[] {
   });
 
   return map.stations.map((station) => {
-    const connections = Array.from(
-      new Set(
-        map.lines
-          .filter((line) => line.stations.includes(station.id))
-          .flatMap((line) => line.stations)
-          .filter((id) => id !== station.id)
-      )
-    );
+    const isFirst = !!map.lines
+      .filter((line) => line.stations.includes(station.id))
+      .find((line) => line.stations.indexOf(station.id) === 0)
+    const isLast = !!map.lines
+      .filter((line) => line.stations.includes(station.id))
+      .find((line) => line.stations.indexOf(station.id) === line.stations.length - 1)
     return {
       id: station.id,
       type: "station",
       position: { x: station.x * X_UNIT, y: station.y * Y_UNIT },
       data: {
         ...station,
-        connections,
+        isFirst,
+        isLast,
         lineColors: lineColor,
       },
       draggable: true,

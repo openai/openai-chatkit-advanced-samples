@@ -1,6 +1,6 @@
-import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import { ChatKit, useChatKit, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import {
   CHATKIT_API_DOMAIN_KEY,
@@ -32,8 +32,51 @@ export function ChatKitPanel({
   const setThreadId = useAppStore((state) => state.setThreadId);
   const setMap = useMapStore((state) => state.setMap);
   const currentMap = useMapStore((state) => state.map);
-  const fitView = useMapStore((state) => state.fitView);
   const focusStation = useMapStore((state) => state.focusStation);
+
+  const stationEntities = useMemo<Entity[]>(() => {
+    if (!currentMap) return [];
+    return currentMap.stations.map((station) => {
+      return {
+        id: station.id,
+        title: station.name,
+        interactive: true,
+        group: "Stations",
+        data: {
+          type: "station",
+          station_id: station.id,
+          name: station.name,
+        },
+      };
+    });
+  }, [currentMap]);
+
+  const searchStations = useCallback(
+    async (query: string) => {
+      if (!stationEntities.length) return [];
+      const normalized = query.trim().toLowerCase();
+      if (!normalized) return stationEntities;
+      return stationEntities.filter((entity) => {
+        const lineNames = entity.data?.line_names?.toLowerCase() ?? "";
+        return (
+          entity.title.toLowerCase().includes(normalized) ||
+          entity.id.toLowerCase().includes(normalized) ||
+          lineNames.includes(normalized)
+        );
+      });
+    },
+    [stationEntities]
+  );
+
+  const handleEntityClick = useCallback(
+    (entity: Entity) => {
+      const stationId = (entity.data?.station_id || entity.id || "").trim();
+      if (stationId) {
+        focusStation(stationId, currentMap ?? undefined);
+      }
+    },
+    [currentMap, focusStation]
+  );
 
   const handleClientTool = useCallback(
     (toolCall: { name: string; params: Record<string, unknown> }) => {
@@ -52,7 +95,7 @@ export function ChatKitPanel({
       }
       return { success: false };
     },
-    [currentMap, fitView, focusStation, setMap]
+    [focusStation, setMap]
   );
 
   const chatkit = useChatKit({
@@ -84,6 +127,10 @@ export function ChatKitPanel({
     },
     composer: {
       placeholder: getPlaceholder(Boolean(activeThread)),
+    },
+    entities: {
+      onTagSearch: searchStations,
+      onClick: handleEntityClick,
     },
     threadItemActions: {
       feedback: false,

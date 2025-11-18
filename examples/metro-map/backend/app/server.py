@@ -46,7 +46,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
 
         data_dir = Path(__file__).resolve().parent / "data"
         self.metro_map_store = MetroMapStore(data_dir)
-        self.thread_item_converter = MetroMapThreadItemConverter()
+        self.thread_item_converter = MetroMapThreadItemConverter(self.metro_map_store)
 
     # -- Required overrides ----------------------------------------------------
     async def respond(
