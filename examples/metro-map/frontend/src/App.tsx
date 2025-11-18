@@ -13,7 +13,7 @@ function AppShell() {
   const setChatkit = useAppStore((state) => state.setChatkit);
 
   return (
-    <div className="h-full flex min-h-screen flex-col transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100 bg-white/90 text-slate-900">
+    <div className="h-full flex min-h-screen flex-col transition-colors duration-300 dark:bg-[#0d1117] dark:text-slate-100 bg-white/90 text-slate-900">
       <div className="sticky top-0 z-30 w-full text-slate-900 dark:text-slate-100">
         <div className="relative flex w-full flex-col gap-4 px-6 py-6 pr-24 sm:flex-row sm:items-center sm:gap-8">
           <span

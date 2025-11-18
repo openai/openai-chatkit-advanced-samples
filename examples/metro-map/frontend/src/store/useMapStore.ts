@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { MetroMap } from "../lib/map";
+import { X_UNIT, Y_UNIT, type MetroMap } from "../lib/map";
 import type { ReactFlowInstance } from "reactflow";
 
 type MapState = {
@@ -9,6 +9,7 @@ type MapState = {
   reactFlow: ReactFlowInstance | null;
   setReactFlow: (instance: ReactFlowInstance | null) => void;
   fitView: () => void;
+  focusStation: (stationId: string, map?: MetroMap) => void;
 };
 
 export const useMapStore = create<MapState>((set, get) => ({
@@ -25,5 +26,19 @@ export const useMapStore = create<MapState>((set, get) => ({
       maxZoom: 1.4,
       includeHiddenNodes: true,
     });
+  },
+  focusStation: (stationId, currentMap) => {
+    const instance = get().reactFlow;
+    const map = currentMap ?? get().map;
+    if (!instance || !map) return;
+
+    const station = map.stations.find((entry) => entry.id === stationId);
+    if (!station) return;
+
+    const x = station.x * X_UNIT;
+    const y = station.y * Y_UNIT;
+    const zoom = Math.max(1.05, Math.min(1.3, instance.getZoom() + 0.1));
+
+    instance.setCenter(x, y, { zoom, duration: 800 });
   },
 }));

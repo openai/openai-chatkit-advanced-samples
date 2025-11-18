@@ -10,7 +10,7 @@ import { MetroMapCanvas } from "./MetroMapCanvas";
 export function MapPanel() {
   const map = useMapStore((state) => state.map);
   const setMap = useMapStore((state) => state.setMap);
-  const fitView = useMapStore((state) => state.fitView);
+  const focusStation = useMapStore((state) => state.focusStation);
   const chatkit = useAppStore((state) => state.chatkit);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,7 +126,7 @@ export function MapPanel() {
       const saved = await updateMetroMap(updatedMap);
       setMap(saved);
       closeModal();
-      requestAnimationFrame(() => fitView());
+      requestAnimationFrame(() => focusStation(stationId, saved));
       if (chatkit) {
         const followUpPrompt = `I've added a new station named "${trimmedName}" to the ${line.name} line. What should I do next?`;
         chatkit

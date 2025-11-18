@@ -20,8 +20,8 @@
     { "id": "farpoint-prime", "name": "Farpoint Prime", "x": 3, "y": 2, "lines": ["orange"] }
   ],
   "lines": [
-    { "id": "blue", "name": "Blue Line", "color": "#06b6d4", "stations": ["helios-prime", "cinderia", "vega-reach", "orionis-gate", "titan-border", "cygnus-way"] },
-    { "id": "purple", "name": "Purple Line", "color": "#a855f7", "stations": ["kepler-forge", "arcturus-dorange", "vega-reach", "orionis-gate", "sagan-halo", "lyra-verge"] },
-    { "id": "orange", "name": "Orange Line", "color": "#f59e0b", "stations": ["lumen-cradle", "proxima-step", "zephyr-system", "orionis-gate", "altair-rim", "farpoint-prime"] }
+    { "id": "blue", "name": "Blue Line", "color": "#06b6d4", "orientation": "horizontal", "stations": ["helios-prime", "cinderia", "vega-reach", "orionis-gate", "titan-border", "cygnus-way"] },
+    { "id": "purple", "name": "Purple Line", "color": "#a855f7", "orientation": "horizontal", "stations": ["kepler-forge", "arcturus-dorange", "vega-reach", "orionis-gate", "sagan-halo", "lyra-verge"] },
+    { "id": "orange", "name": "Orange Line", "color": "#f59e0b", "orientation": "vertical", "stations": ["lumen-cradle", "proxima-step", "zephyr-system", "orionis-gate", "altair-rim", "farpoint-prime"] }
   ]
 }

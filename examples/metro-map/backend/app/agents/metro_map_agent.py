@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Annotated
 
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext, ClientToolCall
-from chatkit.types import ProgressUpdateEvent
+from chatkit.types import (
+    AssistantMessageContent,
+    AssistantMessageItem,
+    ProgressUpdateEvent,
+    ThreadItemDoneEvent,
+)
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..data.metro_map_store import Line, MetroMap, MetroMapStore, Station
@@ -12,40 +18,27 @@ from ..memory_store import MemoryStore
 from ..request_context import RequestContext
 
 INSTRUCTIONS = """
-    You are a concise metro planner helping riders navigate the Orbital Transit map.
+    You are a concise metro planner helping city planners update the Orbital Transit map.
     Give short answers, list 2–3 options, and highlight the lines or interchanges involved.
 
     Before recommending a route, sync the latest map with the provided tools. Cite line
     colors when helpful (e.g., "take Red then Blue at Central Exchange").
 
-    When the rider asks what to do next, reply with 2 concise follow-up ideas and pick one to lead with.
+    When the user asks what to do next, reply with 2 concise follow-up ideas and pick one to lead with.
     Default to actionable options like adding another station on the same line or explaining how to travel
     from the newly added station to a nearby destination.
 
-    Map edits requests:
-    - When users ask to add/rename/move stations or add lines, plan the full layout, make the change,
-      then call update_map with the complete list of stations and lines so the UI refreshes.
-    - Only allow one change at a time. If the user asks to make multiple changes, ask them to choose one at a time.
-      For example, if the user asks to replace the entire map, ask them to specify which station or line they would
-      like to update.
+    When a user wants to add a station:
+    - If the user did not specify a line, ask them to choose one from the list of lines.
+    - If the user did not specify a station name, ask them to enter a name.
+    - If the user did not specify whether to add the station to the end of the line or the beginning, ask them to choose one.
+    - When you have all the information you need, call the `add_station` tool with the station name, line id, and append flag.
 
-    May layout rules:
-    - Coordinates are grid units (1 unit = 160px horizontally, 80px vertically when rendered).
-      Keep stations spaced out by at least one unit on shared rows/columns; only adjust existing
-      station positions if required to avoid conflicts.
-    - Prefer continuous lines: when adding/inserting on a horizontal segment (same y), move the new
-      station into a fresh column (x +/- 1) so it is not sharing the column with its neighbors; on a
-      vertical segment (same x), move it into a fresh row (y +/- 1) instead of sharing the row.
-    - If inserting between two stations, spread the downstream stations along that same axis to
-      preserve one-unit spacing and keep the order intact.
-    - Prefer minimal layout shifts—only move existing stations after applying the above continuity
-      rule and spacing requirements.
-
-    If the rider asks for quick guidance, provide a one-sentence route and a simple
-    backup option. Avoid over-explaining and stay within the given station list.
+    When a user wants to plan a route:
+    - If the user did not specify a starting or detination station, ask them to choose them from the list of stations.
+    - Provide a one-sentence route, the estimated travel time, and points of interest along the way.
+    - Avoid over-explaining and stay within the given station list.
 """
-
-MODEL = "gpt-4o-mini"
 
 
 class MetroAgentContext(AgentContext):
@@ -139,31 +132,52 @@ async def get_station(
 
 @function_tool(
     description_override=(
-        "Replace the current metro map with an updated layout (include lines and stations)."
+        """Add a new station to the metro map.
+        - `station_name`: The name of the station to add.
+        - `line_id`: The id of the line to add the station to. Should be one of the ids returned by list_lines.
+        - `append`: Whether to add the station to the end of the line or the beginning. Defaults to True.
+        """
     )
 )
-async def update_map(
+async def add_station(
     ctx: RunContextWrapper[MetroAgentContext],
-    map: MetroMap,
+    station_name: str,
+    line_id: str,
+    append: bool = True,
 ) -> MapResult:
-    print(f"[TOOL CALL] update_map: {map}")
-    await ctx.context.stream(ProgressUpdateEvent(text="Updating the map..."))
+    station_name = station_name.strip().title()
+    print(f"[TOOL CALL] add_station: {station_name} to {line_id}")
+    await ctx.context.stream(ProgressUpdateEvent(text="Adding station..."))
     try:
-        updated_map = ctx.context.metro.update_map(map)
+        updated_map = ctx.context.metro.add_station(station_name, line_id, append)
         ctx.context.client_tool_call = ClientToolCall(
             name="update_map",
             arguments={"map": updated_map.model_dump(mode="json")},
         )
         return MapResult(map=updated_map)
     except Exception as e:
-        print(f"[ERROR] update_map: {e}")
+        print(f"[ERROR] add_station: {e}")
+        await ctx.context.stream(
+            ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=ctx.context.thread.id,
+                    id=ctx.context.generate_id("message"),
+                    created_at=datetime.now(),
+                    content=[
+                        AssistantMessageContent(
+                            text=f"There was an error adding _{station_name}_, {e.message}"
+                        )
+                    ],
+                ),
+            )
+        )
         raise
 
 
 metro_map_agent = Agent[MetroAgentContext](
     name="metro_map",
     instructions=INSTRUCTIONS,
-    model=MODEL,
+    model="gpt-4o-mini",
     tools=[
         # Retrieval tools
         get_map,
@@ -172,8 +186,8 @@ metro_map_agent = Agent[MetroAgentContext](
         get_line_route,
         get_station,
         # Tools to update the map
-        update_map,
+        add_station,
     ],
     # Stop inference after client tool call
-    tool_use_behavior=StopAtTools(stop_at_tool_names=[update_map.name]),
+    tool_use_behavior=StopAtTools(stop_at_tool_names=[add_station.name]),
 )

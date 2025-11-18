@@ -13,8 +13,6 @@ export const CHATKIT_API_DOMAIN_KEY =
 
 export const MAP_API_URL = import.meta.env.VITE_MAP_API_URL ?? "/map";
 
-export const THEME_STORAGE_KEY = "metro-map-theme";
-
 export const GREETING = "Welcome aboard—where are you headed on the metro map?";
 
 export const STARTER_PROMPTS: StartScreenPrompt[] = [

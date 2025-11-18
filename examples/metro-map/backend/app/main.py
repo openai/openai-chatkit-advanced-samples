@@ -47,7 +47,9 @@ async def chatkit_endpoint(
 
 
 @app.get("/map")
-async def read_map(server: MetroMapServer = Depends(get_chatkit_server)) -> dict[str, Any]:
+async def read_map(
+    server: MetroMapServer = Depends(get_chatkit_server),
+) -> dict[str, Any]:
     return {"map": server.metro_map_store.dump_for_client()}
 
 
@@ -60,7 +62,7 @@ async def write_map(
     payload: MapUpdatePayload, server: MetroMapServer = Depends(get_chatkit_server)
 ) -> dict[str, Any]:
     try:
-        updated = server.metro_map_store.update_map(payload.map)
+        server.metro_map_store.set_map(payload.map)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
-    return {"map": updated.model_dump(mode="json")}
+    return {"map": payload.map.model_dump(mode="json")}

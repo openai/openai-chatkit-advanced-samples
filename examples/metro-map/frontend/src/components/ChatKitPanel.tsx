@@ -58,6 +58,12 @@ export function ChatKitPanel({
       density: "spacious",
       colorScheme: theme,
       color: {
+        ...(theme === "dark" ? {
+          surface: {
+            background: "#0d1117",
+            foreground: "#1d222b"
+          }
+        } : null),
         accent: {
           primary: "#0ea5e9",
           level: 1,
