@@ -19,6 +19,7 @@ from chatkit.types import (
     ClientToolCallItem,
     HiddenContextItem,
     ThreadItemDoneEvent,
+    ThreadItemReplacedEvent,
     ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
@@ -146,10 +147,8 @@ class MetroMapServer(ChatKitServer[RequestContext]):
 
         if sender:
             updated_widget_item = sender.model_copy(update={"widget": updated_widget})
-            await self.store.save_item(thread.id, updated_widget_item, context=context)
-            yield ThreadItemUpdated(
-                item_id=sender.id,
-                update=WidgetRootUpdated(widget=updated_widget),
+            yield ThreadItemReplacedEvent(
+                item=updated_widget_item,
             )
 
         # Add hidden context so the agent can pick up the chosen line id on the next run.

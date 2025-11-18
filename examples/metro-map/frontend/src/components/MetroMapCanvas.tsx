@@ -21,8 +21,6 @@ type MetroMapCanvasProps = {
 };
 
 type StationNodeData = Station & {
-  isFirst: boolean;
-  isLast: boolean;
   lineColors: Record<string, string>;
 };
 
@@ -295,20 +293,12 @@ function buildNodes(map: MetroMap): Node<StationNodeData>[] {
   });
 
   return map.stations.map((station) => {
-    const isFirst = !!map.lines
-      .filter((line) => line.stations.includes(station.id))
-      .find((line) => line.stations.indexOf(station.id) === 0)
-    const isLast = !!map.lines
-      .filter((line) => line.stations.includes(station.id))
-      .find((line) => line.stations.indexOf(station.id) === line.stations.length - 1)
     return {
       id: station.id,
       type: "station",
       position: { x: station.x * X_UNIT, y: station.y * Y_UNIT },
       data: {
         ...station,
-        isFirst,
-        isLast,
         lineColors: lineColor,
       },
       draggable: false,
@@ -368,7 +358,7 @@ function buildEdges(map: MetroMap, nodes: Node[]): Edge[] {
   return edges;
 }
 
-function MetroFlow({ map }: { map: MetroMap }) {
+export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
   const [{ nodes, edges }, setGraph] = useState(() => buildGraph(map));
   const setReactFlow = useMapStore((state) => state.setReactFlow);
 
@@ -388,39 +378,33 @@ function MetroFlow({ map }: { map: MetroMap }) {
   };
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      nodeTypes={NODE_TYPES}
-      onInit={onInit}
-      fitView
-      minZoom={0.4}
-      maxZoom={1.6}
-      snapToGrid
-      snapGrid={[40, 40]}
-      proOptions={{ hideAttribution: true }}
-      className="rounded-2xl bg-slate-50 dark:bg-slate-900"
-      nodesDraggable={false}
-      nodesConnectable={false}
-      elementsSelectable
-      panOnScroll
-      zoomOnDoubleClick={false}
-      panOnDrag
-    >
-      <Background
-        id="grid"
-        gap={40}
-        size={1.5}
-        color="rgba(148,163,184,0.5)"
-      />
-    </ReactFlow>
-  );
-}
-
-export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
-  return (
     <ReactFlowProvider>
-      <MetroFlow map={map} />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={NODE_TYPES}
+        onInit={onInit}
+        fitView
+        minZoom={0.4}
+        maxZoom={1.6}
+        snapToGrid
+        snapGrid={[40, 40]}
+        proOptions={{ hideAttribution: true }}
+        className="rounded-2xl bg-slate-50 dark:bg-slate-900"
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable
+        panOnScroll
+        zoomOnDoubleClick={false}
+        panOnDrag
+      >
+        <Background
+          id="grid"
+          gap={40}
+          size={1.5}
+          color="rgba(148,163,184,0.5)"
+        />
+      </ReactFlow>
     </ReactFlowProvider>
   );
 }

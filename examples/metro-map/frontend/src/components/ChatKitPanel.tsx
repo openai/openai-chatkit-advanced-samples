@@ -1,6 +1,6 @@
 import { ChatKit, useChatKit, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 
 import {
   CHATKIT_API_DOMAIN_KEY,
@@ -25,8 +25,6 @@ export function ChatKitPanel({
   onChatKitReady,
   className,
 }: ChatKitPanelProps) {
-  const chatkitRef = useRef<ReturnType<typeof useChatKit> | null>(null);
-
   const theme = useAppStore((state) => state.scheme);
   const activeThread = useAppStore((state) => state.threadId);
   const setThreadId = useAppStore((state) => state.setThreadId);
@@ -155,7 +153,6 @@ export function ChatKitPanel({
       onChatKitReady?.(chatkit);
     },
   });
-  chatkitRef.current = chatkit;
 
   return (
     <div className={clsx("relative h-full w-full overflow-hidden", className)}>

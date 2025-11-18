@@ -55,8 +55,8 @@ INSTRUCTIONS = """
     Custom tags:
     - <LINE_SELECTED>{line_id}</LINE_SELECTED> - when the user has selected a line, you can use this tag to reference the line id.
       When this is the latest message, acknowledge the selection.
-    - <STATION_TAG>...</STATION_TAG> - contains a tagged station's details (id, name, line list). Use the id inside this
-      tag when looking up stations or planning routes.
+    - <STATION_TAG>...</STATION_TAG> - contains full station details (id, name, description, coordinates, and served lines with ids/colors/orientations).
+      Use the data inside the tag directly; do not call `get_station` just to resolve a tagged station.
 """
 
 
@@ -87,12 +87,6 @@ class LineDetailResult(BaseModel):
 class StationDetailResult(BaseModel):
     station: Station
     lines: list[Line]
-
-
-class StationAddResult(BaseModel):
-    station: Station
-    line: Line
-    map: MetroMap
 
 
 @function_tool(description_override="Show a clickable widget listing metro lines.")

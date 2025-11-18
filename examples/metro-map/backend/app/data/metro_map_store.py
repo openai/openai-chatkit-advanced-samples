@@ -78,9 +78,6 @@ class MetroMapStore:
                 stations.append(station)
         return stations
 
-    def interchanges(self) -> list[Station]:
-        return [station for station in self.map.stations if len(station.lines) > 1]
-
     def dump_for_client(self) -> dict:
         return self.map.model_dump(mode="json")
 

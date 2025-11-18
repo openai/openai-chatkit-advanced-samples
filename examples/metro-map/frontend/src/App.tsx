@@ -1,15 +1,12 @@
 import clsx from "clsx";
-import { useRef } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 
 import { ChatKitPanel } from "./components/ChatKitPanel";
-import type { ChatKit } from "./components/ChatKitPanel";
 import { MapPanel } from "./components/MapPanel";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { useAppStore } from "./store/useAppStore";
 
 function AppShell() {
-  const chatkitRef = useRef<ChatKit | null>(null);
   const setChatkit = useAppStore((state) => state.setChatkit);
 
   return (
@@ -37,7 +34,6 @@ function AppShell() {
           <ChatKitPanel
             className="flex-1"
             onChatKitReady={(chatkit) => {
-              chatkitRef.current = chatkit;
               setChatkit(chatkit);
             }}
           />

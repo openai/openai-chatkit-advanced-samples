@@ -31,7 +31,7 @@ class MetroMapThreadItemConverter(ThreadItemConverter):
     async def tag_to_message_content(
         self, tag: UserMessageTagContent
     ) -> ResponseInputTextParam:
-        """Represent a tagged station so the agent can load it by id."""
+        """Represent a tagged station with all inline details for the model."""
         tag_data = tag.data or {}
         station_id = (tag_data.get("station_id") or tag.id or "").strip()
         station_name = (tag_data.get("name") or tag.text or station_id).strip()
@@ -40,23 +40,35 @@ class MetroMapThreadItemConverter(ThreadItemConverter):
         if not station:
             return ResponseInputTextParam(
                 type="input_text",
-                text=f"Tagged station: {station_name} (not found)",
+                text="\n".join(
+                    [
+                        "Tagged station (not found):",
+                        "<STATION_TAG>",
+                        f"name: {station_name}",
+                        "status: not found",
+                        "</STATION_TAG>",
+                    ]
+                ),
             )
 
         line_details: list[str] = []
         for line_id in station.lines:
             line = self.metro_map_store.find_line(line_id)
             if line:
-                line_details.append(f"{line.name} ({line.id}, {line.color})")
+                line_details.append(
+                    f"- {line.name} (id={line.id}, color={line.color}, orientation={line.orientation})"
+                )
 
-        station_lines = ", ".join(line_details)
+        station_lines = "\n".join(line_details)
         text = "\n".join(
             [
-                "Tagged station:",
+                "Tagged station with full details:",
                 "<STATION_TAG>",
                 f"id: {station.id}",
                 f"name: {station.name}",
-                f"lines: {station_lines}",
+                f"description: {station.description}",
+                "lines:",
+                station_lines or "- none",
                 "</STATION_TAG>",
             ]
         )
