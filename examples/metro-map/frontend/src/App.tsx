@@ -6,9 +6,11 @@ import { ChatKitPanel } from "./components/ChatKitPanel";
 import type { ChatKit } from "./components/ChatKitPanel";
 import { MapPanel } from "./components/MapPanel";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { useAppStore } from "./store/useAppStore";
 
 function AppShell() {
   const chatkitRef = useRef<ChatKit | null>(null);
+  const setChatkit = useAppStore((state) => state.setChatkit);
 
   return (
     <div className="h-full flex min-h-screen flex-col transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100 bg-white/90 text-slate-900">
@@ -34,7 +36,10 @@ function AppShell() {
         <div className="flex flex-1 min-h-0 bg-transparent">
           <ChatKitPanel
             className="flex-1"
-            onChatKitReady={(chatkit) => (chatkitRef.current = chatkit)}
+            onChatKitReady={(chatkit) => {
+              chatkitRef.current = chatkit;
+              setChatkit(chatkit);
+            }}
           />
         </div>
       </div>

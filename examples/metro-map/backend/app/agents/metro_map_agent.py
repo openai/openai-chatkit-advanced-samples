@@ -18,6 +18,10 @@ INSTRUCTIONS = """
     Before recommending a route, sync the latest map with the provided tools. Cite line
     colors when helpful (e.g., "take Red then Blue at Central Exchange").
 
+    When the rider asks what to do next, reply with 2 concise follow-up ideas and pick one to lead with.
+    Default to actionable options like adding another station on the same line or explaining how to travel
+    from the newly added station to a nearby destination.
+
     Map edits requests:
     - When users ask to add/rename/move stations or add lines, plan the full layout, make the change,
       then call update_map with the complete list of stations and lines so the UI refreshes.

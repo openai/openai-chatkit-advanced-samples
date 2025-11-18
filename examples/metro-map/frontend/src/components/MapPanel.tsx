@@ -4,12 +4,14 @@ import { ChevronDown } from "lucide-react";
 
 import { fetchMetroMap, updateMetroMap, type Line, type MetroMap } from "../lib/map";
 import { useMapStore } from "../store/useMapStore";
+import { useAppStore } from "../store/useAppStore";
 import { MetroMapCanvas } from "./MetroMapCanvas";
 
 export function MapPanel() {
   const map = useMapStore((state) => state.map);
   const setMap = useMapStore((state) => state.setMap);
   const fitView = useMapStore((state) => state.fitView);
+  const chatkit = useAppStore((state) => state.chatkit);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newStationName, setNewStationName] = useState("");
@@ -125,6 +127,14 @@ export function MapPanel() {
       setMap(saved);
       closeModal();
       requestAnimationFrame(() => fitView());
+      if (chatkit) {
+        const followUpPrompt = `I've added a new station named "${trimmedName}" to the ${line.name} line. What should I do next?`;
+        chatkit
+          .sendUserMessage({ text: followUpPrompt, newThread: true })
+          .catch((sendError) => {
+            console.error("Failed to notify ChatKit about the new station.", sendError);
+          });
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to update the metro map.";

@@ -1,3 +1,4 @@
+import type { UseChatKitReturn } from "@openai/chatkit-react";
 import { create } from "zustand";
 
 import { THEME_STORAGE_KEY } from "../lib/config";
@@ -9,6 +10,8 @@ type AppState = {
   setScheme: (scheme: ColorScheme) => void;
   threadId: string | null;
   setThreadId: (threadId: string | null) => void;
+  chatkit: UseChatKitReturn | null;
+  setChatkit: (chatkit: UseChatKitReturn | null) => void;
 };
 
 function getInitialScheme(): ColorScheme {
@@ -47,5 +50,7 @@ export const useAppStore = create<AppState>((set) => {
     },
     threadId: null,
     setThreadId: (threadId) => set({ threadId }),
+    chatkit: null,
+    setChatkit: (chatkit) => set({ chatkit }),
   };
 });
