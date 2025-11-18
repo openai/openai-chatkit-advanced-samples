@@ -14,6 +14,7 @@ class Station(BaseModel):
     name: str
     x: int
     y: int
+    description: str
     lines: list[str] = Field(default_factory=list)
 
 
@@ -94,6 +95,7 @@ class MetroMapStore:
         station_name: str,
         line_id: str,
         append: bool = True,
+        description: str = "",
     ) -> tuple[MetroMap, Station]:
         normalized_line_id = self._normalize_id(line_id)
         line = self._line_lookup.get(line_id) or self._line_lookup.get(
@@ -110,6 +112,7 @@ class MetroMapStore:
             name=station_name,
             x=x,
             y=y,
+            description=description,
             lines=[line.id],
         )
 

@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import ReactModal from "react-modal";
 import { ChevronDown } from "lucide-react";
 
-import { fetchMetroMap, updateMetroMap, type Line, type MetroMap } from "../lib/map";
+import { fetchMetroMap, Station, updateMetroMap, type Line, type MetroMap } from "../lib/map";
 import { useMapStore } from "../store/useMapStore";
 import { useAppStore } from "../store/useAppStore";
 import { MetroMapCanvas } from "./MetroMapCanvas";
@@ -11,6 +11,7 @@ export function MapPanel() {
   const map = useMapStore((state) => state.map);
   const setMap = useMapStore((state) => state.setMap);
   const focusStation = useMapStore((state) => state.focusStation);
+  const clearLocationSelectMode = useMapStore((state) => state.clearLocationSelectMode);
   const chatkit = useAppStore((state) => state.chatkit);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -105,17 +106,20 @@ export function MapPanel() {
       stations: [...line.stations, stationId],
     };
 
+    const station: Station = {
+      id: stationId,
+      name: trimmedName,
+      x: position.x,
+      y: position.y,
+      description: "",
+      lines: [line.id],
+    }
+
     const updatedMap: MetroMap = {
       ...map,
       stations: [
         ...map.stations,
-        {
-          id: stationId,
-          name: trimmedName,
-          x: position.x,
-          y: position.y,
-          lines: [line.id],
-        },
+        station,
       ],
       lines: map.lines.map((entry) => (entry.id === line.id ? updatedLine : entry)),
     };
@@ -125,15 +129,12 @@ export function MapPanel() {
     try {
       const saved = await updateMetroMap(updatedMap);
       setMap(saved);
+      clearLocationSelectMode();
       closeModal();
       requestAnimationFrame(() => focusStation(stationId, saved));
       if (chatkit) {
-        const followUpPrompt = `I've added a new station named "${trimmedName}" to the ${line.name} line. What should I do next?`;
-        chatkit
-          .sendUserMessage({ text: followUpPrompt, newThread: true })
-          .catch((sendError) => {
-            console.error("Failed to notify ChatKit about the new station.", sendError);
-          });
+        const followUpPrompt = `How would you describe the ${trimmedName} station?`;
+        chatkit.sendUserMessage({ text: followUpPrompt, newThread: true })
       }
     } catch (error) {
       const message =

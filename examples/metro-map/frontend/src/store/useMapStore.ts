@@ -10,6 +10,9 @@ type MapState = {
   setReactFlow: (instance: ReactFlowInstance | null) => void;
   fitView: () => void;
   focusStation: (stationId: string, map?: MetroMap) => void;
+  locationSelectLineId: string | null;
+  setLocationSelectLineId: (lineId: string | null) => void;
+  clearLocationSelectMode: () => void;
 };
 
 export const useMapStore = create<MapState>((set, get) => ({
@@ -24,7 +27,7 @@ export const useMapStore = create<MapState>((set, get) => ({
       padding: 0.2,
       minZoom: 0.55,
       maxZoom: 1.4,
-      includeHiddenNodes: true,
+      duration: 800,
     });
   },
   focusStation: (stationId, currentMap) => {
@@ -41,4 +44,12 @@ export const useMapStore = create<MapState>((set, get) => ({
 
     instance.setCenter(x, y, { zoom, duration: 800 });
   },
+  locationSelectLineId: null,
+  setLocationSelectLineId: (lineId) => {
+    set({ locationSelectLineId: lineId });
+    if (lineId) {
+      get().fitView();
+    }
+  },
+  clearLocationSelectMode: () => set({ locationSelectLineId: null }),
 }));

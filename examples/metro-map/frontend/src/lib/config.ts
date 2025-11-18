@@ -13,7 +13,7 @@ export const CHATKIT_API_DOMAIN_KEY =
 
 export const MAP_API_URL = import.meta.env.VITE_MAP_API_URL ?? "/map";
 
-export const GREETING = "Welcome aboard—where are you headed on the metro map?";
+export const GREETING = "Welcome to Orbital Transit";
 
 export const STARTER_PROMPTS: StartScreenPrompt[] = [
   {
@@ -22,18 +22,23 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
     icon: "sparkle",
   },
   {
-    label: "Fastest route",
-    prompt: "What's the quickest way from North Pier to Harborfront?",
-    icon: "globe",
+    label: "Plan a route",
+    prompt: "What's the quickest way from Cinderia to Lyra Verge?",
+    icon: "maps",
+  },
+  {
+    label: "Station overview",
+    prompt: "Tell me about the Titan Border station.",
+    icon: "map-pin",
   },
   {
     label: "Line overview",
     prompt: "Give me a short rundown of each line and where they cross.",
-    icon: "maps",
+    icon: "globe",
   },
 ];
 
 export const getPlaceholder = (hasThread: boolean) => {
-  return hasThread ? "Ask about a line or transfer" : "Where should we start on this map?";
+  return hasThread ? "I'd like to add a new station." : "Tell me about the Lyra Verge station.";
 };
 

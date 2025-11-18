@@ -33,6 +33,8 @@ export function ChatKitPanel({
   const setMap = useMapStore((state) => state.setMap);
   const currentMap = useMapStore((state) => state.map);
   const focusStation = useMapStore((state) => state.focusStation);
+  const setLocationSelectLineId = useMapStore((state) => state.setLocationSelectLineId);
+  const clearLocationSelectMode = useMapStore((state) => state.clearLocationSelectMode);
 
   const stationEntities = useMemo<Entity[]>(() => {
     if (!currentMap) return [];
@@ -83,6 +85,7 @@ export function ChatKitPanel({
       if (toolCall.name === "add_station") {
         const stationId = toolCall.params.stationId as string | undefined;
         const nextMap = toolCall.params.map as MetroMap | undefined;
+        clearLocationSelectMode();
 
         if (nextMap) {
           setMap(nextMap);
@@ -93,9 +96,15 @@ export function ChatKitPanel({
         }
         return { success: true };
       }
+      if (toolCall.name === "location_select_mode") {
+        const lineId = toolCall.params.lineId as string | undefined;
+        if (!lineId) return { success: false };
+        setLocationSelectLineId(lineId);
+        return { success: true };
+      }
       return { success: false };
     },
-    [focusStation, setMap]
+    [clearLocationSelectMode, focusStation, setLocationSelectLineId, setMap]
   );
 
   const chatkit = useChatKit({
@@ -136,7 +145,9 @@ export function ChatKitPanel({
       feedback: false,
     },
     onClientTool: handleClientTool,
-    onThreadChange: ({ threadId }) => setThreadId(threadId),
+    onThreadChange: ({ threadId }) => {
+      setThreadId(threadId);
+    },
     onError: ({ error }) => {
       console.error("ChatKit error", error);
     },

@@ -29,12 +29,23 @@ INSTRUCTIONS = """
     Default to actionable options like adding another station on the same line or explaining how to travel
     from the newly added station to a nearby destination.
 
-    When a user wants to add a station (e.g. "I would like to add a new metro station."):
-    - If the user did not specify a line, you MUST call `show_line_selector` with a message prompting asking them to choose
-      one from the list of lines.
+    When the user mentions a station, always call the `get_map` tool to sync the latest map before responding.
+
+    When a user wants to add a station (e.g. "I would like to add a new metro station." or "Add another station"):
+    - If the user did not specify a line, you MUST call `show_line_selector` with a message prompting them to choose one
+      from the list of lines. You must NEVER ask the user to choose a line without calling `show_line_selector` first.
+      This applies even if you just added a station—treat each new "add a station" turn as needing a fresh line selection
+      unless the user explicitly included the line in that same turn or in the latest message via <LINE_SELECTED>.
+    - If the user replies with a number to pick one of your follow-up options AND that option involves adding a station,
+      treat this as a fresh station-add request and immediately call `show_line_selector` before asking anything else.
     - If the user did not specify a station name, ask them to enter a name.
     - If the user did not specify whether to add the station to the end of the line or the beginning, ask them to choose one.
     - When you have all the information you need, call the `add_station` tool with the station name, line id, and append flag.
+
+    Describing:
+    - After a new station has been added, describe it to the user in a whimsical and poetic sentence.
+    - When describing a station to the user, omit the station id and coordinates.
+    - When describing a line to the user, omit the line id and color.
 
     When a user wants to plan a route:
     - If the user did not specify a starting or detination station, ask them to choose them from the list of stations.
@@ -44,7 +55,7 @@ INSTRUCTIONS = """
     Custom tags:
     - <LINE_SELECTED>{line_id}</LINE_SELECTED> - when the user has selected a line, you can use this tag to reference the line id.
       When this is the latest message, acknowledge the selection.
-    - <STATION_TAG>...</STATION_TAG> - contains a tagged station's details (id, name, line list, coordinates). Use the id inside this
+    - <STATION_TAG>...</STATION_TAG> - contains a tagged station's details (id, name, line list). Use the id inside this
       tag when looking up stations or planning routes.
 """
 
@@ -104,11 +115,10 @@ async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message:
     description_override="Load the latest metro map with lines and stations."
 )
 async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
+    print("[TOOL CALL] get_map")
     metro_map = ctx.context.metro.get_map()
     await ctx.context.stream(
-        ProgressUpdateEvent(
-            text=f"Synced {metro_map.name} with {len(metro_map.lines)} lines."
-        )
+        ProgressUpdateEvent(text="Retrieving the latest metro map...")
     )
     return MapResult(map=metro_map)
 
@@ -117,11 +127,13 @@ async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
     description_override="List all metro lines with their colors and endpoints."
 )
 async def list_lines(ctx: RunContextWrapper[MetroAgentContext]) -> LineListResult:
+    print("[TOOL CALL] list_lines")
     return LineListResult(lines=ctx.context.metro.list_lines())
 
 
 @function_tool(description_override="List all stations and which lines serve them.")
 async def list_stations(ctx: RunContextWrapper[MetroAgentContext]) -> StationListResult:
+    print("[TOOL CALL] list_stations")
     return StationListResult(stations=ctx.context.metro.list_stations())
 
 
@@ -130,6 +142,7 @@ async def get_line_route(
     ctx: RunContextWrapper[MetroAgentContext],
     line_id: str,
 ) -> LineDetailResult:
+    print("[TOOL CALL] get_line_route", line_id)
     line = ctx.context.metro.find_line(line_id)
     if not line:
         raise ValueError(f"Line '{line_id}' was not found.")
@@ -144,6 +157,7 @@ async def get_station(
     ctx: RunContextWrapper[MetroAgentContext],
     station_id: str,
 ) -> StationDetailResult:
+    print("[TOOL CALL] get_station", station_id)
     station = ctx.context.metro.find_station(station_id)
     if not station:
         raise ValueError(f"Station '{station_id}' was not found.")
@@ -208,18 +222,22 @@ metro_map_agent = Agent[MetroAgentContext](
     instructions=INSTRUCTIONS,
     model="gpt-4o-mini",
     tools=[
-        # Retrieval tools
-        show_line_selector,
+        # Retrieve map data
         get_map,
         list_lines,
         list_stations,
         get_line_route,
         get_station,
-        # Tools to update the map
+        # Respond with a widget
+        show_line_selector,
+        # Update the metro map
         add_station,
     ],
     # Stop inference after client tool call or widget output
     tool_use_behavior=StopAtTools(
-        stop_at_tool_names=[add_station.name, show_line_selector.name]
+        stop_at_tool_names=[
+            add_station.name,
+            show_line_selector.name,
+        ]
     ),
 )

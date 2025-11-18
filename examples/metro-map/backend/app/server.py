@@ -13,8 +13,12 @@ from chatkit.agents import stream_agent_response
 from chatkit.server import ChatKitServer
 from chatkit.types import (
     Action,
+    AssistantMessageContent,
+    AssistantMessageItem,
     Attachment,
+    ClientToolCallItem,
     HiddenContextItem,
+    ThreadItemDoneEvent,
     ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
@@ -55,37 +59,6 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         item: UserMessageItem | None,
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        async for event in self._stream_agent(thread, item, context):
-            yield event
-        return
-
-    async def action(
-        self,
-        thread: ThreadMetadata,
-        action: Action[str, Any],
-        sender: WidgetItem | None,
-        context: RequestContext,
-    ) -> AsyncIterator[ThreadStreamEvent]:
-        if action.type == LINE_SELECT_ACTION_TYPE:
-            payload = self._parse_line_select_payload(action)
-            if payload is None:
-                return
-            async for event in self._handle_line_select_action(thread, payload, sender, context):
-                yield event
-            return
-
-        return
-
-    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
-        raise RuntimeError("File attachments are not supported in this demo.")
-
-    # -- Helpers ----------------------------------------------------
-    async def _stream_agent(
-        self,
-        thread: ThreadMetadata,
-        item: UserMessageItem | None,
-        context: RequestContext,
-    ) -> AsyncIterator[ThreadStreamEvent]:
         if item and not thread.title:
             thread.title = "Metro Planner"
             await self.store.save_thread(thread, context=context)
@@ -98,6 +71,18 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             context=context,
         )
         items = list(reversed(items_page.data))
+
+        # Don't run inference after the location_select_mode tool call; we do not want
+        # additional agent output after this specific client tool call.
+        last_item = items[-1] if len(items) > 0 else None
+        is_location_select_mode_tool_call = (
+            last_item
+            and isinstance(last_item, ClientToolCallItem)
+            and last_item.name == "location_select_mode"
+        )
+        if not item and is_location_select_mode_tool_call:
+            return
+
         input_items = await self.thread_item_converter.to_agent_input(items)
 
         agent_context = MetroAgentContext(
@@ -107,12 +92,39 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             request_context=context,
         )
 
-        result = Runner.run_streamed(metro_map_agent, input_items, context=agent_context)
+        result = Runner.run_streamed(
+            metro_map_agent, input_items, context=agent_context
+        )
 
         async for event in stream_agent_response(agent_context, result):
             yield event
 
-    def _parse_line_select_payload(self, action: Action[str, Any]) -> LineSelectPayload | None:
+    async def action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        sender: WidgetItem | None,
+        context: RequestContext,
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        if action.type == LINE_SELECT_ACTION_TYPE:
+            payload = self._parse_line_select_payload(action)
+            if payload is None:
+                return
+            async for event in self._handle_line_select_action(
+                thread, payload, sender, context
+            ):
+                yield event
+            return
+
+        return
+
+    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
+        raise RuntimeError("File attachments are not supported in this demo.")
+
+    # -- Helpers ----------------------------------------------------
+    def _parse_line_select_payload(
+        self, action: Action[str, Any]
+    ) -> LineSelectPayload | None:
         try:
             return LineSelectPayload.model_validate(action.payload or {})
         except ValidationError as exc:
@@ -152,9 +164,29 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             context=context,
         )
 
-        # Trigger a fresh agent run with the updated context so the assistant can respond.
-        async for event in self._stream_agent(thread, None, context):
-            yield event
+        yield ThreadItemDoneEvent(
+            item=AssistantMessageItem(
+                thread_id=thread.id,
+                id=self.store.generate_item_id("message", thread, context),
+                created_at=datetime.now(),
+                content=[
+                    AssistantMessageContent(
+                        text="Would you like to add the station to the beginning or end of the line?"
+                    )
+                ],
+            ),
+        )
+
+        yield ThreadItemDoneEvent(
+            item=ClientToolCallItem(
+                id=self.store.generate_item_id("tool_call", thread, context),
+                thread_id=thread.id,
+                name="location_select_mode",
+                arguments={"lineId": payload.id},
+                created_at=datetime.now(),
+                call_id=self.store.generate_item_id("tool_call", thread, context),
+            ),
+        )
 
 
 def create_chatkit_server() -> MetroMapServer | None:

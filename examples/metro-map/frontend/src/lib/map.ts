@@ -8,6 +8,7 @@ export type Station = {
   name: string;
   x: number;
   y: number;
+  description: string;
   lines: string[];
 };
 
