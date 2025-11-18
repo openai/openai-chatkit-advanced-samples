@@ -94,7 +94,7 @@ class MetroMapStore:
         station_name: str,
         line_id: str,
         append: bool = True,
-    ) -> MetroMap:
+    ) -> tuple[MetroMap, Station]:
         normalized_line_id = self._normalize_id(line_id)
         line = self._line_lookup.get(line_id) or self._line_lookup.get(
             normalized_line_id
@@ -117,7 +117,7 @@ class MetroMapStore:
         self._station_lookup[station.id] = station
 
         line.stations.insert(insertion_index, station.id)
-        return self.map
+        return self.map, station
 
     # -- Helpers --------------------------------------------------------------
     def _normalize_id(self, value: str, fallback: str = "id") -> str:

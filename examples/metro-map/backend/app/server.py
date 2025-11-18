@@ -4,20 +4,37 @@ MetroMapServer implements the ChatKitServer interface for the metro-map demo.
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Any, AsyncIterator
 
 from agents import Runner
 from chatkit.agents import stream_agent_response
 from chatkit.server import ChatKitServer
-from chatkit.types import Action, Attachment, ThreadMetadata, ThreadStreamEvent, UserMessageItem, WidgetItem
+from chatkit.types import (
+    Action,
+    Attachment,
+    HiddenContextItem,
+    ThreadItemUpdated,
+    ThreadMetadata,
+    ThreadStreamEvent,
+    UserMessageItem,
+    WidgetItem,
+    WidgetRootUpdated,
+)
 from openai.types.responses import ResponseInputContentParam
+from pydantic import ValidationError
 
 from .agents.metro_map_agent import MetroAgentContext, metro_map_agent
 from .data.metro_map_store import MetroMapStore
 from .memory_store import MemoryStore
 from .request_context import RequestContext
 from .thread_item_converter import MetroMapThreadItemConverter
+from .widgets.line_select_widget import (
+    LINE_SELECT_ACTION_TYPE,
+    LineSelectPayload,
+    build_line_select_widget,
+)
 
 
 class MetroMapServer(ChatKitServer[RequestContext]):
@@ -33,6 +50,37 @@ class MetroMapServer(ChatKitServer[RequestContext]):
 
     # -- Required overrides ----------------------------------------------------
     async def respond(
+        self,
+        thread: ThreadMetadata,
+        item: UserMessageItem | None,
+        context: RequestContext,
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        async for event in self._stream_agent(thread, item, context):
+            yield event
+        return
+
+    async def action(
+        self,
+        thread: ThreadMetadata,
+        action: Action[str, Any],
+        sender: WidgetItem | None,
+        context: RequestContext,
+    ) -> AsyncIterator[ThreadStreamEvent]:
+        if action.type == LINE_SELECT_ACTION_TYPE:
+            payload = self._parse_line_select_payload(action)
+            if payload is None:
+                return
+            async for event in self._handle_line_select_action(thread, payload, sender, context):
+                yield event
+            return
+
+        return
+
+    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
+        raise RuntimeError("File attachments are not supported in this demo.")
+
+    # -- Helpers ----------------------------------------------------
+    async def _stream_agent(
         self,
         thread: ThreadMetadata,
         item: UserMessageItem | None,
@@ -63,20 +111,50 @@ class MetroMapServer(ChatKitServer[RequestContext]):
 
         async for event in stream_agent_response(agent_context, result):
             yield event
-        return
 
-    async def action(
+    def _parse_line_select_payload(self, action: Action[str, Any]) -> LineSelectPayload | None:
+        try:
+            return LineSelectPayload.model_validate(action.payload or {})
+        except ValidationError as exc:
+            print(f"[WARN] Invalid line.select payload: {exc}")
+            return None
+
+    async def _handle_line_select_action(
         self,
         thread: ThreadMetadata,
-        action: Action[str, Any],
+        payload: LineSelectPayload,
         sender: WidgetItem | None,
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        # No custom widget actions yet.
-        return
+        # Update the widget to show the selected line and disable further clicks.
+        updated_widget = build_line_select_widget(
+            self.metro_map_store.list_lines(),
+            selected=payload.id,
+        )
 
-    async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
-        raise RuntimeError("File attachments are not supported in this demo.")
+        if sender:
+            updated_widget_item = sender.model_copy(update={"widget": updated_widget})
+            await self.store.save_item(thread.id, updated_widget_item, context=context)
+            yield ThreadItemUpdated(
+                item_id=sender.id,
+                update=WidgetRootUpdated(widget=updated_widget),
+            )
+
+        # Add hidden context so the agent can pick up the chosen line id on the next run.
+        await self.store.add_thread_item(
+            thread.id,
+            HiddenContextItem(
+                id=self.store.generate_item_id("message", thread, context),
+                thread_id=thread.id,
+                created_at=datetime.now(),
+                content=f"<LINE_SELECTED>{payload.id}</LINE_SELECTED>",
+            ),
+            context=context,
+        )
+
+        # Trigger a fresh agent run with the updated context so the assistant can respond.
+        async for event in self._stream_agent(thread, None, context):
+            yield event
 
 
 def create_chatkit_server() -> MetroMapServer | None:

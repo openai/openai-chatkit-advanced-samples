@@ -33,23 +33,26 @@ export function ChatKitPanel({
   const setMap = useMapStore((state) => state.setMap);
   const currentMap = useMapStore((state) => state.map);
   const fitView = useMapStore((state) => state.fitView);
+  const focusStation = useMapStore((state) => state.focusStation);
 
   const handleClientTool = useCallback(
     (toolCall: { name: string; params: Record<string, unknown> }) => {
-      if (toolCall.name === "update_map") {
+      if (toolCall.name === "add_station") {
+        const stationId = toolCall.params.stationId as string | undefined;
         const nextMap = toolCall.params.map as MetroMap | undefined;
+
         if (nextMap) {
-          const mapChanged = !currentMap || currentMap.id !== nextMap.id;
           setMap(nextMap);
-          if (mapChanged) {
-            requestAnimationFrame(() => fitView());
-          }
+        }
+
+        if (stationId) {
+          requestAnimationFrame(() => focusStation(stationId, nextMap));
         }
         return { success: true };
       }
       return { success: false };
     },
-    [currentMap, fitView, setMap]
+    [currentMap, fitView, focusStation, setMap]
   );
 
   const chatkit = useChatKit({

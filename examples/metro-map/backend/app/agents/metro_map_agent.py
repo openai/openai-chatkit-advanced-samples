@@ -16,6 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..data.metro_map_store import Line, MetroMap, MetroMapStore, Station
 from ..memory_store import MemoryStore
 from ..request_context import RequestContext
+from ..widgets.line_select_widget import build_line_select_widget
 
 INSTRUCTIONS = """
     You are a concise metro planner helping city planners update the Orbital Transit map.
@@ -28,8 +29,9 @@ INSTRUCTIONS = """
     Default to actionable options like adding another station on the same line or explaining how to travel
     from the newly added station to a nearby destination.
 
-    When a user wants to add a station:
-    - If the user did not specify a line, ask them to choose one from the list of lines.
+    When a user wants to add a station (e.g. "I would like to add a new metro station."):
+    - If the user did not specify a line, you MUST call `show_line_selector` with a message prompting asking them to choose
+      one from the list of lines.
     - If the user did not specify a station name, ask them to enter a name.
     - If the user did not specify whether to add the station to the end of the line or the beginning, ask them to choose one.
     - When you have all the information you need, call the `add_station` tool with the station name, line id, and append flag.
@@ -38,6 +40,10 @@ INSTRUCTIONS = """
     - If the user did not specify a starting or detination station, ask them to choose them from the list of stations.
     - Provide a one-sentence route, the estimated travel time, and points of interest along the way.
     - Avoid over-explaining and stay within the given station list.
+
+    Custom tags:
+    - <LINE_SELECTED>{line_id}</LINE_SELECTED> - when the user has selected a line, you can use this tag to reference the line id.
+      When this is the latest message, acknowledge the selection.
 """
 
 
@@ -74,6 +80,22 @@ class StationAddResult(BaseModel):
     station: Station
     line: Line
     map: MetroMap
+
+
+@function_tool(description_override="Show a clickable widget listing metro lines.")
+async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message: str):
+    widget = build_line_select_widget(ctx.context.metro.list_lines())
+    await ctx.context.stream(
+        ThreadItemDoneEvent(
+            item=AssistantMessageItem(
+                thread_id=ctx.context.thread.id,
+                id=ctx.context.generate_id("message"),
+                created_at=datetime.now(),
+                content=[AssistantMessageContent(text=message)],
+            ),
+        )
+    )
+    await ctx.context.stream_widget(widget)
 
 
 @function_tool(
@@ -149,10 +171,15 @@ async def add_station(
     print(f"[TOOL CALL] add_station: {station_name} to {line_id}")
     await ctx.context.stream(ProgressUpdateEvent(text="Adding station..."))
     try:
-        updated_map = ctx.context.metro.add_station(station_name, line_id, append)
+        updated_map, new_station = ctx.context.metro.add_station(
+            station_name, line_id, append
+        )
         ctx.context.client_tool_call = ClientToolCall(
-            name="update_map",
-            arguments={"map": updated_map.model_dump(mode="json")},
+            name="add_station",
+            arguments={
+                "stationId": new_station.id,
+                "map": updated_map.model_dump(mode="json"),
+            },
         )
         return MapResult(map=updated_map)
     except Exception as e:
@@ -165,7 +192,7 @@ async def add_station(
                     created_at=datetime.now(),
                     content=[
                         AssistantMessageContent(
-                            text=f"There was an error adding _{station_name}_, {e.message}"
+                            text=f"There was an error adding **{station_name}**"
                         )
                     ],
                 ),
@@ -180,6 +207,7 @@ metro_map_agent = Agent[MetroAgentContext](
     model="gpt-4o-mini",
     tools=[
         # Retrieval tools
+        show_line_selector,
         get_map,
         list_lines,
         list_stations,
@@ -188,6 +216,8 @@ metro_map_agent = Agent[MetroAgentContext](
         # Tools to update the map
         add_station,
     ],
-    # Stop inference after client tool call
-    tool_use_behavior=StopAtTools(stop_at_tool_names=[add_station.name]),
+    # Stop inference after client tool call or widget output
+    tool_use_behavior=StopAtTools(
+        stop_at_tool_names=[add_station.name, show_line_selector.name]
+    ),
 )

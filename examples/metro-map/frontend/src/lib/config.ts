@@ -17,6 +17,11 @@ export const GREETING = "Welcome aboard—where are you headed on the metro map?
 
 export const STARTER_PROMPTS: StartScreenPrompt[] = [
   {
+    label: "Add a station",
+    prompt: "I would like to add a new metro station.",
+    icon: "sparkle",
+  },
+  {
     label: "Fastest route",
     prompt: "What's the quickest way from North Pier to Harborfront?",
     icon: "globe",
@@ -25,11 +30,6 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
     label: "Line overview",
     prompt: "Give me a short rundown of each line and where they cross.",
     icon: "maps",
-  },
-  {
-    label: "Interchanges",
-    prompt: "Show me the best transfer stations on this map.",
-    icon: "sparkle",
   },
 ];
 
