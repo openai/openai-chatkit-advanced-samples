@@ -6,8 +6,10 @@ from typing import Annotated
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext, ClientToolCall
 from chatkit.types import (
+    Annotation,
     AssistantMessageContent,
     AssistantMessageItem,
+    EntitySource,
     ProgressUpdateEvent,
     ThreadItemDoneEvent,
 )
@@ -49,8 +51,13 @@ INSTRUCTIONS = """
 
     When a user wants to plan a route:
     - If the user did not specify a starting or detination station, ask them to choose them from the list of stations.
-    - Provide a one-sentence route, the estimated travel time, and points of interest along the way.
+    - You MUST call the `plan_route` tool with the list of stations in the route and a one-sentence message describing the route.
+    - The message describing the route should include the estimated travel time in light years (e.g. "10.6 light years"),
+      and points of interest along the way.
     - Avoid over-explaining and stay within the given station list.
+
+    Every time your response mentions a list of stations (e.g. "the stations on the Blue Line are..." or "to get from Titan Border to
+    Lyra Verge..."), you MUST call the `cite_stations_for_route` tool with the list of stations.
 
     Custom tags:
     - <LINE_SELECTED>{line_id}</LINE_SELECTED> - when the user has selected a line, you can use this tag to reference the line id.
@@ -125,17 +132,39 @@ async def list_stations(ctx: RunContextWrapper[MetroAgentContext]) -> StationLis
     return StationListResult(stations=ctx.context.metro.list_stations())
 
 
-@function_tool(description_override="Get the ordered stations for a specific line.")
-async def get_line_route(
+@function_tool(description_override="Show the user the planned route.")
+async def plan_route(
     ctx: RunContextWrapper[MetroAgentContext],
-    line_id: str,
-) -> LineDetailResult:
-    print("[TOOL CALL] get_line_route", line_id)
-    line = ctx.context.metro.find_line(line_id)
-    if not line:
-        raise ValueError(f"Line '{line_id}' was not found.")
-    stations = ctx.context.metro.stations_for_line(line_id)
-    return LineDetailResult(line=line, stations=stations)
+    route: list[Station],
+    message: str,
+):
+    print("[TOOL CALL] plan_route", route)
+    sources = [
+        EntitySource(
+            id=station.id,
+            icon="map-pin",
+            title=station.name,
+            description=station.description,
+            data={"type": "station", "station_id": station.id, "name": station.name},
+        )
+        for station in route
+    ]
+
+    await ctx.context.stream(
+        ThreadItemDoneEvent(
+            item=AssistantMessageItem(
+                thread_id=ctx.context.thread.id,
+                id=ctx.context.generate_id("message"),
+                created_at=datetime.now(),
+                content=[
+                    AssistantMessageContent(
+                        text=message,
+                        annotations=[Annotation(source=source, index=0) for source in sources],
+                    )
+                ],
+            )
+        )
+    )
 
 
 @function_tool(description_override="Look up a single station and the lines serving it.")
@@ -210,8 +239,9 @@ metro_map_agent = Agent[MetroAgentContext](
         get_map,
         list_lines,
         list_stations,
-        get_line_route,
         get_station,
+        # Response with entity sources
+        plan_route,
         # Respond with a widget
         show_line_selector,
         # Update the metro map
