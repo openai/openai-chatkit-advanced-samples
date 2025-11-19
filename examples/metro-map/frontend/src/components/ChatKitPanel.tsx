@@ -39,14 +39,14 @@ export function ChatKitPanel({
   const headerRightAction = useMemo((): HeaderOption['rightAction'] => {
     if (scheme === "dark") {
       return {
-        icon: "light-mode",
+        icon: "dark-mode",
         onClick: () => {
           setScheme("light");
         }
       }
     }
     return {
-      icon: "dark-mode",
+      icon: "light-mode",
       onClick: () => {
         setScheme("dark");
       }
