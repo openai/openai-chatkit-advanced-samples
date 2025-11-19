@@ -18,12 +18,11 @@ from chatkit.types import (
     Attachment,
     HiddenContextItem,
     ThreadItemDoneEvent,
-    ThreadItemUpdated,
+    ThreadItemReplacedEvent,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
     WidgetItem,
-    WidgetRootUpdated,
 )
 from openai.types.responses import ResponseInputContentParam
 from pydantic import ValidationError
@@ -148,15 +147,8 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
         selection = current_state.name if is_already_named else name
         widget = build_name_suggestions_widget(options, selected=selection)
 
-        # Save the updated widget so that if the user views the thread again, they will
-        # see the updated version of the widget.
-        updated_widget_item = sender.model_copy(update={"widget": widget})
-        await self.store.save_item(thread.id, updated_widget_item, context=context)
-
-        # Stream back the update so that chatkit can render the updated widget,
-        yield ThreadItemUpdated(
-            item_id=sender.id,
-            update=WidgetRootUpdated(widget=widget),
+        yield ThreadItemReplacedEvent(
+            item=sender.model_copy(update={"widget": widget}),
         )
 
         if is_already_named:

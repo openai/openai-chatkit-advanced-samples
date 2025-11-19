@@ -1,0 +1,79 @@
+/* Styles for the location selection arrows that appear on end stations. */
+.LocationSelectArrow {
+  --arrow-base: #0ea5e9;
+  --arrow-outline: #ffffff;
+  --arrow-outline-dark: #0f172a;
+  --arrow-active-bg: color-mix(in srgb, var(--arrow-base) 80%, white);
+  --arrow-active-bg-dark: color-mix(in srgb, var(--arrow-base) 15%, white);
+  --shadow-color: rgba(15, 23, 42, 0.2);
+  --shadow-strong-color: rgba(15, 23, 42, 0.35);
+
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  cursor: pointer;
+  border-radius: 9999px;
+  border: 1px solid var(--arrow-outline);
+  background: var(--arrow-base);
+  color: #fff;
+  box-shadow: 0 10px 18px var(--shadow-color);
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    opacity 150ms ease;
+  animation: location-pulse 1.5s ease-in-out infinite;
+}
+
+.LocationSelectArrow:hover {
+  animation: none;
+  border-color: var(--arrow-base);
+  background: var(--arrow-outline);
+  color: var(--arrow-base);
+  box-shadow: 0 12px 22px -8px var(--shadow-strong-color);
+}
+
+.LocationSelectArrow:active {
+  background: var(--arrow-active-bg);
+  color: #fff;
+}
+
+.dark .LocationSelectArrow {
+  border-color: var(--arrow-outline-dark);
+  background: var(--arrow-base);
+  color: #fff;
+}
+
+.dark .LocationSelectArrow:hover {
+  border-color: var(--arrow-base);
+  background: var(--arrow-outline-dark);
+  color: var(--arrow-base);
+  box-shadow: 0 12px 22px -8px var(--shadow-strong-color);
+}
+
+.dark .LocationSelectArrow:active {
+  background: var(--arrow-active-bg-dark);
+  color: #fff;
+}
+
+.dark .LocationSelectArrow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px #475569, 0 12px 22px -8px var(--shadow-strong-color);
+}
+
+@keyframes location-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 10px 18px var(--shadow-color, rgba(15, 23, 42, 0.2));
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 10px 24px var(--shadow-strong-color, rgba(15, 23, 42, 0.3));
+  }
+}

@@ -7,6 +7,7 @@ You can run the following examples:
 - [**Cat Lounge**](examples/cat-lounge) - caretaker for a virtual cat that helps improve energy, happiness, and cleanliness stats.
 - [**Customer Support**](examples/customer-support) – airline concierge with live itinerary data, timeline syncing, and domain-specific tools.
 - [**News Guide**](examples/news-guide) – Foxhollow Dispatch newsroom assistant with article search, @-mentions, and page-aware responses.
+- [**Metro Map**](examples/metro-map) – chat-driven metro planner with a React Flow network of lines and stations.
 
 ## Quickstart
 
@@ -19,6 +20,7 @@ You can run the following examples:
 | Cat Lounge       | `npm run cat-lounge`       | `cd examples/cat-lounge && npm install && npm run start`   | http://localhost:5170 |
 | Customer Support | `npm run customer-support` | `cd examples/customer-support && npm install && npm start` | http://localhost:5171 |
 | News Guide       | `npm run news-guide`       | `cd examples/news-guide && npm install && npm run start`   | http://localhost:5172 |
+| Metro Map        | `npm run metro-map`        | `cd examples/metro-map && npm install && npm run start`    | http://localhost:5173 |
 
 ## Feature index
 
@@ -29,6 +31,8 @@ You can run the following examples:
 - **News Guide**:
   - The agent leans on a suite of retrieval tools—`list_available_tags_and_keywords`, `get_article_by_id`, `search_articles_by_tags/keywords/exact_text`, and `get_current_page`—before responding, and uses `show_article_list_widget` to present results ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
   - Hidden context such as the featured landing page is normalized into agent input so summaries and recommendations stay grounded ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
+- **Metro Map**:
+  - The metro agent syncs map data with `get_map` and surfaces line and station details via `list_lines`, `list_stations`, `get_line_route`, and `get_station` before giving directions ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
 
 ### Client tool calls that mutate UI state
 
@@ -49,6 +53,8 @@ You can run the following examples:
 - **News Guide**:
   - Retrieval tools stream `ProgressUpdateEvent` messages while searching tags, authors, keywords, exact text, or loading the current page so the UI surfaces “Searching…”/“Loading…” states ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
   - The event finder emits progress as it scans dates, days of week, or keywords to keep users informed during longer lookups ([event_finder_agent.py](examples/news-guide/backend/app/agents/event_finder_agent.py)).
+- **Metro Map**:
+  - The metro agent emits a quick sync update when it loads the line data via `get_map` ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
 
 ### Widgets without actions
 
@@ -71,6 +77,11 @@ You can run the following examples:
   - It is invoked using `chatkit.sendAction()` from `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
 - **News Guide**:
   - The `view_event_details` action is processed server-side to update the timeline widget with expanded descriptions without a round trip to the model ([server.py](examples/news-guide/backend/app/server.py)).
+
+### Canvas layout
+
+- **Metro Map**:
+  - The React Flow canvas draws only metro nodes and colored edges—no custom canvas overlay—highlighting stations and line interchanges ([MetroMapCanvas.tsx](examples/metro-map/frontend/src/components/MetroMapCanvas.tsx)).
 
 ### Entity tags (@-mentions)
 

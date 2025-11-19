@@ -1,0 +1,27 @@
+{
+  "id": "orbital-transit",
+  "name": "Orbital Transit",
+  "summary": "Three stellar corridors linking planets and systems with crossovers at Vega Reach and Orionis Gate for easy transfers.",
+  "stations": [
+    { "id": "helios-prime", "name": "Helios Prime", "x": 0, "y": -1, "lines": ["blue"], "description": "A sun-warmed hub where travelers gather beneath golden light that never quite fades." },
+    { "id": "cinderia", "name": "Cinderia", "x": 1, "y": -1, "lines": ["blue"], "description": "A drifting ember-world whose platforms glow like the last sparks of a dying star." },
+    { "id": "vega-reach", "name": "Vega Reach", "x": 2, "y": 0, "lines": ["blue", "purple"], "description": "A crystalline crossing where starlight refracts into prismatic paths for wandering souls." },
+    { "id": "orionis-gate", "name": "Orionis Gate", "x": 3, "y": 0, "lines": ["blue", "purple", "orange"], "description": "A grand celestial threshold where every corridor feels like the beginning of an old legend." },
+    { "id": "titan-border", "name": "Titan Border", "x": 4, "y": 0, "lines": ["blue"], "description": "A frontier station perched on the hush between vast ice fields and silent cosmic tides." },
+    { "id": "cygnus-way", "name": "Cygnus Way", "x": 5, "y": 0, "lines": ["blue"], "description": "A gentle outpost where gull-wing nebulae drift lazily above the platform rails." },
+    { "id": "kepler-forge", "name": "Kepler Forge", "x": -1, "y": 1, "lines": ["purple"], "description": "An industrious orbit-workshop where constellations seem hammered into shape each dusk." },
+    { "id": "arcturus-dorange", "name": "Arcturus Dorange", "x": 0, "y": 1, "lines": ["purple"], "description": "A warm, fragrant stop known for amber skies that smell faintly of citrus and stardust." },
+    { "id": "sagan-halo", "name": "Sagan Halo", "x": 4, "y": 1, "lines": ["purple"], "description": "A luminous ring-station that hums softly with the quiet wonder of distant worlds." },
+    { "id": "lyra-verge", "name": "Lyra Verge", "x": 5, "y": 1, "lines": ["purple"], "description": "A melodic crossing where cosmic winds carry the echo of unseen harps." },
+    { "id": "lumen-cradle", "name": "Lumen Cradle", "x": 3, "y": -3, "lines": ["orange"], "description": "A glowing sanctuary nestled in deep space where light itself seems to rest and dream." },
+    { "id": "proxima-step", "name": "Proxima Step", "x": 3, "y": -2, "lines": ["orange"], "description": "A humble midpoint marked by wayfarers’ footprints glittering like distant promises." },
+    { "id": "zephyr-system", "name": "Zephyr System", "x": 3, "y": -1, "lines": ["orange"], "description": "A breezy orbital junction where gentle solar winds sigh through its floating arches." },
+    { "id": "altair-rim", "name": "Altair Rim", "x": 3, "y": 1, "lines": ["orange"], "description": "A bright ridge-station where shimmering pathways skim the edge of luminous voids." },
+    { "id": "farpoint-prime", "name": "Farpoint Prime", "x": 3, "y": 2, "lines": ["orange"], "description": "A serene apex of the line where travelers pause to watch galaxies bloom in silence." }
+  ],
+  "lines": [
+    { "id": "blue", "name": "Blue Line", "color": "#06b6d4", "orientation": "horizontal", "stations": ["helios-prime", "cinderia", "vega-reach", "orionis-gate", "titan-border", "cygnus-way"] },
+    { "id": "purple", "name": "Purple Line", "color": "#a855f7", "orientation": "horizontal", "stations": ["kepler-forge", "arcturus-dorange", "vega-reach", "orionis-gate", "sagan-halo", "lyra-verge"] },
+    { "id": "orange", "name": "Orange Line", "color": "#f59e0b", "orientation": "vertical", "stations": ["lumen-cradle", "proxima-step", "zephyr-system", "orionis-gate", "altair-rim", "farpoint-prime"] }
+  ]
+}
