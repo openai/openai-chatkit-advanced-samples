@@ -19,12 +19,10 @@ from chatkit.types import (
     HiddenContextItem,
     ThreadItemDoneEvent,
     ThreadItemReplacedEvent,
-    ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
     WidgetItem,
-    WidgetRootUpdated,
 )
 from openai.types.responses import ResponseInputContentParam
 from pydantic import ValidationError
