@@ -33,6 +33,8 @@ You can run the following examples:
   - Hidden context such as the featured landing page is normalized into agent input so summaries and recommendations stay grounded ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
 - **Metro Map**:
   - The metro agent syncs map data with `get_map` and surfaces line and station details via `list_lines`, `list_stations`, `get_line_route`, and `get_station` before giving directions ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
+  - `show_line_selector` presents the user a multiple-choice question using a widget.
+  - Route-planning replies attach entity sources for the stations in the suggested path as annotations.
 
 ### Client tool calls that mutate UI state
 
@@ -85,6 +87,11 @@ You can run the following examples:
   - The `view_event_details` action is processed server-side to update the timeline widget with expanded descriptions without a round trip to the model ([server.py](examples/news-guide/backend/app/server.py)).
 - **Metro Map**:
   - The `line.select` action is handled server-side to stream an updated widget, add a `<LINE_SELECTED>` hidden context item to thread, stream an assistant message to ask the user whether to add the station at the line’s start or end, and trigger the `location_select_mode` client tool call for the UI to sync ([server.py](examples/metro-map/backend/app/server.py)).
+
+### Annotations
+
+- **Metro Map**:
+  - The `plan_route` tool renders each station in a planned route as an entity source on the assistant message; the client’s entity click handler pans the React Flow canvas to the clicked station ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx), [metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
 
 ### Thread titles
 
