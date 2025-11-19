@@ -33,6 +33,8 @@ You can run the following examples:
   - Hidden context such as the featured landing page is normalized into agent input so summaries and recommendations stay grounded ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
 - **Metro Map**:
   - The metro agent syncs map data with `get_map` and surfaces line and station details via `list_lines`, `list_stations`, `get_line_route`, and `get_station` before giving directions ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
+  - `show_line_selector` presents the user a multiple-choice question using a widget.
+  - Route-planning replies attach entity sources for the stations in the suggested path as annotations.
 
 ### Client tool calls that mutate UI state
 
@@ -41,6 +43,10 @@ You can run the following examples:
   - When invoked, it is handled client-side with the `handleClientToolCall` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
 - **News Guide**:
   - The `open_article` widget action triggers client-side navigation to the selected story and forwards the action back to the server via `sendCustomAction` to follow up with context-aware prompts ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx)).
+- **Metro Map**:
+  - Client tools `add_station` (sent after the server adds a stop) and `location_select_mode` (sent after a line is chosen) update the metro map canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
+  - Inference is deliberately skipped after the `location_select_mode` client tool call output is sent to the server; the `respond` method on the server early returns when the last item in the thread is the `location_select_mode` client tool call ([server.py](examples/news-guide/backend/app/server.py)).
+  - The `location_select_mode` client tool call is streamed within the server action handler ([server.py](examples/news-guide/backend/app/server.py)).
 
 ### Page-aware model responses
 
@@ -69,6 +75,8 @@ You can run the following examples:
 - **News Guide**:
   - Article list widgets render “View” buttons that dispatch `open_article` actions for client navigation and engagement ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py), [article_list_widget.py](examples/news-guide/backend/app/widgets/article_list_widget.py)).
   - The event finder streams a timeline widget with `view_event_details` buttons configured for server handling so users can expand items inline ([event_finder_agent.py](examples/news-guide/backend/app/agents/event_finder_agent.py), [event_list_widget.py](examples/news-guide/backend/app/widgets/event_list_widget.py)).
+- **Metro Map**:
+  - The server tool `show_line_selector` streams a widget with the `line.select` action configured to fire on list item click ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py), [line_select_widget.py](examples/metro-map/backend/app/widgets/line_select_widget.py)).
 
 ### Server-handled widget actions
 
@@ -77,11 +85,22 @@ You can run the following examples:
   - It is invoked using `chatkit.sendAction()` from `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
 - **News Guide**:
   - The `view_event_details` action is processed server-side to update the timeline widget with expanded descriptions without a round trip to the model ([server.py](examples/news-guide/backend/app/server.py)).
+- **Metro Map**:
+  - The `line.select` action is handled server-side to stream an updated widget, add a `<LINE_SELECTED>` hidden context item to thread, stream an assistant message to ask the user whether to add the station at the line’s start or end, and trigger the `location_select_mode` client tool call for the UI to sync ([server.py](examples/metro-map/backend/app/server.py)).
 
-### Canvas layout
+### Annotations
 
 - **Metro Map**:
-  - The React Flow canvas draws only metro nodes and colored edges—no custom canvas overlay—highlighting stations and line interchanges ([MetroMapCanvas.tsx](examples/metro-map/frontend/src/components/MetroMapCanvas.tsx)).
+  - The `plan_route` tool renders each station in a planned route as an entity source on the assistant message; the client’s entity click handler pans the React Flow canvas to the clicked station ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx), [metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
+
+### Thread titles
+
+- **Cat Lounge**:
+  - After the user names the cat, the `set_cat_name` tool locks in the name and updates the thread title to `{name}’s Lounge` before saving it ([cat_agent.py](examples/cat-lounge/backend/app/cat_agent.py)).
+- **News Guide**:
+  - The `title_agent` runs on the first user message to generate a short newsroom-friendly title when none exists ([server.py](examples/news-guide/backend/app/server.py), [title_agent.py](examples/news-guide/backend/app/agents/title_agent.py)).
+- **Metro Map**:
+  - The metro server uses a dedicated `title_agent` to set a brief metro-planning title on the first turn and persists it to thread metadata ([server.py](examples/metro-map/backend/app/server.py), [title_agent.py](examples/metro-map/backend/app/agents/title_agent.py)).
 
 ### Entity tags (@-mentions)
 
@@ -89,6 +108,9 @@ You can run the following examples:
   - Entity search and previews power @-mentions for articles/authors in the composer and render hover previews via `/articles/tags` ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx), [main.py](examples/news-guide/backend/app/main.py)).
   - Tagged entities are converted into model-readable markers so the agent can fetch the right records (`<ARTICLE_REFERENCE>` / `<AUTHOR_REFERENCE>`) ([thread_item_converter.py](examples/news-guide/backend/app/thread_item_converter.py)).
   - Article reference tags are resolved into full articles via the instructed `get_article_by_id` tool before the agent cites details ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
+- **Metro Map**:
+  - The composer’s entity search lists stations so users can @-mention them; clicking a tag also focuses the station on the canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
+  - Tagged stations are converted into `<STATION_TAG>` blocks with full line metadata so the agent can answer without another lookup ([thread_item_converter.py](examples/metro-map/backend/app/thread_item_converter.py), [server.py](examples/metro-map/backend/app/server.py)).
 
 ### Tool choice (composer menu)
 
@@ -96,3 +118,8 @@ You can run the following examples:
   - The ChatKit client is configured with a `composer.tools` option that specifies options in the composer menu ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx))
   - Composer tool buttons let users force specific agents (`event_finder`, `puzzle`), setting `tool_choice` on the request ([config.ts](examples/news-guide/frontend/src/lib/config.ts)).
   - The backend routes these tool choices to specialized agents before falling back to the News Guide agent ([server.py](examples/news-guide/backend/app/server.py)).
+
+### Custom header actions
+
+- **Metro Map**:
+  - The chat header uses a right-side icon toggle (`dark-mode` / `light-mode`) to flip the app’s color scheme client-side ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
