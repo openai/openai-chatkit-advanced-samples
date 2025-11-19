@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: "0.0.0.0",
-    port: 5175,
+    port: 5173,
     proxy: {
       "/chatkit": {
         target: backendTarget,
@@ -19,11 +19,5 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    // For production deployments, you need to add your public domains to this list
-    allowedHosts: [
-      // You can remove these examples added just to demonstrate how to configure the allowlist
-      ".ngrok.io",
-      ".trycloudflare.com",
-    ],
   },
 });

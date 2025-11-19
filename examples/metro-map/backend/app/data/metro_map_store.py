@@ -95,9 +95,7 @@ class MetroMapStore:
         description: str = "",
     ) -> tuple[MetroMap, Station]:
         normalized_line_id = self._normalize_id(line_id)
-        line = self._line_lookup.get(line_id) or self._line_lookup.get(
-            normalized_line_id
-        )
+        line = self._line_lookup.get(line_id) or self._line_lookup.get(normalized_line_id)
         if line is None or len(line.stations) == 0:
             raise ValueError(f"Line '{line_id}' is not found.")
 
@@ -135,24 +133,16 @@ class MetroMapStore:
             counter += 1
         return candidate
 
-    def _get_coordinates_for_new_station(
-        self, line: Line, append: bool
-    ) -> tuple[float, float]:
+    def _get_coordinates_for_new_station(self, line: Line, append: bool) -> tuple[int, int]:
         if append:
             prev_id = line.stations[-1]
             prev_station = self._station_lookup.get(prev_id)
-            prev_x, prev_y = prev_station.x, prev_station.y
+            prev_x, prev_y = (prev_station.x, prev_station.y) if prev_station else (0, 0)
             return (
-                (prev_x + 1, prev_y)
-                if line.orientation == "horizontal"
-                else (prev_x, prev_y + 1)
+                (prev_x + 1, prev_y) if line.orientation == "horizontal" else (prev_x, prev_y + 1)
             )
 
         next_id = line.stations[0]
         next_station = self._station_lookup.get(next_id)
-        next_x, next_y = next_station.x, next_station.y
-        return (
-            (next_x - 1, next_y)
-            if line.orientation == "horizontal"
-            else (next_x, next_y - 1)
-        )
+        next_x, next_y = (next_station.x, next_station.y) if next_station else (0, 0)
+        return (next_x - 1, next_y) if line.orientation == "horizontal" else (next_x, next_y - 1)

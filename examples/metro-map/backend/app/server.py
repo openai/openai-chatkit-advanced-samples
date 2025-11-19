@@ -4,6 +4,7 @@ MetroMapServer implements the ChatKitServer interface for the metro-map demo.
 
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Any, AsyncIterator
@@ -20,17 +21,16 @@ from chatkit.types import (
     HiddenContextItem,
     ThreadItemDoneEvent,
     ThreadItemReplacedEvent,
-    ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
     WidgetItem,
-    WidgetRootUpdated,
 )
 from openai.types.responses import ResponseInputContentParam
 from pydantic import ValidationError
 
 from .agents.metro_map_agent import MetroAgentContext, metro_map_agent
+from .agents.title_agent import title_agent
 from .data.metro_map_store import MetroMapStore
 from .memory_store import MemoryStore
 from .request_context import RequestContext
@@ -52,6 +52,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         data_dir = Path(__file__).resolve().parent / "data"
         self.metro_map_store = MetroMapStore(data_dir)
         self.thread_item_converter = MetroMapThreadItemConverter(self.metro_map_store)
+        self.title_agent = title_agent
 
     # -- Required overrides ----------------------------------------------------
     async def respond(
@@ -60,9 +61,9 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         item: UserMessageItem | None,
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        if item and not thread.title:
-            thread.title = "Metro Planner"
-            await self.store.save_thread(thread, context=context)
+        updating_thread_title = asyncio.create_task(
+            self._maybe_update_thread_title(thread, item, context)
+        )
 
         items_page = await self.store.load_thread_items(
             thread.id,
@@ -82,6 +83,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             and last_item.name == "location_select_mode"
         )
         if not item and is_location_select_mode_tool_call:
+            await updating_thread_title
             return
 
         input_items = await self.thread_item_converter.to_agent_input(items)
@@ -93,12 +95,11 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             request_context=context,
         )
 
-        result = Runner.run_streamed(
-            metro_map_agent, input_items, context=agent_context
-        )
+        result = Runner.run_streamed(metro_map_agent, input_items, context=agent_context)
 
         async for event in stream_agent_response(agent_context, result):
             yield event
+        await updating_thread_title
 
     async def action(
         self,
@@ -111,9 +112,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             payload = self._parse_line_select_payload(action)
             if payload is None:
                 return
-            async for event in self._handle_line_select_action(
-                thread, payload, sender, context
-            ):
+            async for event in self._handle_line_select_action(thread, payload, sender, context):
                 yield event
             return
 
@@ -123,9 +122,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         raise RuntimeError("File attachments are not supported in this demo.")
 
     # -- Helpers ----------------------------------------------------
-    def _parse_line_select_payload(
-        self, action: Action[str, Any]
-    ) -> LineSelectPayload | None:
+    def _parse_line_select_payload(self, action: Action[str, Any]) -> LineSelectPayload | None:
         try:
             return LineSelectPayload.model_validate(action.payload or {})
         except ValidationError as exc:
@@ -186,6 +183,24 @@ class MetroMapServer(ChatKitServer[RequestContext]):
                 call_id=self.store.generate_item_id("tool_call", thread, context),
             ),
         )
+
+    async def _maybe_update_thread_title(
+        self,
+        thread: ThreadMetadata,
+        user_message: UserMessageItem | None,
+        context: RequestContext,
+    ) -> None:
+        if user_message is None or thread.title is not None:
+            return
+
+        run = await Runner.run(
+            self.title_agent,
+            input=await self.thread_item_converter.to_agent_input(user_message),
+        )
+        model_result: str = run.final_output
+        model_result = model_result[:1].upper() + model_result[1:]
+        thread.title = model_result.strip(".")
+        await self.store.save_thread(thread, context=context)
 
 
 def create_chatkit_server() -> MetroMapServer | None:

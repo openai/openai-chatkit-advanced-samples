@@ -28,9 +28,7 @@ class MetroMapThreadItemConverter(ThreadItemConverter):
             role="user",
         )
 
-    async def tag_to_message_content(
-        self, tag: UserMessageTagContent
-    ) -> ResponseInputTextParam:
+    async def tag_to_message_content(self, tag: UserMessageTagContent) -> ResponseInputTextParam:
         """Represent a tagged station with all inline details for the model."""
         tag_data = tag.data or {}
         station_id = (tag_data.get("station_id") or tag.id or "").strip()

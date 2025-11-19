@@ -105,21 +105,15 @@ async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message:
     await ctx.context.stream_widget(widget)
 
 
-@function_tool(
-    description_override="Load the latest metro map with lines and stations."
-)
+@function_tool(description_override="Load the latest metro map with lines and stations.")
 async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
     print("[TOOL CALL] get_map")
     metro_map = ctx.context.metro.get_map()
-    await ctx.context.stream(
-        ProgressUpdateEvent(text="Retrieving the latest metro map...")
-    )
+    await ctx.context.stream(ProgressUpdateEvent(text="Retrieving the latest metro map..."))
     return MapResult(map=metro_map)
 
 
-@function_tool(
-    description_override="List all metro lines with their colors and endpoints."
-)
+@function_tool(description_override="List all metro lines with their colors and endpoints.")
 async def list_lines(ctx: RunContextWrapper[MetroAgentContext]) -> LineListResult:
     print("[TOOL CALL] list_lines")
     return LineListResult(lines=ctx.context.metro.list_lines())
@@ -144,9 +138,7 @@ async def get_line_route(
     return LineDetailResult(line=line, stations=stations)
 
 
-@function_tool(
-    description_override="Look up a single station and the lines serving it."
-)
+@function_tool(description_override="Look up a single station and the lines serving it.")
 async def get_station(
     ctx: RunContextWrapper[MetroAgentContext],
     station_id: str,
@@ -181,9 +173,7 @@ async def add_station(
     print(f"[TOOL CALL] add_station: {station_name} to {line_id}")
     await ctx.context.stream(ProgressUpdateEvent(text="Adding station..."))
     try:
-        updated_map, new_station = ctx.context.metro.add_station(
-            station_name, line_id, append
-        )
+        updated_map, new_station = ctx.context.metro.add_station(station_name, line_id, append)
         ctx.context.client_tool_call = ClientToolCall(
             name="add_station",
             arguments={

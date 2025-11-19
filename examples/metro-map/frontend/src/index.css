@@ -104,7 +104,7 @@ html, body, #root {
   }
 
   body {
-    @apply m-0 min-h-screen font-sans bg-surface-light text-slate-900 transition-colors;
+    @apply m-0 min-h-screen font-sans bg-surface-light text-slate-900;
   }
 
   .dark body {

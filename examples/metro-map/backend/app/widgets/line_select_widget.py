@@ -41,18 +41,12 @@ def _line_item(line: Line, selected: str | None) -> ListViewItem:
                 size="sm",
                 color="gray-900" if is_selected or selected is None else "gray-600",
             ),
-            *(
-                [Icon(name="check", color="gray-900", size="2xl")]
-                if is_selected
-                else []
-            ),
+            *([Icon(name="check", color="gray-900", size="2xl")] if is_selected else []),
         ],
     )
 
 
-def build_line_select_widget(
-    lines: list[Line], selected: str | None = None
-) -> ListView:
+def build_line_select_widget(lines: list[Line], selected: str | None = None) -> ListView:
     """Render a line selector widget from the provided line metadata."""
 
     items = [_line_item(line, selected) for line in lines]

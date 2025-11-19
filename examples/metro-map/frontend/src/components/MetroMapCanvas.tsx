@@ -375,6 +375,9 @@ export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
       minZoom: 0.55,
       maxZoom: 1.4,
     });
+    const { viewport } = instance.toObject();
+    // Add an offset to account for the station label.
+    instance.setViewport({ ...viewport, x: viewport.x - 30 });
   };
 
   return (

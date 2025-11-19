@@ -20,7 +20,7 @@ You can run the following examples:
 | Cat Lounge       | `npm run cat-lounge`       | `cd examples/cat-lounge && npm install && npm run start`   | http://localhost:5170 |
 | Customer Support | `npm run customer-support` | `cd examples/customer-support && npm install && npm start` | http://localhost:5171 |
 | News Guide       | `npm run news-guide`       | `cd examples/news-guide && npm install && npm run start`   | http://localhost:5172 |
-| Metro Map        | `npm run metro-map`        | `cd examples/metro-map && npm install && npm run start`    | http://localhost:5175 |
+| Metro Map        | `npm run metro-map`        | `cd examples/metro-map && npm install && npm run start`    | http://localhost:5173 |
 
 ## Feature index
 

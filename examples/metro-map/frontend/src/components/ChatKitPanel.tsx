@@ -1,4 +1,4 @@
-import { ChatKit, useChatKit, type Entity } from "@openai/chatkit-react";
+import { ChatKit, HeaderIcon, HeaderOption, useChatKit, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
 import { useCallback, useMemo } from "react";
 
@@ -33,6 +33,25 @@ export function ChatKitPanel({
   const focusStation = useMapStore((state) => state.focusStation);
   const setLocationSelectLineId = useMapStore((state) => state.setLocationSelectLineId);
   const clearLocationSelectMode = useMapStore((state) => state.clearLocationSelectMode);
+  const scheme = useAppStore((state) => state.scheme);
+  const setScheme = useAppStore((state) => state.setScheme);
+
+  const headerRightAction = useMemo((): HeaderOption['rightAction'] => {
+    if (scheme === "dark") {
+      return {
+        icon: "light-mode",
+        onClick: () => {
+          setScheme("light");
+        }
+      }
+    }
+    return {
+      icon: "dark-mode",
+      onClick: () => {
+        setScheme("dark");
+      }
+    }
+  }, [scheme, setScheme]);
 
   const stationEntities = useMemo<Entity[]>(() => {
     if (!currentMap) return [];
@@ -107,6 +126,10 @@ export function ChatKitPanel({
 
   const chatkit = useChatKit({
     api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY },
+    header: {
+      title: {enabled: false},
+      rightAction: headerRightAction,
+    },
     theme: {
       density: "spacious",
       colorScheme: theme,
@@ -155,7 +178,7 @@ export function ChatKitPanel({
   });
 
   return (
-    <div className={clsx("relative h-full w-full overflow-hidden", className)}>
+    <div className="flex-1 relative h-full w-full overflow-hidden py-1 pr-1">
       <ChatKit control={chatkit.control} className="block h-full w-full" />
     </div>
   );
