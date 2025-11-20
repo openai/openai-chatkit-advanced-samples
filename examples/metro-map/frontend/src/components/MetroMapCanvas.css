@@ -77,3 +77,34 @@
     box-shadow: 0 10px 24px var(--shadow-strong-color, rgba(15, 23, 42, 0.3));
   }
 }
+
+.StationNode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: 4px solid color-mix(in srgb, var(--station-highlight) 0%, transparent);
+  transition: outline-color 150ms ease;
+}
+
+.StationNode.location-select-mode {
+  cursor: inherit;
+}
+
+.StationNode:not(.location-select-mode):hover {
+  outline: 4px solid color-mix(in srgb, var(--station-highlight) 50%, transparent);
+}
+
+.StationNode:not(.location-select-mode):active {
+  outline: 4px solid color-mix(in srgb, var(--station-highlight) 100%, transparent);
+}
+
+.StationNode--selected:not(.location-select-mode) {
+  outline: 4px solid color-mix(in srgb, var(--station-highlight) 80%, transparent);
+}
+
+.StationNode--selected:not(.location-select-mode):hover {
+  outline: 4px solid color-mix(in srgb, var(--station-highlight) 90%, transparent);
+}
