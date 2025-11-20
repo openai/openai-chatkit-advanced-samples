@@ -96,7 +96,12 @@ class StationDetailResult(BaseModel):
     lines: list[Line]
 
 
-@function_tool(description_override="Show a clickable widget listing metro lines.")
+@function_tool(
+    description_override=(
+        "Show a clickable widget listing metro lines.\n"
+        "- `message`: Text shown above the widget to prompt the user."
+    )
+)
 async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message: str):
     widget = build_line_select_widget(ctx.context.metro.list_lines())
     await ctx.context.stream(
@@ -112,7 +117,9 @@ async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message:
     await ctx.context.stream_widget(widget)
 
 
-@function_tool(description_override="Load the latest metro map with lines and stations.")
+@function_tool(
+    description_override=("Load the latest metro map with lines and stations. No parameters.")
+)
 async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
     print("[TOOL CALL] get_map")
     metro_map = ctx.context.metro.get_map()
@@ -120,19 +127,29 @@ async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
     return MapResult(map=metro_map)
 
 
-@function_tool(description_override="List all metro lines with their colors and endpoints.")
+@function_tool(
+    description_override=("List all metro lines with their colors and endpoints. No parameters.")
+)
 async def list_lines(ctx: RunContextWrapper[MetroAgentContext]) -> LineListResult:
     print("[TOOL CALL] list_lines")
     return LineListResult(lines=ctx.context.metro.list_lines())
 
 
-@function_tool(description_override="List all stations and which lines serve them.")
+@function_tool(
+    description_override=("List all stations and which lines serve them. No parameters.")
+)
 async def list_stations(ctx: RunContextWrapper[MetroAgentContext]) -> StationListResult:
     print("[TOOL CALL] list_stations")
     return StationListResult(stations=ctx.context.metro.list_stations())
 
 
-@function_tool(description_override="Show the user the planned route.")
+@function_tool(
+    description_override=(
+        "Show the user the planned route.\n"
+        "- `route`: Ordered list of stations in the journey.\n"
+        "- `message`: One-sentence description of the itinerary."
+    )
+)
 async def plan_route(
     ctx: RunContextWrapper[MetroAgentContext],
     route: list[Station],
@@ -167,7 +184,12 @@ async def plan_route(
     )
 
 
-@function_tool(description_override="Look up a single station and the lines serving it.")
+@function_tool(
+    description_override=(
+        "Look up a single station and the lines serving it.\n"
+        "- `station_id`: Station identifier to retrieve."
+    )
+)
 async def get_station(
     ctx: RunContextWrapper[MetroAgentContext],
     station_id: str,
@@ -251,6 +273,7 @@ metro_map_agent = Agent[MetroAgentContext](
     tool_use_behavior=StopAtTools(
         stop_at_tool_names=[
             add_station.name,
+            plan_route.name,
             show_line_selector.name,
         ]
     ),

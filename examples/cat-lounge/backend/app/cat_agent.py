@@ -115,7 +115,11 @@ async def _add_hidden_context(ctx: RunContextWrapper[CatAgentContext], content: 
     )
 
 
-@function_tool(description_override="Read the cat's current stats before deciding what to do next.")
+@function_tool(
+    description_override=(
+        "Read the cat's current stats before deciding what to do next. No parameters."
+    )
+)
 async def get_cat_status(
     ctx: RunContextWrapper[CatAgentContext],
 ) -> dict[str, Any]:
@@ -125,7 +129,12 @@ async def get_cat_status(
     return state.to_payload(ctx.context.thread.id)
 
 
-@function_tool(description_override="Feed the cat to replenish energy and keep moods stable.")
+@function_tool(
+    description_override=(
+        "Feed the cat to replenish energy and keep moods stable.\n"
+        "- `meal`: Meal or snack description to include in the update."
+    )
+)
 async def feed_cat(
     ctx: RunContextWrapper[CatAgentContext],
     meal: str | None = None,
@@ -138,7 +147,12 @@ async def feed_cat(
     # No need to return payload for a client tool call; agent must be configured to stop after this tool call.
 
 
-@function_tool(description_override="Play with the cat to boost happiness and create fun moments.")
+@function_tool(
+    description_override=(
+        "Play with the cat to boost happiness and create fun moments.\n"
+        "- `activity`: Toy or activity used during playtime."
+    )
+)
 async def play_with_cat(
     ctx: RunContextWrapper[CatAgentContext],
     activity: str | None = None,
@@ -151,7 +165,12 @@ async def play_with_cat(
     # No need to return payload for a client tool call; agent must be configured to stop after this tool call.
 
 
-@function_tool(description_override="Clean the cat to tidy up and improve cleanliness.")
+@function_tool(
+    description_override=(
+        "Clean the cat to tidy up and improve cleanliness.\n"
+        "- `method`: Cleaning method or item used."
+    )
+)
 async def clean_cat(
     ctx: RunContextWrapper[CatAgentContext],
     method: str | None = None,
@@ -165,7 +184,10 @@ async def clean_cat(
 
 
 @function_tool(
-    description_override="Give the cat a permanent name and update the thread title to match."
+    description_override=(
+        "Give the cat a permanent name and update the thread title to match.\n"
+        "- `name`: Desired name for the cat."
+    )
 )
 async def set_cat_name(
     ctx: RunContextWrapper[CatAgentContext],
@@ -206,7 +228,13 @@ async def set_cat_name(
     # No need to return payload for a client tool call; agent must be configured to stop after this tool call.
 
 
-@function_tool(description_override="Show the cat's profile card with avatar and age.")
+@function_tool(
+    description_override=(
+        "Show the cat's profile card with avatar and age.\n"
+        "- `age`: Cat age (in years) to display and persist.\n"
+        "- `favorite_toy`: Favorite toy label to include."
+    )
+)
 async def show_cat_profile(
     ctx: RunContextWrapper[CatAgentContext],
     age: int | None = None,
@@ -250,13 +278,17 @@ async def show_cat_profile(
         )
 
 
-@function_tool(description_override="Speak as the cat so a bubble appears in the dashboard.")
+@function_tool(
+    description_override=(
+        "Speak as the cat so a bubble appears in the dashboard.\n"
+        "- `line`: The text the cat should say."
+    )
+)
 async def speak_as_cat(
     ctx: RunContextWrapper[CatAgentContext],
     line: str,
-    mood: str | None = None,
 ):
-    print(f"[TOOL CALL] speak_as_cat({line}, {str(mood)})")
+    print(f"[TOOL CALL] speak_as_cat({line})")
     message = line.strip()
     if not message:
         raise ValueError("A line is required for the cat to speak.")
@@ -266,14 +298,14 @@ async def speak_as_cat(
         arguments={
             "state": state.to_payload(ctx.context.thread.id),
             "message": message,
-            "mood": mood or "playful",
         },
     )
 
 
 @function_tool(
     description_override=(
-        "Render up to three creative cat name options provided in the `suggestions` argument."
+        "Render up to three creative cat name options provided in the `suggestions` argument.\n"
+        "- `suggestions`: List of name suggestions with a `name` and `reason` for each."
     )
 )
 async def suggest_cat_names(
