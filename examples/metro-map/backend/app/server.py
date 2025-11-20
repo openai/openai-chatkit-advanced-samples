@@ -35,11 +35,7 @@ from .data.metro_map_store import MetroMapStore
 from .memory_store import MemoryStore
 from .request_context import RequestContext
 from .thread_item_converter import MetroMapThreadItemConverter
-from .widgets.line_select_widget import (
-    LINE_SELECT_ACTION_TYPE,
-    LineSelectPayload,
-    build_line_select_widget,
-)
+from .widgets.line_select_widget import build_line_select_widget
 
 
 class MetroMapServer(ChatKitServer[RequestContext]):
@@ -108,11 +104,12 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         sender: WidgetItem | None,
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
-        if action.type == LINE_SELECT_ACTION_TYPE:
-            payload = self._parse_line_select_payload(action)
-            if payload is None:
+        if action.type == "line.select":
+            if action.payload is None:
                 return
-            async for event in self._handle_line_select_action(thread, payload, sender, context):
+            async for event in self._handle_line_select_action(
+                thread, action.payload, sender, context
+            ):
                 yield event
             return
 
@@ -122,24 +119,19 @@ class MetroMapServer(ChatKitServer[RequestContext]):
         raise RuntimeError("File attachments are not supported in this demo.")
 
     # -- Helpers ----------------------------------------------------
-    def _parse_line_select_payload(self, action: Action[str, Any]) -> LineSelectPayload | None:
-        try:
-            return LineSelectPayload.model_validate(action.payload or {})
-        except ValidationError as exc:
-            print(f"[WARN] Invalid line.select payload: {exc}")
-            return None
-
     async def _handle_line_select_action(
         self,
         thread: ThreadMetadata,
-        payload: LineSelectPayload,
+        payload: dict[str, Any],
         sender: WidgetItem | None,
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
+        line_id = payload["id"]
+
         # Update the widget to show the selected line and disable further clicks.
         updated_widget = build_line_select_widget(
             self.metro_map_store.list_lines(),
-            selected=payload.id,
+            selected=line_id,
         )
 
         if sender:
@@ -155,7 +147,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
                 id=self.store.generate_item_id("message", thread, context),
                 thread_id=thread.id,
                 created_at=datetime.now(),
-                content=f"<LINE_SELECTED>{payload.id}</LINE_SELECTED>",
+                content=f"<LINE_SELECTED>{line_id}</LINE_SELECTED>",
             ),
             context=context,
         )
@@ -178,7 +170,7 @@ class MetroMapServer(ChatKitServer[RequestContext]):
                 id=self.store.generate_item_id("tool_call", thread, context),
                 thread_id=thread.id,
                 name="location_select_mode",
-                arguments={"lineId": payload.id},
+                arguments={"lineId": line_id},
                 created_at=datetime.now(),
                 call_id=self.store.generate_item_id("tool_call", thread, context),
             ),

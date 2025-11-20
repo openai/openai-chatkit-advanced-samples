@@ -1,0 +1,134 @@
+{
+  "version": "1.0",
+  "name": "lineSelect",
+  "template": "{\"type\":\"ListView\",\"children\":[{%- set _c -%}{%-for item in items -%},{\"type\":\"ListViewItem\",\"key\":{{ (item.id) | tojson }},\"gap\":5,\"onClickAction\":{% if selected %}{{ (none) | tojson }}{% else %}{\"type\":\"line.select\",\"payload\":{\"id\":{{ (item.id) | tojson }}},\"handler\":\"server\"}{% endif %},\"children\":[{%- set _c -%},{\"type\":\"Box\",\"size\":25,\"radius\":\"full\",\"background\":{{ (item.color) | tojson }}},{\"type\":\"Text\",\"value\":{{ (item.name) | tojson }},\"color\":{% if ((not selected) or (selected == item.id)) %}\"gray-900\"{% else %}\"gray-300\"{% endif %},\"size\":\"sm\"}{%-if selected == item.id -%},{\"type\":\"Icon\",\"name\":\"check\",\"size\":\"xl\"}{%-else-%}{%-endif-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}{%-endfor-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "selected": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "label",
+            "color"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "selected",
+      "items"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "ListView",
+    "of": [],
+    "children": [
+      {
+        "type": "ListViewItem",
+        "key": "blue",
+        "gap": 5,
+        "onClickAction": {
+          "type": "line.select",
+          "payload": {
+            "id": "blue"
+          },
+          "handler": "server"
+        },
+        "children": [
+          {
+            "type": "Box",
+            "size": 25,
+            "radius": "full",
+            "background": "#06b6d4"
+          },
+          {
+            "type": "Text",
+            "value": "Blue Line",
+            "color": "gray-900",
+            "size": "sm"
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "purple",
+        "gap": 5,
+        "onClickAction": {
+          "type": "line.select",
+          "payload": {
+            "id": "purple"
+          },
+          "handler": "server"
+        },
+        "children": [
+          {
+            "type": "Box",
+            "size": 25,
+            "radius": "full",
+            "background": "#a855f7"
+          },
+          {
+            "type": "Text",
+            "value": "Purple Line",
+            "color": "gray-900",
+            "size": "sm"
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "orange",
+        "gap": 5,
+        "onClickAction": {
+          "type": "line.select",
+          "payload": {
+            "id": "orange"
+          },
+          "handler": "server"
+        },
+        "children": [
+          {
+            "type": "Box",
+            "size": 25,
+            "radius": "full",
+            "background": "#f59e0b"
+          },
+          {
+            "type": "Text",
+            "value": "Orange Line",
+            "color": "gray-900",
+            "size": "sm"
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ19raHZlYjlpbyIsIm5hbWUiOiJVbnRpdGxlZCB3aWRnZXQiLCJ2aWV3IjoiPExpc3RWaWV3IG9mPXtbXX0-XG4gIHtpdGVtcy5tYXAoKGl0ZW0pID0-IChcbiAgICA8TGlzdFZpZXdJdGVtXG4gICAgICBrZXk9e2l0ZW0uaWR9XG4gICAgICBnYXA9ezV9XG4gICAgICBvbkNsaWNrQWN0aW9uPXtzZWxlY3RlZCA_IHVuZGVmaW5lZCA6IHtcbiAgICAgICAgdHlwZTogXCJsaW5lLnNlbGVjdFwiLFxuICAgICAgICBwYXlsb2FkOiB7IGlkOiBpdGVtLmlkIH0sXG4gICAgICAgIGhhbmRsZXI6IFwic2VydmVyXCJcbiAgICAgIH19XG4gICAgPlxuICAgICAgPEJveCBzaXplPXsyNX0gcmFkaXVzPVwiZnVsbFwiIGJhY2tncm91bmQ9e2l0ZW0uY29sb3J9IC8-XG4gICAgICA8VGV4dCB2YWx1ZT17aXRlbS5sYWJlbH0gY29sb3I9eyFzZWxlY3RlZCB8fCBzZWxlY3RlZCA9PT0gaXRlbS5pZCA_IFwiZ3JheS05MDBcIiA6IFwiZ3JheS0zMDBcIn0gc2l6ZT1cInNtXCIgLz5cbiAgICAgIHtzZWxlY3RlZCA9PT0gaXRlbS5pZCAmJiA8SWNvbiBuYW1lPVwiY2hlY2tcIiBzaXplPVwieGxcIiAvPn1cbiAgICA8L0xpc3RWaWV3SXRlbT5cbiAgKSl9XG48L0xpc3RWaWV3PiIsImRlZmF1bHRTdGF0ZSI6eyJzZWxlY3RlZCI6bnVsbCwiaXRlbXMiOlt7ImlkIjoiYmx1ZSIsImxhYmVsIjoiQmx1ZSBMaW5lIiwiY29sb3IiOiIjMDZiNmQ0In0seyJpZCI6InB1cnBsZSIsImxhYmVsIjoiUHVycGxlIExpbmUiLCJjb2xvciI6IiNhODU1ZjcifSx7ImlkIjoib3JhbmdlIiwibGFiZWwiOiJPcmFuZ2UgTGluZSIsImNvbG9yIjoiI2Y1OWUwYiJ9XX0sInNjaGVtYU1vZGUiOiJ6b2QiLCJqc29uU2NoZW1hIjp7InR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7InRpdGxlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbInRpdGxlIl0sImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZX0sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCJcblxuY29uc3QgSXRlbSA9IHouc3RyaWN0T2JqZWN0KHtcbiAgaWQ6IHouc3RyaW5nKCksXG4gIGxhYmVsOiB6LnN0cmluZygpLFxuICBjb2xvcjogei5zdHJpbmcoKSxcbn0pXG5cbmNvbnN0IFdpZGdldFN0YXRlID0gei5zdHJpY3RPYmplY3Qoe1xuICBzZWxlY3RlZDogei5udWxsYWJsZSh6LnN0cmluZygpKSxcbiAgaXRlbXM6IHouYXJyYXkoSXRlbSksXG59KVxuXG5leHBvcnQgZGVmYXVsdCBXaWRnZXRTdGF0ZSIsInN0YXRlcyI6W10sInNjaGVtYVZhbGlkaXR5IjoidmFsaWQiLCJ2aWV3VmFsaWRpdHkiOiJ2YWxpZCIsImRlZmF1bHRTdGF0ZVZhbGlkaXR5IjoidmFsaWQifQ"
+}
