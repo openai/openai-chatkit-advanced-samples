@@ -115,7 +115,12 @@ class CurrentPageResult(BaseModel):
 # -- Tool definitions -------------------------------------------------------
 
 
-@function_tool(description_override="List newsroom articles, optionally filtered by tags.")
+@function_tool(
+    description_override=(
+        "List newsroom articles, optionally filtered by tags.\n"
+        "- `tags`: One or more tags to filter by."
+    )
+)
 async def search_articles_by_tags(
     ctx: RunContextWrapper[NewsAgentContext],
     tags: List[str],
@@ -131,7 +136,12 @@ async def search_articles_by_tags(
     return ArticleSearchResult(articles=articles)
 
 
-@function_tool(description_override="Find articles written by a specific author.")
+@function_tool(
+    description_override=(
+        "Find articles written by a specific author.\n"
+        "- `author`: Author name to search for (case-insensitive)."
+    )
+)
 async def search_articles_by_author(
     ctx: RunContextWrapper[NewsAgentContext],
     author: str,
@@ -148,7 +158,9 @@ async def search_articles_by_author(
 
 
 @function_tool(
-    description_override="List all unique tags and keywords available across the newsroom archive."
+    description_override=(
+        "List all unique tags and keywords available across the newsroom archive. No parameters."
+    )
 )
 async def list_available_tags_and_keywords(
     ctx: RunContextWrapper[NewsAgentContext],
@@ -159,7 +171,10 @@ async def list_available_tags_and_keywords(
 
 
 @function_tool(
-    description_override="Search newsroom articles by keywords within their metadata (title, tags, keywords, etc.)."
+    description_override=(
+        "Search newsroom articles by keywords within their metadata (title, tags, keywords, etc.).\n"
+        "- `keywords`: List of keywords to match against metadata."
+    )
 )
 async def search_articles_by_keywords(
     ctx: RunContextWrapper[NewsAgentContext],
@@ -177,7 +192,10 @@ async def search_articles_by_keywords(
 
 
 @function_tool(
-    description_override="Search newsroom articles for an exact text match within their content."
+    description_override=(
+        "Search newsroom articles for an exact text match within their content.\n"
+        "- `text`: Exact string to find inside article bodies."
+    )
 )
 async def search_articles_by_exact_text(
     ctx: RunContextWrapper[NewsAgentContext],
@@ -193,7 +211,12 @@ async def search_articles_by_exact_text(
     return ArticleSearchResult(articles=articles)
 
 
-@function_tool(description_override="Fetch the markdown content for a specific article.")
+@function_tool(
+    description_override=(
+        "Fetch the markdown content for a specific article.\n"
+        "- `article_id`: Identifier of the article to load."
+    )
+)
 async def get_article_by_id(
     ctx: RunContextWrapper[NewsAgentContext],
     article_id: str,
@@ -208,7 +231,9 @@ async def get_article_by_id(
 
 
 @function_tool(
-    description_override="Load the full content for the page the reader currently has open."
+    description_override=(
+        "Load the full content for the page the reader currently has open. No parameters."
+    )
 )
 async def get_current_page(
     ctx: RunContextWrapper[NewsAgentContext],
@@ -228,7 +253,11 @@ async def get_current_page(
 
 
 @function_tool(
-    description_override="Show a Newsroom-style article list widget for a provided set of articles."
+    description_override=(
+        "Show a Newsroom-style article list widget for a provided set of articles.\n"
+        "- `articles`: Article metadata entries to display.\n"
+        "- `message`: Introductory text explaining why these were selected."
+    )
 )
 async def show_article_list_widget(
     ctx: RunContextWrapper[NewsAgentContext],

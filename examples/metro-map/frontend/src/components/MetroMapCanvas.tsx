@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import clsx from "clsx";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from "react";
 import ReactFlow, {
+  useStore as useReactFlowStore,
   Background,
   Handle,
   Position,
@@ -15,10 +17,6 @@ import { X_UNIT, Y_UNIT, type Line, type MetroMap, type Station } from "../lib/m
 import { useAppStore } from "../store/useAppStore";
 import { useMapStore } from "../store/useMapStore";
 import "./MetroMapCanvas.css";
-
-type MetroMapCanvasProps = {
-  map: MetroMap;
-};
 
 type StationNodeData = Station & {
   lineColors: Record<string, string>;
@@ -155,11 +153,10 @@ const NODE_TYPES = {
   station: StationNode,
 };
 
-function StationNode({ data }: NodeProps<StationNodeData>) {
+function StationNode({ data, selected }: NodeProps<StationNodeData>) {
   const { name, lines, lineColors } = data;
   const locationSelectLineId = useMapStore((state) => state.locationSelectLineId);
   const setLocationSelectLineId = useMapStore((state) => state.setLocationSelectLineId);
-  // const locationSelectLineId = "blue";
   const map = useMapStore((state) => state.map);
   const chatkit = useAppStore((state) => state.chatkit);
 
@@ -223,7 +220,10 @@ function StationNode({ data }: NodeProps<StationNodeData>) {
   );
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div
+      className={clsx("StationNode", {"StationNode--selected": selected, "location-select-mode": !!locationSelectLineId })}
+      style={{ "--station-highlight": primaryColor } as CSSProperties}
+    >
       {/* Hidden handles on all sides so edges can connect based on orientation. */}
       <Handle id="target-left" type="target" position={Position.Left} className="!h-0 !w-0 !bg-transparent !border-0" />
       <Handle id="target-right" type="target" position={Position.Right} className="!h-0 !w-0 !bg-transparent !border-0" />
@@ -280,13 +280,13 @@ function StationNode({ data }: NodeProps<StationNodeData>) {
   );
 }
 
-function buildGraph(map: MetroMap): { nodes: Node[]; edges: Edge[] } {
-  const nodes = buildNodes(map);
+function buildGraph(map: MetroMap, selectedStationId: string | null = null): { nodes: Node[]; edges: Edge[] } {
+  const nodes = buildNodes(map, selectedStationId);
   const edges = buildEdges(map, nodes);
   return { nodes, edges };
 }
 
-function buildNodes(map: MetroMap): Node<StationNodeData>[] {
+function buildNodes(map: MetroMap, selectedStationId: string | null): Node<StationNodeData>[] {
   const lineColor: Record<string, string> = {};
   map.lines.forEach((line) => {
     lineColor[line.id] = line.color;
@@ -303,6 +303,7 @@ function buildNodes(map: MetroMap): Node<StationNodeData>[] {
       },
       draggable: false,
       selectable: true,
+      selected: selectedStationId === station.id,
     };
   });
 }
@@ -358,13 +359,24 @@ function buildEdges(map: MetroMap, nodes: Node[]): Edge[] {
   return edges;
 }
 
-export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
-  const [{ nodes, edges }, setGraph] = useState(() => buildGraph(map));
+export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
+  const locationSelectLineId = useMapStore((state) => state.locationSelectLineId);
+  const selectedStationId = useMapStore((state) => state.selectedStationId);
+  const setSelectedStationId = useMapStore((state) => state.setSelectedStationId);
+  const [{ nodes, edges }, setGraph] = useState(() => buildGraph(map, selectedStationId));
+  const unselectNodesAndEdges = useReactFlowStore((state) => state.unselectNodesAndEdges);
   const setReactFlow = useMapStore((state) => state.setReactFlow);
+  const chatkit = useAppStore((state) => state.chatkit);
 
   useEffect(() => {
-    setGraph(buildGraph(map));
-  }, [map]);
+    setGraph(buildGraph(map, selectedStationId));
+  }, [map, selectedStationId]);
+
+  // Clear selection whenever location selection mode is toggled
+  useEffect(() => {
+    setSelectedStationId(null);
+    unselectNodesAndEdges();
+  }, [locationSelectLineId, unselectNodesAndEdges]);
 
   useEffect(() => () => setReactFlow(null), [setReactFlow]);
 
@@ -380,13 +392,40 @@ export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
     instance.setViewport({ ...viewport, x: viewport.x - 30 });
   };
 
+  const handleSelectionChange = useCallback(
+    ({ nodes: selectedNodes = [] }: { nodes?: Node[] }) => {
+      const nextSelectedId = selectedNodes[0]?.id ?? null;
+      setSelectedStationId(nextSelectedId);
+    },
+    [setSelectedStationId]
+  );
+
+  const handleNodeClick = useCallback(
+    (_: MouseEvent, node: Node) => {
+      handleSelectionChange({ nodes: [node] });
+      if (!chatkit) return;
+
+      const stationName =
+        (node.data as StationNodeData | undefined)?.name ??
+        map.stations.find((station) => station.id === node.id)?.name;
+
+      if (!stationName) return;
+
+      chatkit
+        .sendUserMessage({ text: `Tell me about ${stationName}` })
+        .catch((error) => console.error("Failed to send station prompt.", error));
+    },
+    [chatkit, handleSelectionChange, map.stations]
+  );
+
   return (
-    <ReactFlowProvider>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={NODE_TYPES}
         onInit={onInit}
+        onSelectionChange={handleSelectionChange}
+        onNodeClick={handleNodeClick}
         fitView
         minZoom={0.4}
         maxZoom={1.6}
@@ -408,6 +447,13 @@ export function MetroMapCanvas({ map }: MetroMapCanvasProps) {
           color="rgba(148,163,184,0.5)"
         />
       </ReactFlow>
+  );
+}
+
+export function MetroMapCanvas(props: { map: MetroMap }) {
+  return (
+    <ReactFlowProvider>
+      <MetroMapCanvasContents {...props} />
     </ReactFlowProvider>
   );
 }
