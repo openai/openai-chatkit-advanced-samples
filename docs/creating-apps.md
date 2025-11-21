@@ -41,7 +41,7 @@ frontend:
 Create a markdown file with your agent definition exported from Agent Builder:
 
 ```markdown
-# specs/my-app/my-app-workflow.md
+`specs/my-app/my-app-workflow.md`
 
 This is the workflow code from Agent Builder.
 
