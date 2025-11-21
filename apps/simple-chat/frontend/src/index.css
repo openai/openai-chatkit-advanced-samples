@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply m-0 min-h-screen font-sans bg-surface-light text-slate-900 transition-colors;
+  }
+
+  .dark body {
+    @apply bg-surface-dark text-slate-100;
+  }
+}
