@@ -6,6 +6,8 @@ We have developed and prototyped this the app's workflow and agents in [OpenAI's
 
 We are now making an app, integrating these agents with [OpenAI's ChatKit](https://platform.openai.com/docs/guides/chatkit)/
 
+Here's a more robust [ChatKit reference](https://openai.github.io/chatkit-js/).
+
 Please familarize yourself with the above before we begin.
 
 This repo is a FORK of the [OpenAI Chatkit Advanced Examples](https://github.com/openai/openai-chatkit-advanced-samples).

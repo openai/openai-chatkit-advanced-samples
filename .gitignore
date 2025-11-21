@@ -28,3 +28,4 @@ dist/
 coverage/
 
 .obsidian/
+.playwright-mcp/

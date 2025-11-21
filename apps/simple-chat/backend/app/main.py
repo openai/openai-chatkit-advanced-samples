@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from chatkit.server import StreamingResult
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse

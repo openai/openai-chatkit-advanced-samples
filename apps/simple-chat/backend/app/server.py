@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, AsyncIterator
+from typing import Annotated, Any, AsyncIterator
 
 from agents import Runner
-from chatkit.agents import stream_agent_response
+from chatkit.agents import AgentContext, stream_agent_response
 from chatkit.server import ChatKitServer
 from chatkit.types import (
     Action,
@@ -17,12 +17,19 @@ from chatkit.types import (
     WidgetItem,
 )
 from openai.types.responses import ResponseInputContentParam
+from pydantic import Field
 
 from .agents.simple_agent import simple_agent
 from .memory_store import MemoryStore
 from .thread_item_converter import BasicThreadItemConverter
 
 logging.basicConfig(level=logging.INFO)
+
+
+class SimpleAgentContext(AgentContext):
+    """Context for the simple chat agent."""
+    store: Annotated[MemoryStore, Field(exclude=True)]
+    request_context: dict[str, Any]
 
 
 class SimpleChatServer(ChatKitServer[dict[str, Any]]):
@@ -50,6 +57,13 @@ class SimpleChatServer(ChatKitServer[dict[str, Any]]):
         item: UserMessageItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
+        # Create agent context
+        agent_context = SimpleAgentContext(
+            thread=thread,
+            store=self.store,
+            request_context=context,
+        )
+
         # Load all thread items for conversation history
         items_page = await self.store.load_thread_items(
             thread.id,
@@ -69,9 +83,10 @@ class SimpleChatServer(ChatKitServer[dict[str, Any]]):
         result = Runner.run_streamed(
             simple_agent,
             input_items,
+            context=agent_context,
         )
 
-        async for event in stream_agent_response(None, result):
+        async for event in stream_agent_response(agent_context, result):
             yield event
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:

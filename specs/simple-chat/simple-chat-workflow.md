@@ -1,21 +1,15 @@
 This is the workflow code output from Agent Builder.
 
+> **Note:** The original workflow used `gpt-5.1` with reasoning parameters, but these are not
+> supported in the current API. The implementation uses `gpt-4.1` without reasoning settings.
+
 ```python
-from agents import Agent, ModelSettings, TResponseInputItem, Runner, RunConfig, trace
-from openai.types.shared.reasoning import Reasoning
-from pydantic import BaseModel
+from agents import Agent
 
 simplechat = Agent(
   name="SimpleChat",
   instructions="You are a helpful assistant.",
-  model="gpt-5.1",
-  model_settings=ModelSettings(
-    store=True,
-    reasoning=Reasoning(
-      effort="low",
-      summary="auto"
-    )
-  )
+  model="gpt-4.1",
 )
 
 
