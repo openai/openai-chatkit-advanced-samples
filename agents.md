@@ -1,48 +1,35 @@
-# ChatKit Integration Guide
+# Repository Guidelines
 
-This document explains how to customize the ChatKit starter template that lives in this repository. It covers the React client wrapper, the server-side integration that powers agent responses, and the widgets/actions system that unlocks richer UI. The goal is to keep everything you need in one place so you can ship quickly without hunting through code comments.
+## Project Structure & Modules
+- `frontend/`: Vite + React ChatKit client (entry: `frontend/src/main.tsx`).
+- `backend/`: FastAPI server powering agent responses (entry: `backend/app/main.py`).
+- `examples/`: Sample flows, prompts, and integration patterns.
+- Root `package.json` / tooling scripts: shared dev utilities and lint/test runners.
 
----
+## Build, Test, and Development
+- Frontend dev: `cd frontend && npm install && npm run dev` (starts Vite on `http://127.0.0.1:5170`).
+- Frontend build: `cd frontend && npm run build` (production bundle).
+- Backend dev: `cd backend && uv sync && uv run uvicorn app.main:app --reload --port 8000`.
+- Backend tests (when present): `cd backend && uv run pytest`.
 
-## Quick Reference
-- **Frontend entry point**: `frontend/src/main.tsx`
-- **ChatKit config helper**: `frontend/src/lib/config.ts`
-- **FastAPI entry point**: `backend/app/main.py`
+## Coding Style & Naming
+- Follow OpenAI ChatKit official examples and coding patterns.
+- TypeScript/JavaScript: 2-space indentation, prefer functional React components, `PascalCase` for components, `camelCase` for variables and functions.
+- Python: 4-space indentation, type hints where practical, `snake_case` for functions and variables, `PascalCase` for classes.
+- Use existing formatters/linters (e.g., `npm run lint`, `npm run format`, or `uv run`-based tools) instead of introducing new ones.
 
----
+## Testing Guidelines
+- Prefer small, focused tests near the relevant code (e.g., `frontend/src/**/__tests__` or `backend/tests`).
+- Name tests descriptively (e.g., `chat_session.spec.ts`, `test_chat_routes.py`).
+- Ensure core chat flows, error handling, and configuration parsing are covered before shipping.
 
-## Prerequisites
-- Node.js 20+
-- Python 3.11+
-- [uv](https://docs.astral.sh/uv/getting-started/installation/) (recommended) or `pip`
-- OpenAI API key exported as `OPENAI_API_KEY`
-- ChatKit domain key exported as `VITE_CHATKIT_API_DOMAIN_KEY` (any non-empty placeholder during local dev; use the real key from the allowlist in production)
+## Commits & Pull Requests
+- Write concise, imperative commit messages (e.g., `feat: add message streaming`, `fix: handle missing api key`).
+- Keep PRs scoped: one feature or fix per PR when possible.
+- PR description should include: overview, implementation notes, testing steps, and any screenshots or logs relevant to ChatKit behavior.
 
----
+## Security & Configuration
+- Never commit secrets; use env vars such as `OPENAI_API_KEY` and `VITE_CHATKIT_API_DOMAIN_KEY`.
+- Mirror allowed domains in `frontend/vite.config.ts` and the OpenAI domain allowlist.
+- Treat this repo as production-bound: prioritize robustness, clear error messages, and deploy-safe defaults.
 
-## Local Project Setup
-
-1. **Backend**
-   ```bash
-   cd backend
-   uv sync
-   export OPENAI_API_KEY="sk-proj-..."
-   uv run uvicorn app.main:app --reload --port 8000
-   ```
-   The API listens on `http://127.0.0.1:8000`.
-
-2. **Frontend**
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   The Vite server listens on `http://127.0.0.1:5170`.
-
-3. **Domain allowlisting**
-   - For local development, export any non-empty string so the SDK sees a key:
-     ```bash
-     export VITE_CHATKIT_API_DOMAIN_KEY=domain_pk_local_dev
-     ```
-   - When deploying, register your dev or production domain at [platform.openai.com/settings/organization/security/domain-allowlist](https://platform.openai.com/settings/organization/security/domain-allowlist) and replace the placeholder with the generated `domain_pk_...` value.
-   - Mirror the domain inside `frontend/vite.config.ts` by adding it to `server.allowedHosts`.
