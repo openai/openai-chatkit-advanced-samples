@@ -14,10 +14,12 @@ from chatkit.server import ChatKitServer
 from chatkit.types import (
     Action,
     Attachment,
+    InferenceOptions,
     ThreadItemDoneEvent,
     ThreadMetadata,
     ThreadStreamEvent,
     UserMessageItem,
+    UserMessageTextContent,
     WidgetItem,
 )
 from openai.types.responses import ResponseInputContentParam
@@ -62,8 +64,31 @@ class CupidServer(ChatKitServer[RequestContext]):
         context: RequestContext,
     ) -> AsyncIterator[ThreadStreamEvent]:
         """Handle widget action (MATCH button click)."""
-        # MATCH button sends "yes" message - treat it like a user message
-        # The Cupid agent will handle this in the next respond() call
+        # The MATCH button sends type="conversation.message" with payload text="yes"
+        # We need to create a user message and then call respond() to advance to next chapter
+
+        if action.type == "conversation.message":
+            # Get the message text from the payload
+            message_text = action.payload.get("text", "yes")
+
+            # Create a user message item
+            user_message = UserMessageItem(
+                thread_id=thread.id,
+                id=self.store.generate_item_id("message", thread, context),
+                created_at=datetime.now(),
+                content=[UserMessageTextContent(text=message_text)],
+                inference_options=InferenceOptions(),
+            )
+
+            # Add the message to the store
+            await self.store.add_thread_item(thread.id, user_message, context)
+
+            # Yield the message event
+            yield ThreadItemDoneEvent(item=user_message)
+
+            # Call respond to generate the next chapter
+            async for event in self.respond(thread, user_message, context):
+                yield event
         return
         yield  # Make this an async generator
 
