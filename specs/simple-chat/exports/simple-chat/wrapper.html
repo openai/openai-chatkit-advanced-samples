@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat</title>
+    <style>
+/* Tailwind CSS - Core styles extracted */
+*, ::before, ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+html, :host {
+  line-height: 1.5;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0px;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  color: #0f172a;
+  transition: color 150ms, background-color 150ms;
+}
+
+.h-full { height: 100%; }
+.w-full { width: 100%; }
+.max-w-4xl { max-width: 56rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.flex { display: flex; }
+.flex-1 { flex: 1 1 0%; }
+.items-center { align-items: center; }
+.gap-4 { gap: 1rem; }
+.relative { position: relative; }
+.sticky { position: sticky; }
+.top-0 { top: 0px; }
+.z-30 { z-index: 30; }
+.overflow-hidden { overflow: hidden; }
+.rounded-3xl { border-radius: 1.5rem; }
+.rounded-full { border-radius: 9999px; }
+.border-b { border-bottom-width: 1px; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.pb-10 { padding-bottom: 2.5rem; }
+.pt-6 { padding-top: 1.5rem; }
+.p-2 { padding: 0.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.font-semibold { font-weight: 600; }
+
+.text-slate-100 { color: #f1f5f9; }
+.text-slate-600 { color: #475569; }
+.text-slate-800 { color: #1e293b; }
+.text-slate-900 { color: #0f172a; }
+.bg-slate-200 { background-color: #e2e8f0; }
+.bg-white\/90 { background-color: rgb(255 255 255 / 0.9); }
+.bg-white\/80 { background-color: rgb(255 255 255 / 0.8); }
+.border-slate-200\/70 { border-color: rgb(226 232 240 / 0.7); }
+
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+.from-slate-100 {
+  --tw-gradient-from: #f1f5f9;
+  --tw-gradient-to: rgb(241 245 249 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.via-white {
+  --tw-gradient-to: rgb(255 255 255 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), #fff, var(--tw-gradient-to);
+}
+.to-slate-200 {
+  --tw-gradient-to: #e2e8f0;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.ring-1 {
+  box-shadow: 0 0 0 1px rgb(226 232 240 / 0.6);
+}
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+.transition-colors {
+  transition: color 150ms, background-color 150ms, border-color 150ms;
+}
+.duration-300 { transition-duration: 300ms; }
+
+.hover\:bg-slate-300:hover { background-color: #cbd5e1; }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="h-full bg-gradient-to-br transition-colors duration-300 from-slate-100 via-white to-slate-200 text-slate-900">
+            <!-- Header Bar -->
+            <div class="sticky top-0 z-30 w-full border-b backdrop-blur bg-white/90 border-slate-200/70 text-slate-900">
+                <div class="relative mx-auto flex w-full max-w-4xl items-center gap-4 px-6 py-4">
+                    <h1 class="text-lg font-semibold">Simple Chat</h1>
+                    <p class="flex-1 text-sm text-slate-600">A simple conversation interface</p>
+                    <button aria-label="Toggle theme" class="rounded-full p-2 transition-colors bg-slate-200 text-slate-800 hover:bg-slate-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="mx-auto w-full max-w-4xl px-6 pb-10 pt-6" style="height: calc(100vh - 80px);">
+                <div class="relative h-full w-full overflow-hidden rounded-3xl bg-white/80 shadow-lg ring-1 ring-slate-200/60 backdrop-blur">
+                    <!-- ChatKit widget renders here -->
+                    <div class="chatkit-placeholder" style="height: 100%; display: flex; flex-direction: column;">
+                        <!-- See chatkit.html for the interior chat UI -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
