@@ -26,3 +26,5 @@ dist/
 .vite/
 .coverage/
 coverage/
+
+.obsidian/
