@@ -1,0 +1,18 @@
+## Simple-chat Spec
+
+name: simple-chat
+description: A simple chat interface with ChatKit and AgentKit
+
+agent:
+  workflow_id: wf_69206528d6788190917f6d44fee9fa1b0ea4b76302f3c578
+  workflow_source: ./simple-chat-workflow.md
+
+backend:
+  tools: none # No custom tools needed - pure conversation
+  state: in-memory # Session state per thread
+
+frontend:
+  type: chat-only # No side panels or widgets
+  features:
+    - markdown rendering
+    - conversation history
