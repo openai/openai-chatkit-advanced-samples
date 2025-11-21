@@ -6,7 +6,8 @@
     "customer-support": "npm --prefix examples/customer-support install && npm --prefix examples/customer-support start",
     "news-guide": "npm --prefix examples/news-guide install && npm --prefix examples/news-guide start",
     "metro-map": "npm --prefix examples/metro-map install && npm --prefix examples/metro-map start",
-    "simple-chat": "npm --prefix apps/simple-chat install && npm --prefix apps/simple-chat start"
+    "simple-chat": "npm --prefix apps/simple-chat install && npm --prefix apps/simple-chat start",
+    "cupid-simple": "npm --prefix apps/cupid-simple install && npm --prefix apps/cupid-simple start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
