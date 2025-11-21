@@ -1,0 +1,15 @@
+[project]
+name = "simple-chat-backend"
+version = "0.1.0"
+description = "Simple chat backend with ChatKit"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.114.1,<0.116",
+    "uvicorn[standard]>=0.36,<0.37",
+    "openai>=1.40",
+    "openai-chatkit>=1.1.2,<2",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
