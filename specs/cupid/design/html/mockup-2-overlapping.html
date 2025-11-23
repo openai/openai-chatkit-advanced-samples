@@ -76,13 +76,13 @@ body { margin: 0px; min-height: 100vh; --tw-bg-opacity: 1; background-color: rgb
 
 /* Badge styles */
 .planet-badge {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0.5rem;
     border-radius: 0.75rem;
     background: rgba(226, 232, 240, 0.5);
-    min-width: 70px;
+    flex: 1;
 }
 
 .planet-emoji {
@@ -149,8 +149,17 @@ body { margin: 0px; min-height: 100vh; --tw-bg-opacity: 1; background-color: rgb
         <!-- Dashboard Container -->
         <div style="width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border-radius: 1.5rem; box-shadow: 0 45px 90px -45px rgba(15,23,42,0.6); border: 1px solid rgba(226, 232, 240, 0.6); padding: 2rem;">
 
+            <!-- Section Title with Difficulty Rating -->
+            <div class="flex items-center justify-between mb-6" style="padding: 1.25rem 0;">
+                <h2 class="text-lg font-semibold" style="color: #0f172a; margin: 0;">The Compatibility</h2>
+                <div class="flex items-center gap-2">
+                    <div class="difficulty-stars">★★★☆☆</div>
+                    <div class="text-xs text-slate-500">Moderate Challenge</div>
+                </div>
+            </div>
+
             <!-- Planetary Badges -->
-            <div class="flex justify-center gap-2 mb-6">
+            <div class="flex gap-2 mb-6">
                 <div class="planet-badge">
                     <div class="planet-emoji">☀️</div>
                     <div class="planet-score">56</div>
@@ -201,14 +210,6 @@ body { margin: 0px; min-height: 100vh; --tw-bg-opacity: 1; background-color: rgb
                 <div class="flex items-center justify-between">
                     <span class="text-sm font-medium text-slate-600">Compatibility (Base)</span>
                     <span class="text-xs text-slate-400">69</span>
-                </div>
-            </div>
-
-            <!-- Difficulty Rating -->
-            <div class="border-t border-slate-200/80 pt-5 mt-4">
-                <div class="text-center">
-                    <div class="difficulty-stars">★★★☆☆</div>
-                    <div class="text-xs text-slate-500 mt-1">Moderate Challenge</div>
                 </div>
             </div>
         </div>
