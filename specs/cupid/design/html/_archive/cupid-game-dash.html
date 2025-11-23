@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupid Game Dashboard</title>
+    <style>
+/* Base styles from Cat Lounge */
+*, ::before, ::after { box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(229, 231, 235); }
+::before, ::after { --tw-content: ''; }
+
+html, :host {
+    line-height: 1.5;
+    text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0px;
+    line-height: inherit;
+    min-height: 100vh;
+    background-color: rgb(243 244 246);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: rgb(15 23 42);
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #f1f5f9, #ffffff, #e2e8f0);
+    padding: 2rem;
+}
+
+/* Main dashboard matching cat-lounge right panel */
+.game-dashboard {
+    width: 100%;
+    max-width: 500px;
+    height: calc(90vh - 100px);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border-radius: 1.5rem;
+    box-shadow: 0 45px 90px -45px rgba(15,23,42,0.6);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+
+/* Profile cards section */
+.profiles-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* Compact profile card */
+.compact-profile {
+    background: rgba(248, 250, 252, 0.6);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    background: rgba(226, 232, 240, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar-icon {
+    width: 20px;
+    height: 20px;
+    color: rgb(100 116 139);
+}
+
+.profile-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-name-small {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-occupation-small {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-location-small {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.location-icon-small {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+}
+
+/* Compact astro badges */
+.astro-badges-small {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.badge-small {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.375rem;
+    background: rgba(59, 130, 246, 0.1);
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: #3b82f6;
+    white-space: nowrap;
+}
+
+/* Compatibility dashboard section */
+.compatibility-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+}
+
+.title-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+}
+
+.difficulty-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.difficulty-stars {
+    color: #fbbf24;
+    font-size: 1rem;
+    letter-spacing: 0.05rem;
+}
+
+.difficulty-label {
+    font-size: 0.625rem;
+    color: #64748b;
+}
+
+/* Planetary badges */
+.planet-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.planet-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background: rgba(226, 232, 240, 0.5);
+    flex: 1;
+}
+
+.planet-emoji {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.planet-score {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.planet-label {
+    font-size: 0.6rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(226, 232, 240, 0.8);
+}
+
+/* Score badges */
+.score-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.score-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    background: rgba(226, 232, 240, 0.5);
+    flex: 1;
+}
+
+.badge-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.375rem;
+}
+
+.badge-score {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.connection-increase {
+    font-size: 0.75rem;
+    color: #10b981;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+/* Slider section */
+.slider-section {
+    margin-top: 0.5rem;
+}
+
+.slider-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    color: #0f172a;
+    margin-bottom: 0.75rem;
+}
+
+.slider-stack {
+    position: relative;
+    width: 100%;
+    padding: 0.75rem 0;
+}
+
+.slider-track {
+    height: 16px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: rgba(226, 232, 240, 0.7);
+    position: relative;
+    overflow: visible;
+}
+
+.slider-fill-base {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+    opacity: 0.4;
+}
+
+.slider-fill-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+    z-index: 2;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-dashboard">
+            <!-- Profile Cards Row -->
+            <div class="profiles-row">
+                <!-- Mortal Card (Left) -->
+                <div class="compact-profile">
+                    <div class="profile-header">
+                        <div class="avatar-small">
+                            <svg class="avatar-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="profile-header-info">
+                            <h3 class="profile-name-small">Zara Patel</h3>
+                            <p class="profile-occupation-small">Personal Trainer, 28</p>
+                        </div>
+                    </div>
+                    <div class="profile-location-small">
+                        <svg class="location-icon-small" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Greenpoint, Brooklyn</span>
+                    </div>
+                    <div class="astro-badges-small">
+                        <span class="badge-small">☀️ Aries</span>
+                        <span class="badge-small">🌙 Virgo</span>
+                        <span class="badge-small">💖 Taurus</span>
+                        <span class="badge-small">🔥 Aries</span>
+                    </div>
+                </div>
+
+                <!-- Match Card (Right) -->
+                <div class="compact-profile">
+                    <div class="profile-header">
+                        <div class="avatar-small">
+                            <svg class="avatar-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="profile-header-info">
+                            <h3 class="profile-name-small">Sam Martinez</h3>
+                            <p class="profile-occupation-small">Podcast Host, 28</p>
+                        </div>
+                    </div>
+                    <div class="profile-location-small">
+                        <svg class="location-icon-small" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Queens, New York</span>
+                    </div>
+                    <div class="astro-badges-small">
+                        <span class="badge-small">☀️ Gemini</span>
+                        <span class="badge-small">🌙 Aquarius</span>
+                        <span class="badge-small">💖 Gemini</span>
+                        <span class="badge-small">🔥 Taurus</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compatibility Dashboard Section -->
+            <div class="compatibility-section">
+                <!-- Section Title with Difficulty -->
+                <div class="section-title">
+                    <h2 class="title-text">The Compatibility</h2>
+                    <div class="difficulty-rating">
+                        <div class="difficulty-stars">★★★☆☆</div>
+                        <div class="difficulty-label">Moderate</div>
+                    </div>
+                </div>
+
+                <!-- Planetary Badges -->
+                <div class="planet-badges">
+                    <div class="planet-badge">
+                        <div class="planet-emoji">☀️</div>
+                        <div class="planet-score">56</div>
+                        <div class="planet-label">Sun</div>
+                    </div>
+                    <div class="planet-badge">
+                        <div class="planet-emoji">🌙</div>
+                        <div class="planet-score">72</div>
+                        <div class="planet-label">Moon</div>
+                    </div>
+                    <div class="planet-badge">
+                        <div class="planet-emoji">💖</div>
+                        <div class="planet-score">78</div>
+                        <div class="planet-label">Venus</div>
+                    </div>
+                    <div class="planet-badge">
+                        <div class="planet-emoji">🔥</div>
+                        <div class="planet-score">74</div>
+                        <div class="planet-label">Mars</div>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider"></div>
+
+                <!-- Score Badges -->
+                <div class="score-badges">
+                    <div class="score-badge">
+                        <div class="badge-label">Compatibility</div>
+                        <div class="badge-score">69</div>
+                    </div>
+                    <div class="score-badge">
+                        <div class="badge-label">Connection</div>
+                        <div class="badge-score">36</div>
+                        <div class="connection-increase">+12</div>
+                    </div>
+                </div>
+
+                <!-- Slider Section -->
+                <div class="slider-section">
+                    <div class="slider-title">Current Connection</div>
+                    <div class="slider-stack">
+                        <!-- Base compatibility (bottom layer) -->
+                        <div class="slider-track">
+                            <div class="slider-fill-base" style="width: 69%;"></div>
+                        </div>
+
+                        <!-- Active connection (top layer) -->
+                        <div class="slider-track" style="position: absolute; top: 0.75rem; left: 0; width: 100%;">
+                            <div class="slider-fill-active" style="width: 36%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

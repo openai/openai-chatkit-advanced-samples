@@ -1,0 +1,27 @@
+## Simple-chat Spec
+
+name: cupid-simple
+description: A simple chat interface for Cupid with ChatKit and AgentKit
+
+agent:
+  workflow_id: wf_691ef9eb993c8190a0ad8f003f79b8ef0a89be58306abbad
+  workflow_source: ./cupid-simple-workflow.md
+
+backend:
+  tools: none # No custom tools needed - pure conversation
+  state: in-memory # Session state per thread
+
+frontend:
+  type: use the simple-chat interface with profile card widget from the specs folder
+  widget: ./widgets/ProfileCard00.widget
+  features:
+    - profile card widget
+    - markdown rendering
+    - conversation history
+notes: |
+  USe simple-chat interface layout as a base to start from. 
+  To replace the suggested choices. "Welcome! How can I help you today?" -> "Cupid v0.1"
+
+  ANd the onley prompt option should be Play with prompt "Play"
+
+  In the workflow, I have put references to files or loaded them from files. We can do that in the actual thing; we'll develop more robust data and we'll swap in state variables, but for now, let's just read from flat files. Use simple-chat as a starting point; we're not making that many adjustments except changing the prompt options and greeting in the front, and then we're adding a widget, and we want to make sure that that widget renders as it does an agent builder. This has been tested. I've also put the instructions in a separate file which I reference in the workflow, and the data in a different file just to keep it more readable and compact for me, and so that in the development, I can edit those files again. We will likely move to a different system for that, but let's just keep them as files now.

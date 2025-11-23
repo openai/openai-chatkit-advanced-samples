@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupid Profile Card - Zara Patel</title>
+    <style>
+/* Base styles from Cat Lounge */
+*, ::before, ::after { box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(229, 231, 235); }
+::before, ::after { --tw-content: ''; }
+
+html, :host {
+    line-height: 1.5;
+    text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0px;
+    line-height: inherit;
+    min-height: 100vh;
+    background-color: rgb(243 244 246);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: rgb(15 23 42);
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, #f1f5f9, #ffffff, #e2e8f0);
+    padding: 2rem;
+}
+
+/* Card styles */
+.profile-card {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    background: rgba(226, 232, 240, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar-icon {
+    width: 28px;
+    height: 28px;
+    color: rgb(100 116 139);
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.3;
+}
+
+.profile-occupation {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0 0 0.25rem 0;
+}
+
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.location-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.birth-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+.birth-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.birth-separator {
+    color: #cbd5e1;
+}
+
+/* Astrological badges */
+.astro-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #3b82f6;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(226, 232, 240, 0.8);
+    margin: 1rem 0;
+}
+
+/* Bio section */
+.bio-section {
+    margin-bottom: 1rem;
+}
+
+.bio-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+}
+
+.bio-text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Match button */
+.match-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    border: none;
+    background: #0f172a;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.match-button:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.match-button:active {
+    transform: translateY(0);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <!-- Header with avatar and basic info -->
+            <div class="card-header">
+                <div class="avatar">
+                    <svg class="avatar-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name">Zara Patel</h2>
+                    <p class="profile-occupation">Personal Trainer & Wellness Coach, 28</p>
+                    <div class="profile-location">
+                        <svg class="location-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Greenpoint, Brooklyn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Birth info -->
+            <div class="birth-info">
+                <span class="birth-label">Born</span>
+                <span>April 2, 1996</span>
+                <span class="birth-separator">•</span>
+                <span>Los Angeles, CA</span>
+            </div>
+
+            <!-- Astrological badges -->
+            <div class="astro-badges">
+                <span class="badge">☀️ Sun: Aries</span>
+                <span class="badge">🌙 Moon: Virgo</span>
+                <span class="badge">💖 Venus: Taurus</span>
+                <span class="badge">🔥 Mars: Aries</span>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Bio section -->
+            <div class="bio-section">
+                <h3 class="bio-label">Bio:</h3>
+                <p class="bio-text">Zara is a high-energy personal trainer who moved from LA to Greenpoint two years ago, hungry to compete in NYC's cutthroat fitness scene. With an Aries Sun and Ascendant, she's a natural-born leader who inspires her clients through tough-love coaching and genuine care. Her Virgo Moon means she's obsessed with the details—tracking macros, optimizing workouts, and perfecting form. In love, her Taurus Venus craves stability and sensuality, though her fiery Aries Mars can make her impatient when romance moves too slowly. She's looking for someone who can match her intensity while also helping her slow down and enjoy the moment.</p>
+            </div>
+
+            <!-- Match button -->
+            <button class="match-button">MATCH</button>
+        </div>
+    </div>
+</body>
+</html>
