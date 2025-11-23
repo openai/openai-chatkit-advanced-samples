@@ -1,0 +1,255 @@
+{
+  "version": "1.0",
+  "name": "ProfileCard00",
+  "template": "{\"type\":\"Card\",\"size\":\"sm\",\"children\":[{\"type\":\"Col\",\"gap\":3,\"children\":[{\"type\":\"Row\",\"align\":\"start\",\"gap\":3,\"children\":[{\"type\":\"Box\",\"size\":56,\"radius\":\"full\",\"background\":\"surface-secondary\",\"align\":\"center\",\"justify\":\"center\",\"children\":[{\"type\":\"Icon\",\"name\":\"user\",\"size\":\"xl\",\"color\":\"secondary\"}]},{\"type\":\"Col\",\"flex\":\"auto\",\"gap\":1,\"children\":[{\"type\":\"Title\",\"value\":{{ (name) | tojson }},\"size\":\"md\"},{\"type\":\"Text\",\"value\":{{ ((occupation ~ \", \" ~ age)) | tojson }},\"size\":\"sm\"},{\"type\":\"Row\",\"gap\":1,\"children\":[{\"type\":\"Icon\",\"name\":\"map-pin\",\"size\":\"sm\",\"color\":\"secondary\"},{\"type\":\"Text\",\"value\":{{ (location) | tojson }},\"size\":\"sm\",\"color\":\"secondary\"}]}]}]},{\"type\":\"Row\",\"gap\":2,\"children\":[{\"type\":\"Caption\",\"value\":\"Born\"},{\"type\":\"Text\",\"value\":{{ (birthdate) | tojson }},\"size\":\"sm\",\"color\":\"secondary\"},{\"type\":\"Text\",\"value\":\"•\",\"size\":\"sm\",\"color\":\"tertiary\"},{\"type\":\"Text\",\"value\":{{ ((origin.city ~ \", \" ~ origin.state)) | tojson }},\"size\":\"sm\",\"color\":\"secondary\"}]},{\"type\":\"Row\",\"gap\":2,\"wrap\":\"wrap\",\"children\":[{\"type\":\"Badge\",\"label\":{{ ((\"☀️ Sun: \" ~ astrological_notes.sun_sign)) | tojson }},\"variant\":\"soft\",\"color\":\"info\"},{\"type\":\"Badge\",\"label\":{{ ((\"🌙 Moon: \" ~ astrological_notes.moon_sign)) | tojson }},\"variant\":\"soft\",\"color\":\"info\"},{\"type\":\"Badge\",\"label\":{{ ((\"💖 Venus: \" ~ astrological_notes.venus_sign)) | tojson }},\"variant\":\"soft\",\"color\":\"info\"},{\"type\":\"Badge\",\"label\":{{ ((\"🔥 Mars: \" ~ astrological_notes.mars_sign)) | tojson }},\"variant\":\"soft\",\"color\":\"info\"}]},{\"type\":\"Divider\"},{\"type\":\"Col\",\"gap\":1,\"children\":[{\"type\":\"Text\",\"value\":\"Bio:\",\"size\":\"sm\",\"weight\":\"semibold\"},{\"type\":\"Text\",\"value\":{{ (short_bio) | tojson }},\"size\":\"sm\",\"color\":\"secondary\"}]},{\"type\":\"Row\",\"children\":[{\"type\":\"Button\",\"label\":\"MATCH\",\"block\":true,\"style\":\"primary\",\"size\":\"xl\",\"onClickAction\":{\"type\":\"conversation.message\",\"payload\":{\"text\":\"yes\",\"role\":\"user\"},\"handler\":\"server\"}}]}]}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "age": {
+        "type": "number"
+      },
+      "occupation": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "birthdate": {
+        "type": "string"
+      },
+      "origin": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "state",
+          "country"
+        ],
+        "additionalProperties": false
+      },
+      "astrological_notes": {
+        "type": "object",
+        "properties": {
+          "sun_sign": {
+            "type": "string"
+          },
+          "moon_sign": {
+            "type": "string"
+          },
+          "venus_sign": {
+            "type": "string"
+          },
+          "mars_sign": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sun_sign",
+          "moon_sign",
+          "venus_sign",
+          "mars_sign"
+        ],
+        "additionalProperties": false
+      },
+      "short_bio": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "age",
+      "occupation",
+      "location",
+      "birthdate",
+      "origin",
+      "astrological_notes",
+      "short_bio"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Card",
+    "size": "sm",
+    "children": [
+      {
+        "type": "Col",
+        "gap": 3,
+        "children": [
+          {
+            "type": "Row",
+            "align": "start",
+            "gap": 3,
+            "children": [
+              {
+                "type": "Box",
+                "size": 56,
+                "radius": "full",
+                "background": "surface-secondary",
+                "align": "center",
+                "justify": "center",
+                "children": [
+                  {
+                    "type": "Icon",
+                    "name": "user",
+                    "size": "xl",
+                    "color": "secondary"
+                  }
+                ]
+              },
+              {
+                "type": "Col",
+                "flex": "auto",
+                "gap": 1,
+                "children": [
+                  {
+                    "type": "Title",
+                    "value": "Zara Patel",
+                    "size": "md"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Personal Trainer & Wellness Coach, 28",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "Row",
+                    "gap": 1,
+                    "children": [
+                      {
+                        "type": "Icon",
+                        "name": "map-pin",
+                        "size": "sm",
+                        "color": "secondary"
+                      },
+                      {
+                        "type": "Text",
+                        "value": "Greenpoint, Brooklyn",
+                        "size": "sm",
+                        "color": "secondary"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Row",
+            "gap": 2,
+            "children": [
+              {
+                "type": "Caption",
+                "value": "Born"
+              },
+              {
+                "type": "Text",
+                "value": "April 2, 1996",
+                "size": "sm",
+                "color": "secondary"
+              },
+              {
+                "type": "Text",
+                "value": "•",
+                "size": "sm",
+                "color": "tertiary"
+              },
+              {
+                "type": "Text",
+                "value": "Los Angeles, CA",
+                "size": "sm",
+                "color": "secondary"
+              }
+            ]
+          },
+          {
+            "type": "Row",
+            "gap": 2,
+            "wrap": "wrap",
+            "children": [
+              {
+                "type": "Badge",
+                "label": "☀️ Sun: ARIES",
+                "variant": "soft",
+                "color": "info"
+              },
+              {
+                "type": "Badge",
+                "label": "🌙 Moon: VIRGO",
+                "variant": "soft",
+                "color": "info"
+              },
+              {
+                "type": "Badge",
+                "label": "💖 Venus: TAURUS",
+                "variant": "soft",
+                "color": "info"
+              },
+              {
+                "type": "Badge",
+                "label": "🔥 Mars: ARIES",
+                "variant": "soft",
+                "color": "info"
+              }
+            ]
+          },
+          {
+            "type": "Divider"
+          },
+          {
+            "type": "Col",
+            "gap": 1,
+            "children": [
+              {
+                "type": "Text",
+                "value": "Bio:",
+                "size": "sm",
+                "weight": "semibold"
+              },
+              {
+                "type": "Text",
+                "value": "Zara is a high-energy personal trainer who moved from LA to Greenpoint two years ago, hungry to compete in NYC's cutthroat fitness scene. With an Aries Sun and Ascendant, she's a natural-born leader who inspires her clients through tough-love coaching and genuine care. Her Virgo Moon means she's obsessed with the details—tracking macros, optimizing workouts, and perfecting form. In love, her Taurus Venus craves stability and sensuality, though her fiery Aries Mars can make her impatient when romance moves too slowly. She's looking for someone who can match her intensity while also helping her slow down and enjoy the moment.",
+                "size": "sm",
+                "color": "secondary"
+              }
+            ]
+          },
+          {
+            "type": "Row",
+            "children": [
+              {
+                "type": "Button",
+                "label": "MATCH",
+                "block": true,
+                "style": "primary",
+                "size": "xl",
+                "onClickAction": {
+                  "type": "conversation.message",
+                  "payload": {
+                    "text": "yes",
+                    "role": "user"
+                  },
+                  "handler": "server"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ19iZzFqejUyZCIsIm5hbWUiOiJQcm9maWxlQ2FyZDAwIiwidmlldyI6IjxDYXJkIHNpemU9XCJzbVwiPlxuICA8Q29sIGdhcD17M30-XG4gICAgPFJvdyBhbGlnbj1cInN0YXJ0XCIgZ2FwPXszfT5cbiAgICAgIDxCb3hcbiAgICAgICAgc2l6ZT17NTZ9XG4gICAgICAgIHJhZGl1cz1cImZ1bGxcIlxuICAgICAgICBiYWNrZ3JvdW5kPVwic3VyZmFjZS1zZWNvbmRhcnlcIlxuICAgICAgICBhbGlnbj1cImNlbnRlclwiXG4gICAgICAgIGp1c3RpZnk9XCJjZW50ZXJcIlxuICAgICAgPlxuICAgICAgICA8SWNvbiBuYW1lPVwidXNlclwiIHNpemU9XCJ4bFwiIGNvbG9yPVwic2Vjb25kYXJ5XCIgLz5cbiAgICAgIDwvQm94PlxuICAgICAgPENvbCBmbGV4PVwiYXV0b1wiIGdhcD17MX0-XG4gICAgICAgIDxUaXRsZSB2YWx1ZT17bmFtZX0gc2l6ZT1cIm1kXCIgLz5cbiAgICAgICAgPFRleHQgdmFsdWU9e2Ake29jY3VwYXRpb259LCAke2FnZX1gfSBzaXplPVwic21cIiAvPlxuICAgICAgICA8Um93IGdhcD17MX0-XG4gICAgICAgICAgPEljb24gbmFtZT1cIm1hcC1waW5cIiBzaXplPVwic21cIiBjb2xvcj1cInNlY29uZGFyeVwiIC8-XG4gICAgICAgICAgPFRleHQgdmFsdWU9e2xvY2F0aW9ufSBzaXplPVwic21cIiBjb2xvcj1cInNlY29uZGFyeVwiIC8-XG4gICAgICAgIDwvUm93PlxuICAgICAgPC9Db2w-XG4gICAgPC9Sb3c-XG5cbiAgICA8Um93IGdhcD17Mn0-XG4gICAgICA8Q2FwdGlvbiB2YWx1ZT1cIkJvcm5cIiAvPlxuICAgICAgPFRleHQgdmFsdWU9e2JpcnRoZGF0ZX0gc2l6ZT1cInNtXCIgY29sb3I9XCJzZWNvbmRhcnlcIiAvPlxuICAgICAgPFRleHQgdmFsdWU9XCLigKJcIiBzaXplPVwic21cIiBjb2xvcj1cInRlcnRpYXJ5XCIgLz5cbiAgICAgIDxUZXh0XG4gICAgICAgIHZhbHVlPXtgJHtvcmlnaW4uY2l0eX0sICR7b3JpZ2luLnN0YXRlfWB9XG4gICAgICAgIHNpemU9XCJzbVwiXG4gICAgICAgIGNvbG9yPVwic2Vjb25kYXJ5XCJcbiAgICAgIC8-XG4gICAgPC9Sb3c-XG5cbiAgICA8Um93IGdhcD17Mn0gd3JhcD1cIndyYXBcIj5cbiAgICAgIDxCYWRnZVxuICAgICAgICBsYWJlbD17YOKYgO-4jyBTdW46ICR7YXN0cm9sb2dpY2FsX25vdGVzLnN1bl9zaWdufWB9XG4gICAgICAgIHZhcmlhbnQ9XCJzb2Z0XCJcbiAgICAgICAgY29sb3I9XCJpbmZvXCJcbiAgICAgIC8-XG4gICAgICA8QmFkZ2VcbiAgICAgICAgbGFiZWw9e2Dwn4yZIE1vb246ICR7YXN0cm9sb2dpY2FsX25vdGVzLm1vb25fc2lnbn1gfVxuICAgICAgICB2YXJpYW50PVwic29mdFwiXG4gICAgICAgIGNvbG9yPVwiaW5mb1wiXG4gICAgICAvPlxuICAgICAgPEJhZGdlXG4gICAgICAgIGxhYmVsPXtg8J-SliBWZW51czogJHthc3Ryb2xvZ2ljYWxfbm90ZXMudmVudXNfc2lnbn1gfVxuICAgICAgICB2YXJpYW50PVwic29mdFwiXG4gICAgICAgIGNvbG9yPVwiaW5mb1wiXG4gICAgICAvPlxuICAgICAgPEJhZGdlXG4gICAgICAgIGxhYmVsPXtg8J-UpSBNYXJzOiAke2FzdHJvbG9naWNhbF9ub3Rlcy5tYXJzX3NpZ259YH1cbiAgICAgICAgdmFyaWFudD1cInNvZnRcIlxuICAgICAgICBjb2xvcj1cImluZm9cIlxuICAgICAgLz5cbiAgICA8L1Jvdz5cblxuICAgIDxEaXZpZGVyIC8-XG5cbiAgICA8Q29sIGdhcD17MX0-XG4gICAgICA8VGV4dCB2YWx1ZT1cIkJpbzpcIiBzaXplPVwic21cIiB3ZWlnaHQ9XCJzZW1pYm9sZFwiIC8-XG4gICAgICA8VGV4dCB2YWx1ZT17c2hvcnRfYmlvfSBzaXplPVwic21cIiBjb2xvcj1cInNlY29uZGFyeVwiIC8-XG4gICAgPC9Db2w-XG5cbiAgICA8Um93PlxuICAgICAgPEJ1dHRvblxuICAgICAgICBsYWJlbD1cIk1BVENIXCJcbiAgICAgICAgYmxvY2tcbiAgICAgICAgc3R5bGU9XCJwcmltYXJ5XCJcbiAgICAgICAgc2l6ZT1cInhsXCJcbiAgICAgICAgb25DbGlja0FjdGlvbj17e1xuICAgICAgICAgIHR5cGU6IFwiY29udmVyc2F0aW9uLm1lc3NhZ2VcIixcbiAgICAgICAgICBwYXlsb2FkOiB7IHRleHQ6IFwieWVzXCIsIHJvbGU6IFwidXNlclwiIH0sXG4gICAgICAgICAgaGFuZGxlcjogXCJzZXJ2ZXJcIixcbiAgICAgICAgfX1cbiAgICAgIC8-XG4gICAgPC9Sb3c-XG4gIDwvQ29sPlxuPC9DYXJkPiIsImRlZmF1bHRTdGF0ZSI6eyJuYW1lIjoiWmFyYSBQYXRlbCIsImFnZSI6MjgsIm9jY3VwYXRpb24iOiJQZXJzb25hbCBUcmFpbmVyICYgV2VsbG5lc3MgQ29hY2giLCJsb2NhdGlvbiI6IkdyZWVucG9pbnQsIEJyb29rbHluIiwiYmlydGhkYXRlIjoiQXByaWwgMiwgMTk5NiIsIm9yaWdpbiI6eyJjaXR5IjoiTG9zIEFuZ2VsZXMiLCJzdGF0ZSI6IkNBIiwiY291bnRyeSI6IlVTIn0sImFzdHJvbG9naWNhbF9ub3RlcyI6eyJzdW5fc2lnbiI6IkFSSUVTIiwibW9vbl9zaWduIjoiVklSR08iLCJ2ZW51c19zaWduIjoiVEFVUlVTIiwibWFyc19zaWduIjoiQVJJRVMifSwic2hvcnRfYmlvIjoiWmFyYSBpcyBhIGhpZ2gtZW5lcmd5IHBlcnNvbmFsIHRyYWluZXIgd2hvIG1vdmVkIGZyb20gTEEgdG8gR3JlZW5wb2ludCB0d28geWVhcnMgYWdvLCBodW5ncnkgdG8gY29tcGV0ZSBpbiBOWUMncyBjdXR0aHJvYXQgZml0bmVzcyBzY2VuZS4gV2l0aCBhbiBBcmllcyBTdW4gYW5kIEFzY2VuZGFudCwgc2hlJ3MgYSBuYXR1cmFsLWJvcm4gbGVhZGVyIHdobyBpbnNwaXJlcyBoZXIgY2xpZW50cyB0aHJvdWdoIHRvdWdoLWxvdmUgY29hY2hpbmcgYW5kIGdlbnVpbmUgY2FyZS4gSGVyIFZpcmdvIE1vb24gbWVhbnMgc2hlJ3Mgb2JzZXNzZWQgd2l0aCB0aGUgZGV0YWlsc-KAlHRyYWNraW5nIG1hY3Jvcywgb3B0aW1pemluZyB3b3Jrb3V0cywgYW5kIHBlcmZlY3RpbmcgZm9ybS4gSW4gbG92ZSwgaGVyIFRhdXJ1cyBWZW51cyBjcmF2ZXMgc3RhYmlsaXR5IGFuZCBzZW5zdWFsaXR5LCB0aG91Z2ggaGVyIGZpZXJ5IEFyaWVzIE1hcnMgY2FuIG1ha2UgaGVyIGltcGF0aWVudCB3aGVuIHJvbWFuY2UgbW92ZXMgdG9vIHNsb3dseS4gU2hlJ3MgbG9va2luZyBmb3Igc29tZW9uZSB3aG8gY2FuIG1hdGNoIGhlciBpbnRlbnNpdHkgd2hpbGUgYWxzbyBoZWxwaW5nIGhlciBzbG93IGRvd24gYW5kIGVuam95IHRoZSBtb21lbnQuIn0sInN0YXRlcyI6W10sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCJcblxuY29uc3QgQXN0cm9Ob3RlcyA9IHouc3RyaWN0T2JqZWN0KHtcbiAgc3VuX3NpZ246IHouc3RyaW5nKCksXG4gIG1vb25fc2lnbjogei5zdHJpbmcoKSxcbiAgdmVudXNfc2lnbjogei5zdHJpbmcoKSxcbiAgbWFyc19zaWduOiB6LnN0cmluZygpLFxufSlcblxuY29uc3QgT3JpZ2luID0gei5zdHJpY3RPYmplY3Qoe1xuICBjaXR5OiB6LnN0cmluZygpLFxuICBzdGF0ZTogei5zdHJpbmcoKSxcbiAgY291bnRyeTogei5zdHJpbmcoKSxcbn0pXG5cbmNvbnN0IFdpZGdldFN0YXRlID0gei5zdHJpY3RPYmplY3Qoe1xuICBuYW1lOiB6LnN0cmluZygpLFxuICBhZ2U6IHoubnVtYmVyKCksXG4gIG9jY3VwYXRpb246IHouc3RyaW5nKCksXG4gIGxvY2F0aW9uOiB6LnN0cmluZygpLFxuICBiaXJ0aGRhdGU6IHouc3RyaW5nKCksXG4gIG9yaWdpbjogT3JpZ2luLFxuICBhc3Ryb2xvZ2ljYWxfbm90ZXM6IEFzdHJvTm90ZXMsXG4gIHNob3J0X2Jpbzogei5zdHJpbmcoKSxcbn0pXG5cbmV4cG9ydCBkZWZhdWx0IFdpZGdldFN0YXRlIiwianNvblNjaGVtYSI6e30sInNjaGVtYU1vZGUiOiJ6b2QiLCJzY2hlbWFWYWxpZGl0eSI6InZhbGlkIiwidmlld1ZhbGlkaXR5IjoidmFsaWQiLCJkZWZhdWx0U3RhdGVWYWxpZGl0eSI6InZhbGlkIn0"
+}
