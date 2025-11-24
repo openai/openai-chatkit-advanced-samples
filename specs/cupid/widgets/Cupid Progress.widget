@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "name": "Cupid Progress",
+  "template": "{\"type\":\"Card\",\"size\":\"md\",\"padding\":4,\"children\":[{%- set _c -%},{\"type\":\"Row\",\"children\":[{%- set _c -%},{\"type\":\"Title\",\"value\":{{ ((\"Cupid • \" ~ stageLabel)) | tojson }},\"size\":\"sm\"},{\"type\":\"Spacer\"}{%-if isEnding -%},{\"type\":\"Badge\",\"label\":\"Ending\",\"color\":\"discovery\"}{%-else-%},{\"type\":\"Badge\",\"label\":\"In progress\",\"color\":\"secondary\"}{%-endif-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]},{\"type\":\"Row\",\"gap\":2,\"children\":[{\"type\":\"Badge\",\"label\":{{ ((\"Base \" ~ baseCompatibility)) | tojson }},\"color\":\"info\"},{\"type\":\"Badge\",\"label\":{{ ((\"Now \" ~ newCompatibility)) | tojson }},\"color\":\"secondary\"},{\"type\":\"Badge\",\"label\":{{ ((deltaSign ~ \" \" ~ deltaLabel)) | tojson }},\"color\":{{ (deltaBadgeColor) | tojson }},\"variant\":\"solid\"}]},{\"type\":\"Chart\",\"data\":{{ (chartData) | tojson }},\"series\":[{\"type\":\"Text\",\"value\":{\"type\":\"line\",\"dataKey\":\"Score\",\"color\":\"purple\",\"label\":\"Score\"}}],\"xAxis\":{\"dataKey\":\"x\"},\"showYAxis\":false,\"showLegend\":false,\"height\":120},{\"type\":\"Text\",\"value\":{{ (note) | tojson }},\"size\":\"sm\",\"color\":\"secondary\"}{%-if (hasWarning and warning) -%},{\"type\":\"Row\",\"padding\":{\"x\":2,\"y\":1},\"gap\":2,\"radius\":\"sm\",\"background\":\"surface-elevated-secondary\",\"children\":[{\"type\":\"Icon\",\"name\":\"info\",\"size\":\"sm\",\"color\":\"warning\"},{\"type\":\"Text\",\"value\":{{ (warning) | tojson }},\"size\":\"sm\",\"color\":\"warning\",\"maxLines\":2}]}{%-else-%}{%-endif-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "currentStage": {
+        "type": "string",
+        "enum": [
+          "setup",
+          "scene1",
+          "scene2",
+          "scene3",
+          "dateEnds",
+          "evaluation"
+        ]
+      },
+      "stageLabel": {
+        "type": "string"
+      },
+      "baseCompatibility": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "newCompatibility": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+      },
+      "scoreDelta": {
+        "type": "integer",
+        "minimum": -10,
+        "maximum": 10
+      },
+      "deltaLabel": {
+        "type": "string"
+      },
+      "deltaSign": {
+        "type": "string"
+      },
+      "deltaBadgeColor": {
+        "type": "string",
+        "enum": [
+          "secondary",
+          "success",
+          "danger"
+        ]
+      },
+      "chartData": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "Score": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "Score"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "note": {
+        "type": "string"
+      },
+      "isEnding": {
+        "type": "boolean"
+      },
+      "hasWarning": {
+        "type": "boolean"
+      },
+      "warning": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "currentStage",
+      "stageLabel",
+      "baseCompatibility",
+      "newCompatibility",
+      "scoreDelta",
+      "deltaLabel",
+      "deltaSign",
+      "deltaBadgeColor",
+      "chartData",
+      "note",
+      "isEnding"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Card",
+    "size": "md",
+    "padding": 4,
+    "children": [
+      {
+        "type": "Row",
+        "children": [
+          {
+            "type": "Title",
+            "value": "Cupid • Scene 1",
+            "size": "sm"
+          },
+          {
+            "type": "Spacer"
+          },
+          {
+            "type": "Badge",
+            "label": "In progress",
+            "color": "secondary"
+          }
+        ]
+      },
+      {
+        "type": "Row",
+        "gap": 2,
+        "children": [
+          {
+            "type": "Badge",
+            "label": "Base 69",
+            "color": "info"
+          },
+          {
+            "type": "Badge",
+            "label": "Now 74",
+            "color": "secondary"
+          },
+          {
+            "type": "Badge",
+            "label": "▲ +5",
+            "color": "success",
+            "variant": "solid"
+          }
+        ]
+      },
+      {
+        "type": "Chart",
+        "data": [
+          {
+            "x": "Setup",
+            "Score": 69
+          },
+          {
+            "x": "S1",
+            "Score": 74
+          }
+        ],
+        "series": [
+          {
+            "type": "line",
+            "dataKey": "Score",
+            "color": "purple",
+            "label": "Score"
+          }
+        ],
+        "xAxis": {
+          "dataKey": "x"
+        },
+        "showYAxis": false,
+        "showLegend": false,
+        "height": 120
+      },
+      {
+        "type": "Text",
+        "value": "Strong choice. Played to Venus (72) while balancing weaker Sun (56).",
+        "size": "sm",
+        "color": "secondary"
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6ImFjNTczMzk1LTg0NDQtNDhmYi1iZDA4LThmOGVlMjExY2ZjOSIsIm5hbWUiOiJDdXBpZCBQcm9ncmVzcyIsInZpZXciOiI8Q2FyZCBzaXplPVwibWRcIiBwYWRkaW5nPXs0fT5cbiAgPFJvdz5cbiAgICA8VGl0bGUgdmFsdWU9e2BDdXBpZCDigKIgJHtzdGFnZUxhYmVsfWB9IHNpemU9XCJzbVwiIC8-XG4gICAgPFNwYWNlciAvPlxuICAgIHtpc0VuZGluZyA_IChcbiAgICAgIDxCYWRnZSBsYWJlbD1cIkVuZGluZ1wiIGNvbG9yPVwiZGlzY292ZXJ5XCIgLz5cbiAgICApIDogKFxuICAgICAgPEJhZGdlIGxhYmVsPVwiSW4gcHJvZ3Jlc3NcIiBjb2xvcj1cInNlY29uZGFyeVwiIC8-XG4gICAgKX1cbiAgPC9Sb3c-XG5cbiAgPFJvdyBnYXA9ezJ9PlxuICAgIDxCYWRnZSBsYWJlbD17YEJhc2UgJHtiYXNlQ29tcGF0aWJpbGl0eX1gfSBjb2xvcj1cImluZm9cIiAvPlxuICAgIDxCYWRnZSBsYWJlbD17YE5vdyAke25ld0NvbXBhdGliaWxpdHl9YH0gY29sb3I9XCJzZWNvbmRhcnlcIiAvPlxuICAgIDxCYWRnZVxuICAgICAgbGFiZWw9e2Ake2RlbHRhU2lnbn0gJHtkZWx0YUxhYmVsfWB9XG4gICAgICBjb2xvcj17ZGVsdGFCYWRnZUNvbG9yfVxuICAgICAgdmFyaWFudD1cInNvbGlkXCJcbiAgICAvPlxuICA8L1Jvdz5cblxuICA8Q2hhcnRcbiAgICBkYXRhPXtjaGFydERhdGF9XG4gICAgc2VyaWVzPXtbXG4gICAgICB7IHR5cGU6IFwibGluZVwiLCBkYXRhS2V5OiBcIlNjb3JlXCIsIGNvbG9yOiBcInB1cnBsZVwiLCBsYWJlbDogXCJTY29yZVwiIH0sXG4gICAgXX1cbiAgICB4QXhpcz17eyBkYXRhS2V5OiBcInhcIiB9fVxuICAgIHNob3dZQXhpcz17ZmFsc2V9XG4gICAgc2hvd0xlZ2VuZD17ZmFsc2V9XG4gICAgaGVpZ2h0PXsxMjB9XG4gIC8-XG5cbiAgPFRleHQgdmFsdWU9e25vdGV9IHNpemU9XCJzbVwiIGNvbG9yPVwic2Vjb25kYXJ5XCIgLz5cblxuICB7aGFzV2FybmluZyAmJiB3YXJuaW5nID8gKFxuICAgIDxSb3dcbiAgICAgIHBhZGRpbmc9e3sgeDogMiwgeTogMSB9fVxuICAgICAgZ2FwPXsyfVxuICAgICAgcmFkaXVzPVwic21cIlxuICAgICAgYmFja2dyb3VuZD1cInN1cmZhY2UtZWxldmF0ZWQtc2Vjb25kYXJ5XCJcbiAgICA-XG4gICAgICA8SWNvbiBuYW1lPVwiaW5mb1wiIHNpemU9XCJzbVwiIGNvbG9yPVwid2FybmluZ1wiIC8-XG4gICAgICA8VGV4dCB2YWx1ZT17d2FybmluZ30gc2l6ZT1cInNtXCIgY29sb3I9XCJ3YXJuaW5nXCIgbWF4TGluZXM9ezJ9IC8-XG4gICAgPC9Sb3c-XG4gICkgOiBudWxsfVxuPC9DYXJkPiIsImRlZmF1bHRTdGF0ZSI6eyJjdXJyZW50U3RhZ2UiOiJzY2VuZTEiLCJzdGFnZUxhYmVsIjoiU2NlbmUgMSIsImJhc2VDb21wYXRpYmlsaXR5Ijo2OSwibmV3Q29tcGF0aWJpbGl0eSI6NzQsInNjb3JlRGVsdGEiOjUsImRlbHRhTGFiZWwiOiIrNSIsImRlbHRhU2lnbiI6IuKWsiIsImRlbHRhQmFkZ2VDb2xvciI6InN1Y2Nlc3MiLCJjaGFydERhdGEiOlt7IngiOiJTZXR1cCIsIlNjb3JlIjo2OX0seyJ4IjoiUzEiLCJTY29yZSI6NzR9XSwibm90ZSI6IlN0cm9uZyBjaG9pY2UuIFBsYXllZCB0byBWZW51cyAoNzIpIHdoaWxlIGJhbGFuY2luZyB3ZWFrZXIgU3VuICg1NikuIiwiaXNFbmRpbmciOmZhbHNlLCJoYXNXYXJuaW5nIjpmYWxzZX0sInN0YXRlcyI6W10sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCJcblxuY29uc3QgQ2hhcnRSb3cgPSB6LnN0cmljdE9iamVjdCh7XG4gIHg6IHouc3RyaW5nKCksXG4gIFNjb3JlOiB6Lm51bWJlcigpLFxufSlcblxuY29uc3QgV2lkZ2V0U3RhdGUgPSB6LnN0cmljdE9iamVjdCh7XG4gIGN1cnJlbnRTdGFnZTogei5lbnVtKFtcbiAgICBcInNldHVwXCIsXG4gICAgXCJzY2VuZTFcIixcbiAgICBcInNjZW5lMlwiLFxuICAgIFwic2NlbmUzXCIsXG4gICAgXCJkYXRlRW5kc1wiLFxuICAgIFwiZXZhbHVhdGlvblwiLFxuICBdKSxcbiAgc3RhZ2VMYWJlbDogei5zdHJpbmcoKSxcbiAgYmFzZUNvbXBhdGliaWxpdHk6IHoubnVtYmVyKCkuaW50KCkubWluKDApLm1heCgxMDApLFxuICBuZXdDb21wYXRpYmlsaXR5OiB6Lm51bWJlcigpLmludCgpLm1pbigwKS5tYXgoMTAwKSxcbiAgc2NvcmVEZWx0YTogei5udW1iZXIoKS5pbnQoKS5taW4oLTEwKS5tYXgoMTApLFxuICBkZWx0YUxhYmVsOiB6LnN0cmluZygpLFxuICBkZWx0YVNpZ246IHouc3RyaW5nKCksXG4gIGRlbHRhQmFkZ2VDb2xvcjogei5lbnVtKFtcInNlY29uZGFyeVwiLCBcInN1Y2Nlc3NcIiwgXCJkYW5nZXJcIl0pLFxuICBjaGFydERhdGE6IHouYXJyYXkoQ2hhcnRSb3cpLFxuICBub3RlOiB6LnN0cmluZygpLFxuICBpc0VuZGluZzogei5ib29sZWFuKCksXG4gIGhhc1dhcm5pbmc6IHouYm9vbGVhbigpLm9wdGlvbmFsKCksXG4gIHdhcm5pbmc6IHouc3RyaW5nKCkub3B0aW9uYWwoKSxcbn0pXG5cbmV4cG9ydCBkZWZhdWx0IFdpZGdldFN0YXRlIiwianNvblNjaGVtYSI6e30sInNjaGVtYU1vZGUiOiJ6b2QiLCJzY2hlbWFWYWxpZGl0eSI6InZhbGlkIiwidmlld1ZhbGlkaXR5IjoidmFsaWQiLCJkZWZhdWx0U3RhdGVWYWxpZGl0eSI6InZhbGlkIn0"
+}

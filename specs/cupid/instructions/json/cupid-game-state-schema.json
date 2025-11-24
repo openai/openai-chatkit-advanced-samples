@@ -1,0 +1,268 @@
+{
+  "name": "CupidGameState",
+  "description": "Complete game state output from the State Tracker Agent after each Cupid decision. Tracks progression through the romantic arc, evaluates choices, and maintains compatibility scoring history.",
+  "type": "object",
+  "required": [
+    "currentStage",
+    "baseCompatibility",
+    "scoreDelta",
+    "newCompatibility",
+    "stageHistory",
+    "progressChart",
+    "isEnding",
+    "evaluationNotes",
+    "planetaryContext",
+    "choiceMetadata",
+    "sceneWeights",
+    "warnings"
+  ],
+  "properties": {
+    "currentStage": {
+      "type": "string",
+      "enum": [
+        "setup",
+        "scene1",
+        "scene2",
+        "scene3",
+        "dateEnds",
+        "evaluation"
+      ],
+      "description": "The current stage in the 6-stage CUPID game progression. Determines which planetary aspects are weighted most heavily for scoring."
+    },
+    "baseCompatibility": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "The initial compatibility score from the astrological synastry dashboard, calculated before any Cupid choices. This is the baseline reference point that never changes during gameplay."
+    },
+    "scoreDelta": {
+      "type": "integer",
+      "minimum": -10,
+      "maximum": 10,
+      "description": "The change in compatibility score resulting from Cupid's most recent choice. Positive values indicate choices that improved connection; negative values indicate choices that created friction. Range: -10 (disastrous) to +10 (excellent)."
+    },
+    "newCompatibility": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "The updated total compatibility score after applying the scoreDelta. This is the cumulative result of all Cupid's choices so far. Capped at 100 (perfect) and floored at 0 (complete disaster)."
+    },
+    "stageHistory": {
+      "type": "array",
+      "description": "Complete chronological history of compatibility scores across all stages played so far. Used to generate the progress chart and track Cupid's performance trajectory.",
+      "items": {
+        "type": "object",
+        "required": ["stage", "score", "delta"],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "setup",
+              "scene1",
+              "scene2",
+              "scene3",
+              "dateEnds",
+              "evaluation"
+            ],
+            "description": "The game stage this history entry represents."
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "The compatibility score at the end of this stage."
+          },
+          "delta": {
+            "type": "integer",
+            "minimum": -10,
+            "maximum": 10,
+            "description": "The score change during this stage. Will be 0 for the setup stage (no choices yet)."
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "progressChart": {
+      "type": "string",
+      "description": "ASCII text-based visualization of compatibility progression across stages. Shows the baseline (horizontal dashed line), current and historical scores (●), and directional changes (│ ┘ └). Encoded with \\n for newlines. Rendered in monospace fonts for proper alignment.",
+      "pattern": "^[\\d\\s|●─┘└┐┌│┴\\n]+$",
+      "minLength": 50,
+      "examples": [
+        "100 |          \\n 90 |          \\n 80 |      ●   \\n 70 | ----●┘   \\n 60 |     │    \\n    └─────┴────\\n      Setup S1"
+      ]
+    },
+    "isEnding": {
+      "type": "boolean",
+      "description": "Flag indicating whether the game has reached its conclusion. FALSE for all stages (setup through dateEnds). TRUE only when currentStage is 'evaluation', signaling that final scoring and Cupid's profile update should be displayed."
+    },
+    "evaluationNotes": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Brief technical explanation (1-2 sentences) of why this choice received its scoreDelta. References specific planetary aspects, scene weights, and strategic considerations. Example: 'Strong choice. Played to Venus (72) strength while navigating weak Sun compatibility tactfully.'"
+    },
+    "planetaryContext": {
+      "type": "object",
+      "description": "Optional: Current planetary compatibility scores relevant to this stage. Helps explain why certain choices scored higher or lower.",
+      "required": ["sun", "moon", "venus", "mars"],
+      "properties": {
+        "sun": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Sun compatibility (identity match). Primary weight in Scene 1, secondary in Scene 3."
+        },
+        "moon": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Moon compatibility (emotional safety). Primary weight in Scene 3."
+        },
+        "venus": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Venus compatibility (romantic alignment). Primary weight in Scene 2, secondary in Scene 1 and Date Ends."
+        },
+        "mars": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Mars compatibility (physical chemistry). Primary weight in Date Ends, secondary in Scene 2."
+        }
+      },
+      "additionalProperties": false
+    },
+    "choiceMetadata": {
+      "type": "object",
+      "description": "Optional: Metadata about the choice that was evaluated.",
+      "required": ["choiceLabel", "choiceDescription", "timestamp"],
+      "properties": {
+        "choiceLabel": {
+          "type": "string",
+          "description": "The label of the choice Cupid selected (e.g., 'IMMEDIATE YES', 'COUNTEROFFER', 'SLOW PLAY')."
+        },
+        "choiceDescription": {
+          "type": "string",
+          "description": "Brief description of what the choice entailed."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of when this choice was made."
+        }
+      },
+      "additionalProperties": false
+    },
+    "sceneWeights": {
+      "type": "object",
+      "description": "Optional: The planetary weight multipliers active for the current scene.",
+      "required": ["primaryPlanet", "secondaryPlanet"],
+      "properties": {
+        "primaryPlanet": {
+          "type": "string",
+          "enum": ["sun", "moon", "venus", "mars"],
+          "description": "The planet with ×1.5 weight in this scene."
+        },
+        "secondaryPlanet": {
+          "type": "string",
+          "enum": ["sun", "moon", "venus", "mars"],
+          "description": "The planet with ×1.2-1.3 weight in this scene."
+        }
+      },
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Optional: Warnings about score constraints or unusual conditions.",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        ["Score capped at 100 (delta would have been +8)"],
+        ["Compatibility dropped below 50 - relationship in danger zone"]
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "currentStage": "scene1",
+      "baseCompatibility": 69,
+      "scoreDelta": 5,
+      "newCompatibility": 74,
+      "stageHistory": [
+        {
+          "stage": "setup",
+          "score": 69,
+          "delta": 0
+        },
+        {
+          "stage": "scene1",
+          "score": 74,
+          "delta": 5
+        }
+      ],
+      "progressChart": "100 |          \\n 80 |          \\n 70 | ----●----●\\n 60 |     │    │\\n    └─────┴────┴\\n      Setup S1",
+      "isEnding": false,
+      "evaluationNotes": "Strong choice. Played to Venus (72) strength while navigating weak Sun compatibility tactfully.",
+      "planetaryContext": {
+        "sun": 56,
+        "moon": 68,
+        "venus": 72,
+        "mars": 81
+      },
+      "choiceMetadata": {
+        "choiceLabel": "COUNTEROFFER",
+        "choiceDescription": "Maya suggests art museum opening (confident, specific plan)",
+        "timestamp": "2025-11-24T12:30:45Z"
+      },
+      "sceneWeights": {
+        "primaryPlanet": "sun",
+        "secondaryPlanet": "venus"
+      }
+    },
+    {
+      "currentStage": "evaluation",
+      "baseCompatibility": 69,
+      "scoreDelta": 12,
+      "newCompatibility": 81,
+      "stageHistory": [
+        {
+          "stage": "setup",
+          "score": 69,
+          "delta": 0
+        },
+        {
+          "stage": "scene1",
+          "score": 74,
+          "delta": 5
+        },
+        {
+          "stage": "scene2",
+          "score": 78,
+          "delta": 4
+        },
+        {
+          "stage": "scene3",
+          "score": 76,
+          "delta": -2
+        },
+        {
+          "stage": "dateEnds",
+          "score": 81,
+          "delta": 5
+        }
+      ],
+      "progressChart": "100 |                        \\n 90 |                        \\n 80 |             ●----●     \\n 70 | ----●----●--┘    │     \\n 60 |     │    │       │     \\n    └─────┴────┴───────┴─────\\n      Setup S1  S2   S3  End",
+      "isEnding": true,
+      "evaluationNotes": "Date completed successfully. Strong physical chemistry (Mars 81) and good choices in final scene led to kiss and second date likelihood.",
+      "planetaryContext": {
+        "sun": 56,
+        "moon": 68,
+        "venus": 72,
+        "mars": 81
+      }
+    }
+  ]
+}

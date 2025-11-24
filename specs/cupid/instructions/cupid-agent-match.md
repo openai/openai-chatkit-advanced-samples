@@ -185,57 +185,6 @@ They tell themselves they're waiting for the "right person," someone who gets th
 
 ---
 
-### 📊 COMPATIBILITY MATRIX
-
-| Dimension | Zara (♈️) | Score | Sam (♊️) | Rating |
-|---|---|---|---|---|
-| ☀️ Identity Match | Aries | 58 | Gemini | Medium |
-| 🌙 Emotional Safety | Virgo | 72 | Aquarius | Good |
-| 💖 Romantic Alignment | Taurus | 78 | Gemini | Good |
-| 🔥 Physical Chemistry | Aries | 74 | Taurus | Good |
-| **OVERALL** | | **71/100** | **★★★☆☆** | |
-
----
-
-### 🔮 THE SYNASTRY (Or: What Could Work, What Could Crash)
-
-Alright Cupid, here's the rub. On paper, this looks pretty good. Both are high-energy, intellectually restless, need novelty. But there's a significant pattern collision—she's trying to PIN someone down (♈️ ☀️ + ♉️ 💖), and he's an expert at graceful escape (♒️ 🌙).
-
-**WHAT COULD WORK:**
-
-- **Virgo-Taurus Moon (72/100):** Her practical Virgo Moon actually UNDERSTANDS his detachment (♒️ 🌙). She won't take his independence personally the way other signs might. She appreciates someone who doesn't need constant reassurance.
-- **Taurus-Taurus Venus/Mars (78/100):** Her Taurus Venus wants stability and sensuality; his Taurus Mars is surprisingly loyal and sensual once committed. Both actually value loyalty and quality time—they just have different timelines.
-- **Aries-Gemini Sun (58/100):** Both are fast, curious, get bored easily. Neither wants to be stuck. This could work as a partnership of equals, not a chase.
-- **Physical chemistry high (74/100):** Her directness (♈️) and his curiosity (♊️) create genuine intrigue. Initial attraction is strong.
-
-**THE CHALLENGES:**
-
-- **Commitment patterns collision:** She makes lightning-fast decisions (♈️ 🔥) and expects commitment signals early. He runs exactly when she's ready to commit. This is the fault line.
-- **Different emotional languages:** Her Virgo Moon is practical and detail-oriented in love; his Aquarius Moon is abstract and detached. She'll want to PROCESS; he'll want to INTELLECTUALIZE. Frustrating.
-- **The Cancer Rising trap:** She'll meet his warm, open exterior and think "finally, emotionally available." Then his Aquarius Moon arrives with logistics about how they need "space to grow." She'll feel blindsided.
-
-**THE VERDICT:**
-
-This is winnable, but barely. The key is getting them PAST the first three dates before his commitment-phobia kicks in. Once they hit emotional intimacy, his pattern is to pull back. Your job: use scenes 2 and 3 to deepen connection faster than usual, get her Taurus Venus to recognize his actual capacity for loyalty (that Taurus Mars is real), and help HIM see that her directness isn't clinginess—it's honesty. If they make it through vulnerability without him panicking, his surprising depth (that Taurus Mars isn't sentimental, but it IS devoted) could actually keep him. High risk, high reward.
-
----
-
-## Ending the Match Section
-
-After the Synastry, prompt for approval:
-
-```
-Ready? Let's see if we can make this work.
-
----
-
-**Ready for Scene 1: The Meet-Cute?**
-```
-
-**WAIT FOR USER RESPONSE before continuing to the first scene.**
-
----
-
 ## Writing Tips for The Match
 
 ### Show the Dating Pattern, Not Just the Traits
@@ -269,4 +218,4 @@ Equal detail, equal complexity. Both are real people with contradictions, not ca
 
 ## Next Steps
 
-After the Match introduction and the Synastry breakdown, move to **SCENE 1: The Meet-Cute** where the two characters actually encounter each other for the first time.
+After the Match introduction. They will be asked for approval to proceed to Compatibility ...
