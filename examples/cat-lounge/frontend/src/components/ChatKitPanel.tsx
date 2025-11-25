@@ -83,29 +83,23 @@ export function ChatKitPanel({
     [refresh, handleStatusUpdate, activeThread]
   );
 
-  const handleClientToolCall = useCallback((toolCall: {
+  const handleClientEffect = useCallback(({name, data}: {
     name: string;
-    params: Record<string, unknown>;
+    data: Record<string, unknown>;
   }) => {
-      if (toolCall.name === "update_cat_status") {
-        const data = toolCall.params.state as CatStatePayload | undefined;
-        if (data) {
-          handleStatusUpdate(data, toolCall.params.flash as string | undefined);
+      if (name === "update_cat_status") {
+        const catState = data.state as CatStatePayload | undefined;
+        if (catState) {
+          handleStatusUpdate(catState, data.flash as string | undefined);
         }
-        return { success: true };
       }
 
-      if (toolCall.name === "cat_say") {
-        const message = String(toolCall.params.message ?? "");
+      if (name === "cat_say") {
+        const message = String(data.message ?? "");
         if (message) {
-          setSpeech({
-            message,
-            mood: toolCall.params.mood as string | undefined,
-          });
+          setSpeech({message});
         }
-        return { success: true };
       }
-      return { success: false };
     }, [])
 
   const chatkit = useChatKit({
@@ -139,7 +133,6 @@ export function ChatKitPanel({
     widgets: {
       onAction: handleWidgetAction,
     },
-    onClientTool: handleClientToolCall,
     onThreadChange: ({ threadId }) => setThreadId(threadId),
     onError: ({ error }) => {
       // ChatKit handles displaying the error to the user
@@ -148,6 +141,7 @@ export function ChatKitPanel({
     onReady: () => {
       onChatKitReady?.(chatkit);
     },
+    onEffect: handleClientEffect,
   });
   chatkitRef.current = chatkit;
 

@@ -38,15 +38,15 @@ You can run the following examples:
 
 ### Client tool calls that mutate UI state
 
-- **Cat Lounge**:
-  - Client tool `update_cat_status` is invoked by server tools `feed_cat`, `play_with_cat`, `clean_cat`, and `speak_as_cat` to sync UI state.
-  - When invoked, it is handled client-side with the `handleClientToolCall` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
-- **News Guide**:
-  - The `open_article` widget action triggers client-side navigation to the selected story and forwards the action back to the server via `sendCustomAction` to follow up with context-aware prompts ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx)).
 - **Metro Map**:
-  - Client tools `add_station` (sent after the server adds a stop) and `location_select_mode` (sent after a line is chosen) update the metro map canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
-  - Inference is deliberately skipped after the `location_select_mode` client tool call output is sent to the server; the `respond` method on the server early returns when the last item in the thread is the `location_select_mode` client tool call ([server.py](examples/news-guide/backend/app/server.py)).
-  - The `location_select_mode` client tool call is streamed within the server action handler ([server.py](examples/news-guide/backend/app/server.py)).
+  - Client tool `add_station` (sent after the server adds a stop) updates the metro map canvas; handled via `onClientTool` in [ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx).
+
+### Fire-and-forget client effects
+
+- **Cat Lounge**:
+  - Client effects `update_cat_status` and `cat_say` are invoked by server tools to sync UI state and surface speech bubbles; handled via `onEffect` in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
+- **Metro Map**:
+  - Client effect `location_select_mode` is streamed within the server action handler ([server.py](examples/metro-map/backend/app/server.py)) after a line is chosen and updates the metro map canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
 
 ### Page-aware model responses
 
@@ -86,7 +86,7 @@ You can run the following examples:
 - **News Guide**:
   - The `view_event_details` action is processed server-side to update the timeline widget with expanded descriptions without a round trip to the model ([server.py](examples/news-guide/backend/app/server.py)).
 - **Metro Map**:
-  - The `line.select` action is handled server-side to stream an updated widget, add a `<LINE_SELECTED>` hidden context item to thread, stream an assistant message to ask the user whether to add the station at the line’s start or end, and trigger the `location_select_mode` client tool call for the UI to sync ([server.py](examples/metro-map/backend/app/server.py)).
+  - The `line.select` action is handled server-side to stream an updated widget, add a `<LINE_SELECTED>` hidden context item to thread, stream an assistant message to ask the user whether to add the station at the line’s start or end, and trigger the `location_select_mode` client effect for the UI to sync ([server.py](examples/metro-map/backend/app/server.py)).
 
 ### Annotations
 

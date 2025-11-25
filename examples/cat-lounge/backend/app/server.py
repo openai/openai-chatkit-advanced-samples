@@ -17,6 +17,7 @@ from chatkit.types import (
     AssistantMessageItem,
     Attachment,
     HiddenContextItem,
+    StreamOptions,
     ThreadItemDoneEvent,
     ThreadItemReplacedEvent,
     ThreadMetadata,
@@ -109,6 +110,10 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
         async for event in stream_agent_response(agent_context, result):
             yield event
         return
+
+    def get_stream_options(self, thread: ThreadMetadata, context: dict[str, Any]) -> StreamOptions:
+        # Don't allow stream cancellation because most cat-lounge interactions update the cat's state.
+        return StreamOptions(allow_cancel=False)
 
     async def to_message_content(self, _input: Attachment) -> ResponseInputContentParam:
         raise RuntimeError("File attachments are not supported in this demo.")

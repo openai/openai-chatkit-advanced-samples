@@ -5,10 +5,11 @@ from datetime import datetime
 from typing import Annotated, Any, Callable
 
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
-from chatkit.agents import AgentContext, ClientToolCall
+from chatkit.agents import AgentContext
 from chatkit.types import (
     AssistantMessageContent,
     AssistantMessageItem,
+    ClientEffectEvent,
     HiddenContextItem,
     ThreadItemDoneEvent,
 )
@@ -94,12 +95,14 @@ async def _sync_status(
     state: CatState,
     flash: str | None = None,
 ) -> None:
-    ctx.context.client_tool_call = ClientToolCall(
-        name="update_cat_status",
-        arguments={
-            "state": state.to_payload(ctx.context.thread.id),
-            "flash": flash,
-        },
+    await ctx.context.stream(
+        ClientEffectEvent(
+            name="update_cat_status",
+            data={
+                "state": state.to_payload(ctx.context.thread.id),
+                "flash": flash,
+            },
+        )
     )
 
 
@@ -297,13 +300,22 @@ async def speak_as_cat(
     if not message:
         raise ValueError("A line is required for the cat to speak.")
     state = await _get_state(ctx)
-    ctx.context.client_tool_call = ClientToolCall(
-        name="cat_say",
-        arguments={
-            "state": state.to_payload(ctx.context.thread.id),
-            "message": message,
-        },
+    await ctx.context.stream(
+        ClientEffectEvent(
+            name="cat_say",
+            data={
+                "state": state.to_payload(ctx.context.thread.id),
+                "message": message,
+            },
+        )
     )
+    # ctx.context.client_tool_call = ClientToolCall(
+    #     name="cat_say",
+    #     arguments={
+    #         "state": state.to_payload(ctx.context.thread.id),
+    #         "message": message,
+    #     },
+    # )
 
 
 @function_tool(
@@ -362,27 +374,21 @@ cat_agent = Agent[CatAgentContext](
         get_cat_status,
         # Produces a simple widget output.
         show_cat_profile,
-        # Invokes a simple client tool call to make the cat speak.
+        # Invokes a client effect to make the cat speak.
         speak_as_cat,
-        # Mutates state then invokes a client tool call to sync client state.
+        # Mutates state then invokes a client effect to sync client state.
         feed_cat,
         play_with_cat,
         clean_cat,
-        # Mutates both cat state and thread state then invokes a client tool call
+        # Mutates both cat state and thread state then invokes a client effect
         # to sync client state.
         set_cat_name,
         # Outputs interactive widget output with partially agent-generated content.
         suggest_cat_names,
     ],
-    # Stop inference after client tool calls or tool calls with widget outputs
-    # to prevent repetition.
+    # Stop inference after tool calls with widget outputs to prevent repetition.
     tool_use_behavior=StopAtTools(
         stop_at_tool_names=[
-            feed_cat.name,
-            play_with_cat.name,
-            clean_cat.name,
-            speak_as_cat.name,
-            set_cat_name.name,
             suggest_cat_names.name,
             show_cat_profile.name,
         ]
