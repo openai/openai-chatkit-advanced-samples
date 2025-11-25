@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import logging
 from typing import Annotated, Any, Callable
 
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
@@ -18,6 +19,9 @@ from .cat_store import CatStore
 from .memory_store import MemoryStore
 from .widgets.name_suggestions_widget import CatNameSuggestion, build_name_suggestions_widget
 from .widgets.profile_card_widget import build_profile_card_widget, profile_widget_copy_text
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 INSTRUCTIONS: str = """
     You are Cozy Cat Companion, a playful caretaker helping the user look after a virtual cat.
@@ -123,7 +127,7 @@ async def _add_hidden_context(ctx: RunContextWrapper[CatAgentContext], content: 
 async def get_cat_status(
     ctx: RunContextWrapper[CatAgentContext],
 ) -> dict[str, Any]:
-    print("[TOOL CALL] get_cat_status")
+    logger.info("[TOOL CALL] get_cat_status")
     state = await _get_state(ctx)
     # Must return payload so that the assistant can use it to generate a natural language response.
     return state.to_payload(ctx.context.thread.id)
@@ -139,7 +143,7 @@ async def feed_cat(
     ctx: RunContextWrapper[CatAgentContext],
     meal: str | None = None,
 ):
-    print("[TOOL CALL] feed_cat")
+    logger.info("[TOOL CALL] feed_cat")
     state = await _update_state(ctx, lambda s: s.feed())
     flash = f"Fed {state.name} {meal}" if meal else f"{state.name} enjoyed a snack"
     await _add_hidden_context(ctx, f"<FED_CAT>{flash}</FED_CAT>")
@@ -157,7 +161,7 @@ async def play_with_cat(
     ctx: RunContextWrapper[CatAgentContext],
     activity: str | None = None,
 ):
-    print("[TOOL CALL] play_with_cat")
+    logger.info("[TOOL CALL] play_with_cat")
     state = await _update_state(ctx, lambda s: s.play())
     flash = activity or "Playtime"
     await _add_hidden_context(ctx, f"<PLAYED_WITH_CAT>{flash}</PLAYED_WITH_CAT>")
@@ -175,7 +179,7 @@ async def clean_cat(
     ctx: RunContextWrapper[CatAgentContext],
     method: str | None = None,
 ):
-    print("[TOOL CALL] clean_cat")
+    logger.info("[TOOL CALL] clean_cat")
     state = await _update_state(ctx, lambda s: s.clean())
     flash = method or "Bath time"
     await _add_hidden_context(ctx, f"<CLEANED_CAT>{flash}</CLEANED_CAT>")
@@ -193,7 +197,7 @@ async def set_cat_name(
     ctx: RunContextWrapper[CatAgentContext],
     name: str,
 ):
-    print(f'[TOOL CALL] set_cat_name("{name}")')
+    logger.info('[TOOL CALL] set_cat_name("%s")', name)
 
     try:
         state = await _get_state(ctx)
@@ -222,7 +226,7 @@ async def set_cat_name(
         await _add_hidden_context(ctx, f"<CAT_NAME_SELECTED>{state.name}</CAT_NAME_SELECTED>")
         await _sync_status(ctx, state, f"Now called {state.name}")
     except Exception as exc:
-        print(f"Error setting cat name: {exc}")
+        logger.error("Error setting cat name: %s", exc)
         raise
 
     # No need to return payload for a client tool call; agent must be configured to stop after this tool call.
@@ -288,7 +292,7 @@ async def speak_as_cat(
     ctx: RunContextWrapper[CatAgentContext],
     line: str,
 ):
-    print(f"[TOOL CALL] speak_as_cat({line})")
+    logger.info("[TOOL CALL] speak_as_cat(%s)", line)
     message = line.strip()
     if not message:
         raise ValueError("A line is required for the cat to speak.")
@@ -312,7 +316,7 @@ async def suggest_cat_names(
     ctx: RunContextWrapper[CatAgentContext],
     suggestions: list[CatNameSuggestion],
 ):
-    print("[TOOL CALL] suggest_cat_names")
+    logger.info("[TOOL CALL] suggest_cat_names")
     try:
         normalized: list[CatNameSuggestion] = []
         for entry in suggestions:
@@ -323,7 +327,7 @@ async def suggest_cat_names(
                     else CatNameSuggestion.model_validate(entry)
                 )
             except ValidationError as exc:
-                print(f"Invalid name suggestion payload: {exc}")
+                logger.warning("Invalid name suggestion payload: %s", exc)
         if not normalized:
             raise ValueError("Provide at least one valid name suggestion before calling the tool.")
 
@@ -345,7 +349,7 @@ async def suggest_cat_names(
             widget, copy_text=", ".join(suggestion.name for suggestion in normalized)
         )
     except Exception as exc:
-        print(f"Error suggesting cat names: {exc}")
+        logger.error("Error suggesting cat names: %s", exc)
         raise
 
 
