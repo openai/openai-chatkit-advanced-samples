@@ -53,24 +53,6 @@
             --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
         }
 
-        /* Dark mode - respects prefers-color-scheme */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-primary: #1a1a1a;
-                --bg-surface: #2d2d2d;
-                --text-primary: #E8E8E8;
-                --text-secondary: #A8A8A8;
-                --text-muted: #6B6B6B;
-                --border-color: rgba(168, 168, 168, 0.1);
-                --border-color-hover: rgba(168, 168, 168, 0.2);
-
-                /* Shadows - lighter for dark mode */
-                --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
-                --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
-                --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
-            }
-        }
-
         /* Dark mode - class-based toggle */
         html.dark {
             --bg-primary: #1a1a1a;
@@ -523,11 +505,11 @@
     <nav class="navbar">
         <div class="navbar-left">
             <svg class="navbar-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="25" cy="7" r="4" fill="currentColor" opacity="0.8"/>
-                <circle cx="7" cy="25" r="4" fill="currentColor" opacity="0.6"/>
-                <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.7"/>
-                <circle cx="7" cy="7" r="4" fill="currentColor" opacity="0.75"/>
-                <circle cx="25" cy="25" r="4" fill="currentColor" opacity="0.7"/>
+                <circle cx="7" cy="7" r="4" fill="#D74E39"/>
+                <circle cx="25" cy="7" r="4" fill="#DA6800"/>
+                <circle cx="16" cy="16" r="4" fill="#FFC922"/>
+                <circle cx="7" cy="25" r="4" fill="#8AA47D"/>
+                <circle cx="25" cy="25" r="4" fill="#6CC2FF"/>
             </svg>
             <span class="navbar-title">The Humorist</span>
         </div>
@@ -589,7 +571,7 @@
                 </div>
             </a>
 
-            <a href="/cupid" class="agent-card" data-agent="cupid">
+            <a href="./humorist-cupid-v01.html" class="agent-card" data-agent="cupid">
                 <span class="agent-indicator"></span>
                 <div class="agent-content">
                     <h2 class="agent-name">Cupid</h2>
@@ -646,21 +628,41 @@
     </div>
 
     <script>
-        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
-            var html = document.documentElement;
-            var sunIcon = document.getElementById('sun-icon');
-            var moonIcon = document.getElementById('moon-icon');
-
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                sunIcon.style.display = 'block';
-                moonIcon.style.display = 'none';
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+                updateIcons(true);
             } else {
-                html.classList.add('dark');
+                document.documentElement.classList.remove('dark');
+                updateIcons(false);
+            }
+        }
+
+        function updateIcons(isDark) {
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            if (isDark) {
                 sunIcon.style.display = 'none';
                 moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
             }
+        }
+
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
         });
+
+        // Initialize on load
+        initTheme();
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About The Humorist - AI Agents with Wit</title>
+    <title>Cupid - The Humorist</title>
 
     <!-- Google Fonts: Lexend Family -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -171,7 +171,6 @@
 
         .navbar-link.current {
             color: var(--text-primary);
-            font-weight: 500;
         }
 
         .theme-toggle {
@@ -201,47 +200,46 @@
         }
 
         /* ============================================
-           ARTICLE LAYOUT
+           CUPID PAGE LAYOUT
            ============================================ */
-        .page-wrapper {
+        .cupid-page {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: clamp(24px, 8vw, 48px) clamp(16px, 5vw, 32px) clamp(48px, 10vw, 96px);
-            width: 100%;
-        }
-
-        .article-container {
-            max-width: 720px;
-            width: 100%;
+            padding: clamp(24px, 6vw, 48px) clamp(16px, 4vw, 32px);
+            max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
 
-        .article-header {
+        /* Page Header */
+        .cupid-header {
             text-align: center;
-            margin-bottom: clamp(32px, 8vw, 64px);
+            margin-bottom: clamp(24px, 6vw, 48px);
             animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
         }
 
-        .article-title {
+        .cupid-title {
             font-family: var(--font-display);
-            font-weight: 600;
-            font-size: clamp(32px, 8vw, 48px);
-            line-height: 1.2;
-            margin-bottom: var(--space-sm);
+            font-weight: 400;
+            font-size: clamp(36px, 10vw, 56px);
             letter-spacing: -0.01em;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+            line-height: 1.1;
         }
 
-        .article-subtitle {
+        .cupid-subtitle {
             font-family: var(--font-body);
             font-weight: 300;
-            font-size: clamp(18px, 4vw, 22px);
-            color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
+            font-size: clamp(16px, 4vw, 20px);
             line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: clamp(16px, 4vw, 24px);
         }
 
+        /* Fleuron - Signature Decorative Element */
         .fleuron {
             display: flex;
             gap: clamp(8px, 2vw, 10px);
@@ -297,85 +295,209 @@
             }
         }
 
-        .article-body {
+        /* ============================================
+           CHAT CONTAINER
+           ============================================ */
+        .cupid-chat-container {
+            width: 100%;
+            max-width: 896px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both;
+        }
+
+        .cupid-chat-card {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: clamp(16px, 4vw, 24px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 400px;
+            max-height: calc(100vh - 320px);
+            box-shadow: var(--shadow-medium);
+            transition: border-color 200ms ease, box-shadow 200ms ease;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-surface);
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .chat-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(16px, 4vw, 20px);
+            color: var(--text-primary);
+        }
+
+        .chat-version {
             font-family: var(--font-body);
             font-weight: 300;
-            font-size: clamp(16px, 4vw, 18px);
-            line-height: 1.75;
-            color: var(--text-primary);
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--border-color);
+            padding: 2px 8px;
+            border-radius: 4px;
         }
 
-        .article-body p {
-            margin-bottom: var(--space-md);
-        }
-
-        .article-body h2 {
-            font-family: var(--font-display);
-            font-weight: 600;
-            font-size: clamp(24px, 6vw, 32px);
-            line-height: 1.3;
-            margin-top: clamp(48px, 10vw, 64px);
-            margin-bottom: var(--space-md);
-            letter-spacing: -0.01em;
-        }
-
-        .article-body h3 {
-            font-family: var(--font-display);
-            font-weight: 600;
-            font-size: clamp(20px, 5vw, 24px);
-            line-height: 1.4;
-            margin-top: var(--space-xl);
-            margin-bottom: var(--space-sm);
-            letter-spacing: -0.01em;
-        }
-
-        .article-body ul, .article-body ol {
-            margin-bottom: var(--space-md);
-            margin-left: var(--space-lg);
-        }
-
-        .article-body li {
-            margin-bottom: var(--space-xs);
-            line-height: 1.75;
-        }
-
-        .article-body blockquote {
-            border-left: 4px solid var(--border-color);
-            padding-left: var(--space-md);
-            margin: var(--space-xl) 0;
-            font-style: italic;
+        .play-button {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: transparent;
+            border: none;
             color: var(--text-secondary);
-            line-height: 1.75;
+            font-family: var(--font-body);
+            font-size: 14px;
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 6px;
+            transition: all 200ms ease;
         }
 
-        .article-body strong {
-            font-weight: 500;
+        .play-button:hover {
+            background: var(--border-color);
             color: var(--text-primary);
         }
 
-        .article-body em {
-            font-style: italic;
+        .play-icon {
+            width: 18px;
+            height: 18px;
         }
 
-        .article-body a {
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-muted);
+            padding: var(--space-xl);
+        }
+
+        .chat-placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .chat-placeholder-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(14px, 3vw, 16px);
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 16px;
             color: var(--text-primary);
-            text-decoration: underline;
-            transition: color 200ms ease;
+            outline: none;
+            transition: border-color 200ms ease, box-shadow 200ms ease;
         }
 
-        .article-body a:hover {
-            color: var(--text-secondary);
+        .chat-input:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 3px rgba(231, 181, 160, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send-button:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+
+        .chat-send-button:active {
+            transform: scale(0.95);
+        }
+
+        .send-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        @keyframes gentle-enter {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================
            FOOTER
            ============================================ */
         .footer {
-            margin-top: auto;
+            margin-top: clamp(24px, 4vw, 48px);
             padding-top: clamp(16px, 4vw, 32px);
             text-align: center;
             border-top: 1px solid var(--border-color);
             width: 100%;
+            max-width: 896px;
             transition: border-color 200ms ease;
         }
 
@@ -423,15 +545,23 @@
                 font-size: 13px;
                 padding: 6px 10px;
             }
+
+            .cupid-chat-card {
+                max-height: calc(100vh - 280px);
+            }
         }
 
         @media (max-width: 480px) {
-            .page-wrapper {
-                padding: var(--space-md) var(--space-sm) var(--space-xl);
+            .cupid-page {
+                padding: var(--space-md) var(--space-sm);
             }
 
             .navbar {
                 padding: 8px 12px;
+            }
+
+            .navbar-title {
+                font-size: 14px;
             }
 
             .navbar-link {
@@ -440,8 +570,13 @@
                 min-height: 40px;
             }
 
-            .article-body h2 {
-                margin-top: var(--space-xl);
+            .cupid-chat-card {
+                min-height: 350px;
+                max-height: calc(100vh - 250px);
+            }
+
+            .chat-input-area {
+                padding: var(--space-sm);
             }
         }
 
@@ -458,7 +593,7 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Thin Navbar with Login/About -->
     <nav class="navbar">
         <div class="navbar-left">
             <a href="./humorist-homepage-hybrid-v04.html" style="display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit;">
@@ -490,119 +625,91 @@
                 </svg>
             </button>
             <a href="./humorist-homepage-hybrid-v04.html" class="navbar-link">Home</a>
-            <a href="#" class="navbar-link current">About</a>
-            <a href="./index.html#login" class="navbar-link">Login</a>
+            <a href="./humorist-about-v01.html" class="navbar-link">About</a>
+            <a href="/login" class="navbar-link">Login</a>
         </div>
     </nav>
 
-    <div class="page-wrapper">
-        <article class="article-container">
-            <!-- Article Header -->
-            <header class="article-header">
-                <h1 class="article-title">About The Humorist</h1>
-                <p class="article-subtitle">AI agents with wit, wisdom, and personality</p>
-                <div class="fleuron" role="presentation" aria-hidden="true">
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                    <span class="fleuron-dot"></span>
-                </div>
-            </header>
+    <main class="cupid-page">
+        <!-- Page Header -->
+        <header class="cupid-header">
+            <h1 class="cupid-title">Cupid</h1>
+            <p class="cupid-subtitle">Divine matchmaking powered by the stars</p>
 
-            <!-- Article Body -->
-            <div class="article-body">
-                <p>Welcome to <strong>The Humorist</strong>, where artificial intelligence meets actual charm. We believe that the future of AI doesn't have to be sterile, robotic, or about maximizing engagement metrics. Instead, we've created a collection of intelligent agents designed to be genuinely helpful—and delightfully human in the process.</p>
-
-                <h2>The Origin Story</h2>
-                <p>Once upon a time, a group of bored engineers sat around a café debating an age-old question: "Why is talking to AI so... boring?" The conversation spiraled into a beautiful mess of ideas—what if an AI could make you laugh? What if it could understand context with actual nuance? What if it could feel <em>like a person you'd want to talk to</em>?</p>
-                <p>That café conversation became The Humorist. We started with a simple belief:</p>
-                <blockquote>
-                    "Technology should amplify human connection and intelligence, not replace it. And honestly, life's too short for dull conversations."
-                </blockquote>
-                <p>Today, we're building a suite of AI agents—each with personality, each with purpose, each ready to help you navigate the modern world with a little more wit and wisdom.</p>
-
-                <h2>Our Mission</h2>
-                <p>The Humorist exists at the intersection of <strong>intelligence and personality</strong>. We're not here to replace human judgment, creativity, or friendship. We're here to enhance your daily life through agents that actually understand context, appreciate nuance, and—gasp—can engage in genuine conversation.</p>
-                <p>Our mission is threefold:</p>
-                <ul>
-                    <li><strong>Empower:</strong> Give you tools that make you smarter, better informed, and more capable</li>
-                    <li><strong>Delight:</strong> Make those tools genuinely enjoyable to use, with personality and wit</li>
-                    <li><strong>Connect:</strong> Help you engage with information, ideas, and the world in a more human way</li>
-                </ul>
-
-                <h2>Meet the Agents</h2>
-                <p>Each agent on The Humorist is crafted with a distinct personality and purpose. They're not interchangeable—they're designed to be <em>exactly</em> what you need for their specific domain.</p>
-
-                <h3>News Guide</h3>
-                <p>Your witty companion through the daily headlines. News Guide doesn't just summarize—it contextualizes, explains the "why" behind the news, and occasionally makes you smile while you're learning about world events. Think of it as a friend who actually reads the news and has thoughtful opinions about it.</p>
-
-                <h3>Metro Map</h3>
-                <p>Navigate the city with friendly intelligence. Metro Map understands that getting around isn't just about point A to point B—it's about discovering the neighborhood, finding the best coffee shops, and maybe stumbling upon something unexpected. It's your personal guide with local knowledge and a sense of adventure.</p>
-
-                <h3>Cupid</h3>
-                <p>Astrological compatibility with cosmic charm. Whether you're a believer in the stars or just curious about what the universe thinks of your crush, Cupid brings wisdom, humor, and actual useful insights to questions of the heart. It's equal parts fortune teller, therapist, and your most optimistic friend.</p>
-
-                <h3>Cat Lounge</h3>
-                <p>Adopt your perfect feline friend with personality. Cat Lounge is obsessed—and we mean <em>obsessed</em>—with cats. It helps you find your purr-fect match from available rescues, explains feline behavior, and occasionally waxes poetic about why cats are objectively superior pets. (Other opinions are available, but wrong.)</p>
-
-                <h3>Travel Planner</h3>
-                <p>Adventures curated with care and curiosity. Travel Planner doesn't just book flights—it helps you discover experiences. Whether you're planning a weekend getaway or a multi-month expedition, it understands that great travel is about connection, discovery, and creating memories worth retelling.</p>
-
-                <h3>Support Agent</h3>
-                <p>Help that's actually helpful and human. We all know support chatbots that make you want to scream. Support Agent is different. It listens, understands frustration, and solves problems with genuine care and zero condescension. It's support the way you actually want to receive it.</p>
-
-                <h3>Wisdom Advisor</h3>
-                <p>Thoughtful guidance with a gentle touch. When life gets complicated and you need to talk things through, Wisdom Advisor is there. It combines philosophical insight, practical advice, and genuine empathy. It's like having access to the wisest person you know, but available 24/7.</p>
-
-                <h2>Technology & Approach</h2>
-                <p>Behind the wit and warmth, The Humorist is built on advanced AI architecture designed for genuine understanding. We don't just process keywords—we understand context, nuance, and what you're actually trying to accomplish. Each agent combines:</p>
-                <ul>
-                    <li><strong>Deep language understanding</strong> that grasps context and subtext</li>
-                    <li><strong>Domain expertise</strong> tailored to specific knowledge areas</li>
-                    <li><strong>Personality frameworks</strong> that make interactions feel natural and human</li>
-                    <li><strong>Continuous learning</strong> that makes agents smarter over time</li>
-                </ul>
-                <p>What makes us different isn't just the technology—it's the philosophy behind it. We believe AI should be transparent about its limitations, honest about uncertainty, and humble about what it doesn't know. That's how you build trust.</p>
-
-                <h2>Meet the Team</h2>
-                <p>The Humorist is built by a team of engineers, designers, and thinkers who believe that technology works best when it serves humanity, not the other way around. A few key players:</p>
-                <ul>
-                    <li><strong>Dr. Alex Chen</strong> — Co-founder & Chief Architect. Recovering academic with a passion for making AI more human.</li>
-                    <li><strong>Jordan "J" Martinez</strong> — Creative Director. Wordsmith, personality designer, and the reason our agents don't all sound like robots.</li>
-                    <li><strong>Casey Wong</strong> — Lead Engineer. Builds the infrastructure that makes personality-driven AI actually work at scale.</li>
-                    <li><strong>Morgan Riley</strong> — Head of Research & Ethics. Makes sure we're building responsibly, transparently, and with genuine care.</li>
-                </ul>
-
-                <h2>Get Started</h2>
-                <p>Ready to meet your new favorite AI agents? Head back to the <a href="./">home page</a> and explore. Each agent is designed to be immediately useful, genuinely engaging, and hopefully, a little bit delightful.</p>
-                <p>Welcome to The Humorist. We're excited you're here.</p>
+            <!-- Fleuron -->
+            <div class="fleuron" role="presentation" aria-hidden="true">
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
             </div>
-        </article>
-    </div>
+        </header>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="fleuron" role="presentation" aria-hidden="true">
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
-            <span class="fleuron-dot"></span>
+        <!-- Chat Interface Container -->
+        <div class="cupid-chat-container">
+            <div class="cupid-chat-card">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <span class="chat-title">Cupid</span>
+                        <span class="chat-version">v0.1</span>
+                    </div>
+                    <button class="play-button" aria-label="Play introduction">
+                        <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                        </svg>
+                        <span>Play</span>
+                    </button>
+                </div>
+
+                <!-- Messages Area (Placeholder) -->
+                <div class="chat-messages">
+                    <div class="chat-placeholder">
+                        <svg class="chat-placeholder-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                        </svg>
+                        <p class="chat-placeholder-text">Ask Cupid about astrological compatibility, love advice, or what the stars have in store for your heart.</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Ask about astrological compatibility...">
+                    <button class="chat-send-button" aria-label="Send message">
+                        <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
-        <p class="footer-text">© 2025 The Humorist. AI agents with intelligence and personality.</p>
-    </footer>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="fleuron" role="presentation" aria-hidden="true">
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+            </div>
+            <p class="footer-text">© 2025 The Humorist. AI agents with intelligence and personality.</p>
+        </footer>
+    </main>
 
     <script>
         // Theme management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme');
             const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
+
             if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
                 document.documentElement.classList.add('dark');
                 updateIcons(true);
