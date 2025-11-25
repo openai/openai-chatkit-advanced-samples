@@ -27,7 +27,6 @@ from chatkit.types import (
     WidgetItem,
 )
 from openai.types.responses import ResponseInputContentParam
-from pydantic import ValidationError
 
 from .agents.metro_map_agent import MetroAgentContext, metro_map_agent
 from .agents.title_agent import title_agent

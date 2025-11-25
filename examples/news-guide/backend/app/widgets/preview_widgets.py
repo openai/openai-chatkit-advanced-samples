@@ -1,9 +1,7 @@
 from typing import Any
 
-from chatkit.widgets import WidgetRoot
-
 from ..data.article_store import ArticleMetadata
-from .widget_template import WidgetTemplate
+from .widget_template import BasicRoot, WidgetTemplate
 
 AUTHOR_PROFILES: dict[str, dict[str, str]] = {
     "elowen-wilder": {
@@ -49,7 +47,7 @@ article_preview_widget_template = WidgetTemplate.from_file("article_preview.widg
 author_preview_widget_template = WidgetTemplate.from_file("author_preview.widget")
 
 
-def build_article_preview_widget(article: ArticleMetadata) -> WidgetRoot:
+def build_article_preview_widget(article: ArticleMetadata) -> BasicRoot:
     payload = {
         "id": article.id,
         "title": article.title,
@@ -68,7 +66,7 @@ def build_author_preview_widget(
     author_name: str,
     author_slug: str,
     article_count: int,
-) -> WidgetRoot:
+) -> BasicRoot:
     profile = _profile_for_author(author_slug)
     payload: dict[str, Any] = {
         "slug": author_slug,

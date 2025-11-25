@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import date, datetime
 from itertools import groupby
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping
 
 from chatkit.widgets import WidgetRoot
 
