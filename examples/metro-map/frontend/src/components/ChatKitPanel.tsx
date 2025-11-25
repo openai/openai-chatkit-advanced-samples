@@ -113,12 +113,6 @@ export function ChatKitPanel({
         }
         return { success: true };
       }
-      if (toolCall.name === "location_select_mode") {
-        const lineId = toolCall.params.lineId as string | undefined;
-        if (!lineId) return { success: false };
-        setLocationSelectLineId(lineId);
-        return { success: true };
-      }
       return { success: false };
     },
     [clearLocationSelectMode, focusStation, setLocationSelectLineId, setMap]
@@ -175,6 +169,13 @@ export function ChatKitPanel({
     onReady: () => {
       onChatKitReady?.(chatkit);
     },
+    onEffect: ({name, data}) => {
+      if (name === "location_select_mode") {
+        const lineId = data.lineId as string | undefined;
+        if (!lineId) return { success: false };
+        setLocationSelectLineId(lineId);
+      }
+    }
   });
 
   return (

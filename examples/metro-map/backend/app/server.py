@@ -17,6 +17,7 @@ from chatkit.types import (
     AssistantMessageContent,
     AssistantMessageItem,
     Attachment,
+    ClientEffectEvent,
     ClientToolCallItem,
     HiddenContextItem,
     ThreadItemDoneEvent,
@@ -68,18 +69,6 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             context=context,
         )
         items = list(reversed(items_page.data))
-
-        # Don't run inference after the location_select_mode tool call; we do not want
-        # additional agent output after this specific client tool call.
-        last_item = items[-1] if len(items) > 0 else None
-        is_location_select_mode_tool_call = (
-            last_item
-            and isinstance(last_item, ClientToolCallItem)
-            and last_item.name == "location_select_mode"
-        )
-        if not item and is_location_select_mode_tool_call:
-            await updating_thread_title
-            return
 
         input_items = await self.thread_item_converter.to_agent_input(items)
 
@@ -164,15 +153,9 @@ class MetroMapServer(ChatKitServer[RequestContext]):
             ),
         )
 
-        yield ThreadItemDoneEvent(
-            item=ClientToolCallItem(
-                id=self.store.generate_item_id("tool_call", thread, context),
-                thread_id=thread.id,
-                name="location_select_mode",
-                arguments={"lineId": line_id},
-                created_at=datetime.now(),
-                call_id=self.store.generate_item_id("tool_call", thread, context),
-            ),
+        yield ClientEffectEvent(
+            name="location_select_mode",
+            data={"lineId": line_id},
         )
 
     async def _maybe_update_thread_title(
