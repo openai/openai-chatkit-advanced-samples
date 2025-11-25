@@ -25,18 +25,15 @@ from chatkit.types import (
     WidgetItem,
 )
 from openai.types.responses import ResponseInputContentParam
-from pydantic import ValidationError
 
 from .cat_agent import CatAgentContext, cat_agent
 from .cat_store import CatStore
 from .memory_store import MemoryStore
-from .name_suggestions_widget import (
-    SELECT_CAT_NAME_ACTION_TYPE,
-    CatNameSelectionPayload,
+from .thread_item_converter import BasicThreadItemConverter
+from .widgets.name_suggestions_widget import (
     CatNameSuggestion,
     build_name_suggestions_widget,
 )
-from .thread_item_converter import BasicThreadItemConverter
 
 logging.basicConfig(level=logging.INFO)
 
@@ -60,13 +57,10 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
         sender: WidgetItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        if action.type == SELECT_CAT_NAME_ACTION_TYPE:
-            payload = self._parse_select_name_payload(action)
-            if payload is None:
-                return
+        if action.type == "cats.select_name":
             async for event in self._handle_select_name_action(
                 thread,
-                payload,
+                action.payload,
                 sender,
                 context,
             ):
@@ -120,28 +114,18 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
         raise RuntimeError("File attachments are not supported in this demo.")
 
     # -- Helpers ----------------------------------------------------
-    def _parse_select_name_payload(
-        self,
-        action: Action[str, Any],
-    ) -> CatNameSelectionPayload | None:
-        try:
-            return CatNameSelectionPayload.model_validate(action.payload or {})
-        except ValidationError as exc:
-            logging.warning("Invalid select name payload: %s", exc)
-            return None
-
     async def _handle_select_name_action(
         self,
         thread: ThreadMetadata,
-        payload: CatNameSelectionPayload,
+        payload: dict[str, Any],
         sender: WidgetItem | None,
         context: dict[str, Any],
     ) -> AsyncIterator[ThreadStreamEvent]:
-        name = payload.name.strip()
+        name = payload["name"].strip()
         if not name or not sender:
             return
 
-        options = payload.options or [CatNameSuggestion(name=name)]
+        options = [CatNameSuggestion(**option) for option in payload["options"]]
         current_state = await self.cat_store.load(thread.id)
         is_already_named = current_state.name != "Unnamed Cat"
         selection = current_state.name if is_already_named else name

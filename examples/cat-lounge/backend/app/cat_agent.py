@@ -16,8 +16,8 @@ from pydantic import ConfigDict, Field, ValidationError
 from .cat_state import CatState
 from .cat_store import CatStore
 from .memory_store import MemoryStore
-from .name_suggestions_widget import CatNameSuggestion, build_name_suggestions_widget
-from .profile_card_widget import profile_widget_copy_text, render_profile_card
+from .widgets.name_suggestions_widget import CatNameSuggestion, build_name_suggestions_widget
+from .widgets.profile_card_widget import build_profile_card_widget, profile_widget_copy_text
 
 INSTRUCTIONS: str = """
     You are Cozy Cat Companion, a playful caretaker helping the user look after a virtual cat.
@@ -244,7 +244,7 @@ async def show_cat_profile(
         state.set_age(age)
 
     state = await _update_state(ctx, mutate)
-    widget = render_profile_card(state, favorite_toy)
+    widget = build_profile_card_widget(state, favorite_toy)
     await ctx.context.stream_widget(widget, copy_text=profile_widget_copy_text(state))
 
     if state.name == "Unnamed Cat":

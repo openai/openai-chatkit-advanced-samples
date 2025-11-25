@@ -1,0 +1,246 @@
+{
+  "version": "1.0",
+  "name": "Name suggestions",
+  "template": "{\"type\":\"ListView\",\"children\":[{%- set _c -%}{%-for suggestion in items -%},{\"type\":\"ListViewItem\",\"key\":{{ (suggestion.name) | tojson }},\"onClickAction\":{% if selected %}{{ (none) | tojson }}{% else %}{\"type\":\"cats.select_name\",\"handler\":\"client\",\"payload\":{\"name\":{{ (suggestion.name) | tojson }},\"options\":{{ (items or none) | tojson }}}}{% endif %},\"children\":[{\"type\":\"Row\",\"gap\":3,\"align\":\"center\",\"children\":[{%- set _c -%}{%-if selected == suggestion.name -%},{\"type\":\"Icon\",\"name\":\"check\",\"color\":\"success\",\"size\":\"xl\"}{%-else-%},{\"type\":\"Icon\",\"name\":\"dot\",\"color\":{% if selected %}\"gray-200\"{% else %}\"gray-300\"{% endif %},\"size\":\"xl\"}{%-endif-%},{\"type\":\"Col\",\"gap\":1,\"children\":[{%- set _c -%},{\"type\":\"Text\",\"value\":{{ (suggestion.name) | tojson }},\"weight\":\"semibold\",\"color\":{% if selected == suggestion.name %}\"emphasis\"{% else %}{% if selected %}\"tertiary\"{% else %}{{ (none) | tojson }}{% endif %}{% endif %}}{%-if suggestion.reason -%},{\"type\":\"Text\",\"value\":{{ (suggestion.reason) | tojson }},\"color\":\"tertiary\",\"size\":\"sm\"}{%-else-%}{%-endif-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}]}{%-endfor-%},{\"type\":\"ListViewItem\",\"key\":\"more\",\"children\":[{\"type\":\"Button\",\"onClickAction\":{\"type\":\"cats.more_names\",\"handler\":\"client\",\"payload\":{}},\"variant\":\"outline\",\"color\":\"discovery\",\"size\":\"lg\",\"pill\":true,\"block\":true,\"label\":\"Suggest more names\",\"iconEnd\":\"sparkle\",\"disabled\":{{ (selected is not none) | tojson }}}]}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "selected": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "items",
+      "selected"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "ListView",
+    "children": [
+      {
+        "type": "ListViewItem",
+        "key": "Willow",
+        "onClickAction": {
+          "type": "cats.select_name",
+          "handler": "client",
+          "payload": {
+            "name": "Willow",
+            "options": [
+              {
+                "name": "Willow",
+                "reason": "Calm, playful vibes"
+              },
+              {
+                "name": "Pixel",
+                "reason": "Bright, curious, energetic"
+              },
+              {
+                "name": "Miso",
+                "reason": "Soft, cozy mood"
+              }
+            ]
+          }
+        },
+        "children": [
+          {
+            "type": "Row",
+            "gap": 3,
+            "align": "center",
+            "children": [
+              {
+                "type": "Icon",
+                "name": "dot",
+                "color": "gray-300",
+                "size": "xl"
+              },
+              {
+                "type": "Col",
+                "gap": 1,
+                "children": [
+                  {
+                    "type": "Text",
+                    "value": "Willow",
+                    "weight": "semibold"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Calm, playful vibes",
+                    "color": "tertiary",
+                    "size": "sm"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "Pixel",
+        "onClickAction": {
+          "type": "cats.select_name",
+          "handler": "client",
+          "payload": {
+            "name": "Pixel",
+            "options": [
+              {
+                "name": "Willow",
+                "reason": "Calm, playful vibes"
+              },
+              {
+                "name": "Pixel",
+                "reason": "Bright, curious, energetic"
+              },
+              {
+                "name": "Miso",
+                "reason": "Soft, cozy mood"
+              }
+            ]
+          }
+        },
+        "children": [
+          {
+            "type": "Row",
+            "gap": 3,
+            "align": "center",
+            "children": [
+              {
+                "type": "Icon",
+                "name": "dot",
+                "color": "gray-300",
+                "size": "xl"
+              },
+              {
+                "type": "Col",
+                "gap": 1,
+                "children": [
+                  {
+                    "type": "Text",
+                    "value": "Pixel",
+                    "weight": "semibold"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Bright, curious, energetic",
+                    "color": "tertiary",
+                    "size": "sm"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "Miso",
+        "onClickAction": {
+          "type": "cats.select_name",
+          "handler": "client",
+          "payload": {
+            "name": "Miso",
+            "options": [
+              {
+                "name": "Willow",
+                "reason": "Calm, playful vibes"
+              },
+              {
+                "name": "Pixel",
+                "reason": "Bright, curious, energetic"
+              },
+              {
+                "name": "Miso",
+                "reason": "Soft, cozy mood"
+              }
+            ]
+          }
+        },
+        "children": [
+          {
+            "type": "Row",
+            "gap": 3,
+            "align": "center",
+            "children": [
+              {
+                "type": "Icon",
+                "name": "dot",
+                "color": "gray-300",
+                "size": "xl"
+              },
+              {
+                "type": "Col",
+                "gap": 1,
+                "children": [
+                  {
+                    "type": "Text",
+                    "value": "Miso",
+                    "weight": "semibold"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Soft, cozy mood",
+                    "color": "tertiary",
+                    "size": "sm"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "more",
+        "children": [
+          {
+            "type": "Button",
+            "onClickAction": {
+              "type": "cats.more_names",
+              "handler": "client",
+              "payload": {}
+            },
+            "variant": "outline",
+            "color": "discovery",
+            "size": "lg",
+            "pill": true,
+            "block": true,
+            "label": "Suggest more names",
+            "iconEnd": "sparkle",
+            "disabled": false
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ19kY2Z3eWE1OSIsIm5hbWUiOiJOYW1lIHN1Z2dlc3Rpb25zIiwidmlldyI6IjxMaXN0Vmlldz5cbiAge2l0ZW1zLm1hcCgoc3VnZ2VzdGlvbikgPT4gKFxuICAgIDxMaXN0Vmlld0l0ZW1cbiAgICAgIGtleT17c3VnZ2VzdGlvbi5uYW1lfVxuICAgICAgb25DbGlja0FjdGlvbj17XG4gICAgICAgIHNlbGVjdGVkXG4gICAgICAgICAgPyB1bmRlZmluZWRcbiAgICAgICAgICA6IHtcbiAgICAgICAgICAgIHR5cGU6IFwiY2F0cy5zZWxlY3RfbmFtZVwiLFxuICAgICAgICAgICAgaGFuZGxlcjogXCJjbGllbnRcIixcbiAgICAgICAgICAgIHBheWxvYWQ6IHsgbmFtZTogc3VnZ2VzdGlvbi5uYW1lLCBvcHRpb25zOiBpdGVtcyB8fCBbXSB9LFxuICAgICAgICAgIH1cbiAgICAgIH1cbiAgICA-XG4gICAgICA8Um93IGdhcD17M30gYWxpZ249XCJjZW50ZXJcIj5cbiAgICAgICAge3NlbGVjdGVkID09PSBzdWdnZXN0aW9uLm5hbWUgPyAoXG4gICAgICAgICAgPEljb24gbmFtZT1cImNoZWNrXCIgY29sb3I9XCJzdWNjZXNzXCIgc2l6ZT1cInhsXCIgLz5cbiAgICAgICAgKSA6IChcbiAgICAgICAgICA8SWNvbiBuYW1lPVwiZG90XCIgY29sb3I9e3NlbGVjdGVkID8gXCJncmF5LTIwMFwiIDogXCJncmF5LTMwMFwifSBzaXplPVwieGxcIiAvPlxuICAgICAgICApfVxuICAgICAgICA8Q29sIGdhcD17MX0-XG4gICAgICAgICAgPFRleHRcbiAgICAgICAgICAgIHZhbHVlPXtzdWdnZXN0aW9uLm5hbWV9XG4gICAgICAgICAgICB3ZWlnaHQ9XCJzZW1pYm9sZFwiXG4gICAgICAgICAgICBjb2xvcj17XG4gICAgICAgICAgICAgIChzZWxlY3RlZCA9PT0gc3VnZ2VzdGlvbi5uYW1lXG4gICAgICAgICAgICAgICAgPyBcImVtcGhhc2lzXCJcbiAgICAgICAgICAgICAgICA6IHNlbGVjdGVkXG4gICAgICAgICAgICAgICAgICA_IFwidGVydGlhcnlcIlxuICAgICAgICAgICAgICAgICAgOiB1bmRlZmluZWQpXG4gICAgICAgICAgICB9XG4gICAgICAgICAgLz5cbiAgICAgICAgICB7c3VnZ2VzdGlvbi5yZWFzb24gPyAoXG4gICAgICAgICAgICA8VGV4dCB2YWx1ZT17c3VnZ2VzdGlvbi5yZWFzb259IGNvbG9yPVwidGVydGlhcnlcIiBzaXplPVwic21cIiAvPlxuICAgICAgICAgICkgOiBudWxsfVxuICAgICAgICA8L0NvbD5cbiAgICAgIDwvUm93PlxuICAgIDwvTGlzdFZpZXdJdGVtPlxuICApKX1cbiAgPExpc3RWaWV3SXRlbSBrZXk9XCJtb3JlXCI-XG4gICAgPEJ1dHRvblxuICAgICAgb25DbGlja0FjdGlvbj17eyB0eXBlOiBcImNhdHMubW9yZV9uYW1lc1wiLCBoYW5kbGVyOiBcImNsaWVudFwiLCBwYXlsb2FkOiB7fSB9fVxuICAgICAgdmFyaWFudD1cIm91dGxpbmVcIlxuICAgICAgY29sb3I9XCJkaXNjb3ZlcnlcIlxuICAgICAgc2l6ZT1cImxnXCJcbiAgICAgIHBpbGxcbiAgICAgIGJsb2NrXG4gICAgICBsYWJlbD1cIlN1Z2dlc3QgbW9yZSBuYW1lc1wiXG4gICAgICBpY29uRW5kPVwic3BhcmtsZVwiXG4gICAgICBkaXNhYmxlZD17ISFzZWxlY3RlZH1cbiAgICAvPlxuICA8L0xpc3RWaWV3SXRlbT5cbjwvTGlzdFZpZXc-XG4iLCJkZWZhdWx0U3RhdGUiOnsic2VsZWN0ZWQiOm51bGwsIml0ZW1zIjpbeyJuYW1lIjoiV2lsbG93IiwicmVhc29uIjoiQ2FsbSwgcGxheWZ1bCB2aWJlcyJ9LHsibmFtZSI6IlBpeGVsIiwicmVhc29uIjoiQnJpZ2h0LCBjdXJpb3VzLCBlbmVyZ2V0aWMifSx7Im5hbWUiOiJNaXNvIiwicmVhc29uIjoiU29mdCwgY296eSBtb29kIn1dfSwic2NoZW1hTW9kZSI6InpvZCIsImpzb25TY2hlbWEiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsidGl0bGUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsidGl0bGUiXSwiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlfSwic2NoZW1hIjoiaW1wb3J0IHsgeiB9IGZyb20gXCJ6b2RcIlxuXG5jb25zdCBXaWRnZXRTdGF0ZSA9IHouc3RyaWN0T2JqZWN0KHtcbiAgaXRlbXM6IHouYXJyYXkoei5vYmplY3Qoe1xuICAgIG5hbWU6IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKSxcbiAgICByZWFzb246IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKS5vcHRpb25hbCgpLFxuICB9KSksXG4gIHNlbGVjdGVkOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSkubnVsbGFibGUoKSxcbn0pXG5cbmV4cG9ydCBkZWZhdWx0IFdpZGdldFN0YXRlIiwic3RhdGVzIjpbXSwic2NoZW1hVmFsaWRpdHkiOiJ2YWxpZCIsInZpZXdWYWxpZGl0eSI6InZhbGlkIiwiZGVmYXVsdFN0YXRlVmFsaWRpdHkiOiJ2YWxpZCJ9"
+}

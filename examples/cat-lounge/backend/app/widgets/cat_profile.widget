@@ -1,0 +1,176 @@
+{
+  "version": "1.0",
+  "name": "Untitled widget",
+  "template": "{\"type\":\"Card\",\"size\":\"sm\",\"padding\":0,\"children\":[{\"type\":\"Box\",\"padding\":{\"x\":4,\"y\":2},\"background\":{\"light\":\"yellow-50\",\"dark\":\"yellow-900\"},\"children\":[{\"type\":\"Row\",\"align\":\"center\",\"children\":[{\"type\":\"Title\",\"value\":\"C A L I F O R N I A\",\"size\":\"sm\",\"weight\":\"bold\",\"color\":{\"light\":\"orange-700\",\"dark\":\"orange-100\"}},{\"type\":\"Spacer\"},{\"type\":\"Badge\",\"label\":\"meowing license\",\"color\":\"warning\",\"variant\":\"soft\"}]}]},{\"type\":\"Row\",\"padding\":{\"x\":5,\"top\":2,\"bottom\":4},\"gap\":4,\"align\":\"start\",\"children\":[{\"type\":\"Box\",\"background\":\"linear-gradient(135deg, #fff6d9 0%, #ceb0fb 100%)\",\"radius\":\"3xl\",\"align\":\"center\",\"justify\":\"center\",\"children\":[{\"type\":\"Image\",\"src\":{{ (image_src) | tojson }},\"width\":90,\"height\":110,\"position\":\"top\",\"radius\":\"3xl\"}]},{\"type\":\"Col\",\"gap\":2,\"flex\":\"auto\",\"children\":[{\"type\":\"Title\",\"value\":{{ (name) | tojson }},\"size\":\"md\"},{\"type\":\"Row\",\"children\":[{\"type\":\"Caption\",\"value\":\"Age\"},{\"type\":\"Spacer\"},{\"type\":\"Text\",\"value\":{{ (age) | tojson }},\"size\":\"sm\",\"textAlign\":\"end\"}]},{\"type\":\"Row\",\"children\":[{\"type\":\"Caption\",\"value\":\"Color pattern\"},{\"type\":\"Spacer\"},{\"type\":\"Text\",\"value\":{{ (color_pattern) | tojson }},\"size\":\"sm\",\"textAlign\":\"end\"}]},{\"type\":\"Row\",\"children\":[{\"type\":\"Caption\",\"value\":\"Toy choice\"},{\"type\":\"Spacer\"},{\"type\":\"Text\",\"value\":{{ (favorite_toy) | tojson }},\"size\":\"sm\",\"textAlign\":\"end\"}]}]}]}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "image_src": {
+        "type": "string",
+        "format": "uri"
+      },
+      "age": {
+        "type": "string"
+      },
+      "color_pattern": {
+        "type": "string"
+      },
+      "favorite_toy": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "image_src",
+      "age",
+      "color_pattern",
+      "favorite_toy"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Card",
+    "size": "sm",
+    "padding": 0,
+    "children": [
+      {
+        "type": "Box",
+        "padding": {
+          "x": 4,
+          "y": 2
+        },
+        "background": {
+          "light": "yellow-50",
+          "dark": "yellow-900"
+        },
+        "children": [
+          {
+            "type": "Row",
+            "align": "center",
+            "children": [
+              {
+                "type": "Title",
+                "value": "C A L I F O R N I A",
+                "size": "sm",
+                "weight": "bold",
+                "color": {
+                  "light": "orange-700",
+                  "dark": "orange-100"
+                }
+              },
+              {
+                "type": "Spacer"
+              },
+              {
+                "type": "Badge",
+                "label": "meowing license",
+                "color": "warning",
+                "variant": "soft"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Row",
+        "padding": {
+          "x": 5,
+          "top": 2,
+          "bottom": 4
+        },
+        "gap": 4,
+        "align": "start",
+        "children": [
+          {
+            "type": "Box",
+            "background": "linear-gradient(135deg, #fff6d9 0%, #ceb0fb 100%)",
+            "radius": "3xl",
+            "align": "center",
+            "justify": "center",
+            "children": [
+              {
+                "type": "Image",
+                "src": "https://files.catbox.moe/pbkakb.png",
+                "width": 90,
+                "height": 110,
+                "position": "top",
+                "radius": "3xl"
+              }
+            ]
+          },
+          {
+            "type": "Col",
+            "gap": 2,
+            "flex": "auto",
+            "children": [
+              {
+                "type": "Title",
+                "value": "Luna",
+                "size": "md"
+              },
+              {
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Caption",
+                    "value": "Age"
+                  },
+                  {
+                    "type": "Spacer"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "2 years",
+                    "size": "sm",
+                    "textAlign": "end"
+                  }
+                ]
+              },
+              {
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Caption",
+                    "value": "Color pattern"
+                  },
+                  {
+                    "type": "Spacer"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Calico",
+                    "size": "sm",
+                    "textAlign": "end"
+                  }
+                ]
+              },
+              {
+                "type": "Row",
+                "children": [
+                  {
+                    "type": "Caption",
+                    "value": "Toy choice"
+                  },
+                  {
+                    "type": "Spacer"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Feather wand",
+                    "size": "sm",
+                    "textAlign": "end"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ195b3VwZGtqYiIsIm5hbWUiOiJVbnRpdGxlZCB3aWRnZXQiLCJ2aWV3IjoiPENhcmQgc2l6ZT1cInNtXCIgcGFkZGluZz17MH0-XG4gIDxCb3ggcGFkZGluZz17eyB4OiA0LCB5OiAyIH19IGJhY2tncm91bmQ9e3tsaWdodDogXCJ5ZWxsb3ctNTBcIiwgZGFyazogXCJ5ZWxsb3ctOTAwXCJ9fT5cbiAgICA8Um93IGFsaWduPVwiY2VudGVyXCI-XG4gICAgICA8VGl0bGUgdmFsdWU9XCJDIEEgTCBJIEYgTyBSIE4gSSBBXCIgc2l6ZT1cInNtXCIgd2VpZ2h0PVwiYm9sZFwiIGNvbG9yPXt7IGxpZ2h0OiBcIm9yYW5nZS03MDBcIiwgZGFyazogXCJvcmFuZ2UtMTAwXCIgfX0vPlxuICAgICAgPFNwYWNlciAvPlxuICAgICAgPEJhZGdlIGxhYmVsPVwibWVvd2luZyBsaWNlbnNlXCIgY29sb3I9XCJ3YXJuaW5nXCIgdmFyaWFudD1cInNvZnRcIiAvPlxuICAgIDwvUm93PlxuICA8L0JveD5cbjxSb3cgcGFkZGluZz17e3g6IDUsIHRvcDogMiwgYm90dG9tOiA0fX0gZ2FwPXs0fSBhbGlnbj1cInN0YXJ0XCI-XG4gIDxCb3ggYmFja2dyb3VuZD1cImxpbmVhci1ncmFkaWVudCgxMzVkZWcsICNmZmY2ZDkgMCUsICNjZWIwZmIgMTAwJSlcIiByYWRpdXM9XCIzeGxcIiBhbGlnbj1cImNlbnRlclwiIGp1c3RpZnk9XCJjZW50ZXJcIj5cbiAgICA8SW1hZ2VcbiAgICAgIHNyYz17aW1hZ2Vfc3JjfVxuICAgICAgd2lkdGg9ezkwfVxuICAgICAgaGVpZ2h0PXsxMTB9XG4gICAgICBwb3NpdGlvbj1cInRvcFwiXG4gICAgICByYWRpdXM9XCIzeGxcIlxuICAgIC8-XG4gIDwvQm94PlxuICA8Q29sIGdhcD17Mn0gZmxleD1cImF1dG9cIj5cbiAgICA8VGl0bGUgdmFsdWU9e25hbWV9IHNpemU9XCJtZFwiIC8-XG4gICAgPFJvdz5cbiAgICAgIDxDYXB0aW9uIHZhbHVlPVwiQWdlXCIgLz5cbiAgICAgIDxTcGFjZXIgLz5cbiAgICAgIDxUZXh0IHZhbHVlPXthZ2V9IHNpemU9XCJzbVwiIHRleHRBbGlnbj1cImVuZFwiIC8-XG4gICAgPC9Sb3c-XG4gICAgPFJvdz5cbiAgICAgIDxDYXB0aW9uIHZhbHVlPVwiQ29sb3IgcGF0dGVyblwiIC8-XG4gICAgICA8U3BhY2VyIC8-XG4gICAgICA8VGV4dCB2YWx1ZT17Y29sb3JfcGF0dGVybn0gc2l6ZT1cInNtXCIgdGV4dEFsaWduPVwiZW5kXCIgLz5cbiAgICA8L1Jvdz5cbiAgICA8Um93PlxuICAgICAgPENhcHRpb24gdmFsdWU9XCJUb3kgY2hvaWNlXCIgLz5cbiAgICAgIDxTcGFjZXIgLz5cbiAgICAgIDxUZXh0IHZhbHVlPXtmYXZvcml0ZV90b3l9IHNpemU9XCJzbVwiIHRleHRBbGlnbj1cImVuZFwiIC8-XG4gICAgPC9Sb3c-XG4gIDwvQ29sPlxuICA8L1Jvdz5cbjwvQ2FyZD4iLCJkZWZhdWx0U3RhdGUiOnsibmFtZSI6Ikx1bmEiLCJpbWFnZV9zcmMiOiJodHRwczovL2ZpbGVzLmNhdGJveC5tb2UvcGJrYWtiLnBuZyIsImFnZSI6IjIgeWVhcnMiLCJjb2xvcl9wYXR0ZXJuIjoiQ2FsaWNvIiwiZmF2b3JpdGVfdG95IjoiRmVhdGhlciB3YW5kIn0sInNjaGVtYU1vZGUiOiJ6b2QiLCJqc29uU2NoZW1hIjp7InR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7InRpdGxlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbInRpdGxlIl0sImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZX0sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCJcblxuY29uc3QgV2lkZ2V0U3RhdGUgPSB6LnN0cmljdE9iamVjdCh7XG4gIG5hbWU6IHouc3RyaW5nKCksXG4gIGltYWdlX3NyYzogei5odHRwVXJsKCksXG4gIGFnZTogei5zdHJpbmcoKSxcbiAgY29sb3JfcGF0dGVybjogei5zdHJpbmcoKSxcbiAgZmF2b3JpdGVfdG95OiB6LnN0cmluZygpLFxufSlcblxuZXhwb3J0IGRlZmF1bHQgV2lkZ2V0U3RhdGUiLCJzdGF0ZXMiOltdLCJzY2hlbWFWYWxpZGl0eSI6InZhbGlkIiwidmlld1ZhbGlkaXR5IjoidmFsaWQiLCJkZWZhdWx0U3RhdGVWYWxpZGl0eSI6InZhbGlkIn0"
+}
