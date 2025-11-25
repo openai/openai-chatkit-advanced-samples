@@ -8,10 +8,9 @@ from datetime import date, datetime
 from itertools import groupby
 from typing import Any, Iterable, Mapping
 
-from chatkit.widgets import WidgetRoot
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 
 from ..data.event_store import EventRecord
-from .widget_template import WidgetTemplate
 
 CATEGORY_COLORS: dict[str, str] = {
     "community": "purple-400",

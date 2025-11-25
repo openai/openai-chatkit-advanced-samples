@@ -25,7 +25,6 @@ from chatkit.types import (
     WidgetItem,
     WidgetRootUpdated,
 )
-from chatkit.widgets import ListView
 from openai.types.responses import ResponseInputContentParam
 
 from .agents.event_finder_agent import EventFinderContext, event_finder_agent
@@ -157,13 +156,7 @@ class NewsAssistantServer(ChatKitServer[RequestContext]):
         record = self.event_store.get_event(selected_event_id) if selected_event_id else None
 
         # If the event is already selected, no need to show the details again.
-        if (
-            is_selected
-            or not record
-            or not event_ids
-            or not sender
-            or not isinstance(sender.widget, ListView)
-        ):
+        if is_selected or not record or not event_ids or not sender:
             return
 
         records: list[EventRecord] = []

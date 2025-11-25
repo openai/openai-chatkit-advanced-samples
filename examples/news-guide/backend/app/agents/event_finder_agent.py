@@ -65,7 +65,7 @@ async def search_events_by_date(
     ctx: RunContextWrapper[EventFinderContext],
     date: str,
 ) -> dict[str, Any]:
-    logger.info("[TOOL CALL] search_events_by_date", date)
+    logger.info("[TOOL CALL] search_events_by_date: %s", date)
     if not date:
         raise ValueError("Provide a valid date in YYYY-MM-DD format.")
     await ctx.context.stream(ProgressUpdateEvent(text=f"Looking up events on {date}"))
@@ -78,7 +78,7 @@ async def search_events_by_day_of_week(
     ctx: RunContextWrapper[EventFinderContext],
     day: str,
 ) -> dict[str, Any]:
-    logger.info("[TOOL CALL] search_events_by_day_of_week", day)
+    logger.info("[TOOL CALL] search_events_by_day_of_week: %s", day)
     if not day:
         raise ValueError("Provide a day of the week to search for (e.g., Saturday).")
     await ctx.context.stream(ProgressUpdateEvent(text=f"Checking {day} events"))
@@ -93,7 +93,7 @@ async def search_events_by_keyword(
     ctx: RunContextWrapper[EventFinderContext],
     keywords: List[str],
 ) -> dict[str, Any]:
-    logger.info("[TOOL CALL] search_events_by_keyword", keywords)
+    logger.info("[TOOL CALL] search_events_by_keyword: %s", keywords)
     tokens = [keyword.strip() for keyword in keywords if keyword and keyword.strip()]
     if not tokens:
         raise ValueError("Provide at least one keyword to search for.")
@@ -118,7 +118,7 @@ async def show_event_list_widget(
     events: List[EventRecord],
     message: str | None = None,
 ):
-    logger.info("[TOOL CALL] show_event_list_widget", events)
+    logger.info("[TOOL CALL] show_event_list_widget: %s", events)
     records: List[EventRecord] = [event for event in events if event]
 
     # Gracefully handle case where agent mistakenly calls this tool with no events.

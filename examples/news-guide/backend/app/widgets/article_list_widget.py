@@ -8,10 +8,9 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from chatkit.widgets import WidgetRoot
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 
 from ..data.article_store import ArticleMetadata
-from .widget_template import WidgetTemplate
 
 
 def _format_date(value: datetime) -> str:
