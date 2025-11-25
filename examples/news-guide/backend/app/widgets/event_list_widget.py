@@ -8,22 +8,10 @@ from datetime import date, datetime
 from itertools import groupby
 from typing import Any, Iterable, Mapping, Sequence
 
-from chatkit.actions import ActionConfig
-from chatkit.widgets import (
-    Borders,
-    Box,
-    Button,
-    Col,
-    ListView,
-    ListViewItem,
-    Row,
-    Spacer,
-    Text,
-    Title,
-    WidgetComponent,
-)
+from chatkit.widgets import WidgetRoot
 
 from ..data.event_store import EventRecord
+from .widget_template import WidgetTemplate
 
 CATEGORY_COLORS: dict[str, str] = {
     "community": "purple-400",
@@ -39,45 +27,31 @@ DEFAULT_CATEGORY_COLOR = "gray-400"
 
 
 EventLike = EventRecord | Mapping[str, Any]
+event_list_widget_template = WidgetTemplate.from_file("event_list.widget")
 
 
 def build_event_list_widget(
     events: Iterable[EventLike],
     selected_event_id: str | None = None,
-    selected_event_description: str | None = None,
-) -> ListView:
-    """Render an event list widget grouped by date."""
+) -> WidgetRoot:
+    """Render an event list widget grouped by date using the .widget template."""
     records = [_coerce_event(event) for event in events]
     records.sort(key=lambda rec: rec.date)
     event_ids: list[str] = [record.id for record in records]
 
-    items = []
-
+    groups: list[dict[str, Any]] = []
     for event_date, group in groupby(records, key=lambda rec: rec.date):
         group_records = list(group)
-        items.append(ListViewItem(children=[_group_header(event_date)]))
-        for record in group_records:
-            is_selected = selected_event_id == record.id if selected_event_id else False
-            description_value = (
-                selected_event_description
-                if is_selected and selected_event_description is not None
-                else (record.details if is_selected else None)
-            )
-            items.append(
-                ListViewItem(
-                    children=[
-                        _event_card(
-                            record,
-                            is_selected=is_selected,
-                            description_value=description_value,
-                            event_ids=event_ids,
-                        )
-                    ]
-                )
-            )
+        events_data = [_serialize_event(record) for record in group_records]
+        groups.append({"dateLabel": _format_date(event_date), "events": events_data})
 
-    # Don't show the "show more" button, always cap at 6 items
-    return ListView(children=items[:6], limit=6)
+    payload = {
+        "groups": groups,
+        "selectedEventId": selected_event_id,
+        "eventIds": event_ids,
+    }
+
+    return event_list_widget_template.build(payload)
 
 
 def _coerce_event(event: EventLike) -> EventRecord:
@@ -86,84 +60,19 @@ def _coerce_event(event: EventLike) -> EventRecord:
     return EventRecord.model_validate(event)
 
 
-def _event_card(
-    record: EventRecord,
-    is_selected: bool,
-    description_value: str | None = None,
-    event_ids: Sequence[str] | None = None,
-) -> Box:
+def _serialize_event(record: EventRecord) -> dict[str, Any]:
     category = (record.category or "").strip().lower()
     color = CATEGORY_COLORS.get(category, DEFAULT_CATEGORY_COLOR)
-    children: list[WidgetComponent] = [
-        _event_header(record, color, is_selected=is_selected, event_ids=event_ids or []),
-        Title(value=record.title, size="sm"),
-        Text(value=_format_location(record), color="alpha-70", size="xs"),
-    ]
-    children.append(
-        Text(
-            id=f"{record.id}-details",
-            key=f"{record.id}-details",
-            value=description_value or "",
-            size="sm",
-            color="alpha-90",
-            streaming=True,
-        )
-    )
-    return Box(
-        width=400,
-        border=Borders(
-            top={"size": 1, "color": "gray-900"},
-            right={"size": 1, "color": "gray-900"},
-            bottom={"size": 1, "color": "gray-900"},
-            left={"size": 5, "color": color},
-        ),
-        children=[
-            Col(
-                flex=1,
-                gap=2,
-                padding={"left": 2, "y": 2},
-                children=children,
-            ),
-        ],
-    )
-
-
-def _group_header(event_date: date) -> Box:
-    return Box(
-        padding={"bottom": 1, "top": 2},
-        children=[
-            Text(value=_format_date(event_date), weight="medium", size="sm"),
-        ],
-    )
-
-
-def _event_header(
-    record: EventRecord, color: str, is_selected: bool, event_ids: Sequence[str]
-) -> Row:
-    return Row(
-        align="center",
-        children=[
-            Text(value=_format_time(record), color=color, size="sm"),
-            Spacer(),
-            Button(
-                label="Show details ↓",
-                size="sm",
-                iconSize="sm",
-                pill=True,
-                variant="ghost",
-                color=None if is_selected else "warning",
-                onClickAction=ActionConfig(
-                    type="view_event_details",
-                    payload={
-                        "id": record.id,
-                        "event_ids": list(event_ids),
-                        "is_selected": is_selected,
-                    },
-                    handler="server",
-                ),
-            ),
-        ],
-    )
+    payload: dict[str, Any] = {
+        "id": record.id,
+        "title": record.title,
+        "location": _format_location(record),
+        "timeLabel": _format_time(record),
+        "dateLabel": _format_date(record.date),
+        "color": color,
+        "details": record.details,
+    }
+    return {key: value for key, value in payload.items() if value is not None}
 
 
 def _format_date(event_date: date) -> str:

@@ -6,14 +6,12 @@ same layout cues as the featured article card in the Newsroom panel.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Iterable, List
+from typing import Any
 
-from chatkit.actions import ActionConfig
-from chatkit.widgets import Box, Button, Col, Image, ListView, ListViewItem, Row, Text
+from chatkit.widgets import WidgetRoot
 
 from ..data.article_store import ArticleMetadata
-
-DEFAULT_TAG = "dispatch"
+from .widget_template import WidgetTemplate
 
 
 def _format_date(value: datetime) -> str:
@@ -21,88 +19,20 @@ def _format_date(value: datetime) -> str:
     return f"{month} {value.day}, {value.year}"
 
 
-def _article_item(article: ArticleMetadata) -> ListViewItem:
-    return ListViewItem(
-        children=[
-            Box(
-                maxWidth=450,
-                minWidth=300,
-                padding=0,
-                border={"color": "gray-900", "size": 1},
-                children=[
-                    Row(
-                        align="stretch",
-                        gap=0,
-                        children=[
-                            Image(
-                                src=article.heroImageUrl,
-                                alt=article.title,
-                                fit="cover",
-                                position="top",
-                                height=200,
-                                width=160,
-                                radius="none",
-                                frame=True,
-                            ),
-                            Col(
-                                padding={"x": 4, "y": 3},
-                                gap=2,
-                                flex=1,
-                                align="stretch",
-                                justify="between",
-                                children=[
-                                    Col(
-                                        gap=2,
-                                        flex=1,
-                                        children=[
-                                            Text(
-                                                value=_format_date(article.date),
-                                                color="tertiary",
-                                                size="xs",
-                                            ),
-                                            Text(
-                                                value=article.title,
-                                                size="sm",
-                                                weight="semibold",
-                                                maxLines=4,
-                                            ),
-                                            Text(
-                                                value=f"by {article.author}",
-                                                color="tertiary",
-                                                size="xs",
-                                            ),
-                                        ],
-                                    ),
-                                    Row(
-                                        justify="end",
-                                        children=[
-                                            Button(
-                                                label="View",
-                                                size="sm",
-                                                iconSize="sm",
-                                                pill=True,
-                                                variant="ghost",
-                                                color="warning",
-                                                iconEnd="chevron-right",
-                                                onClickAction=ActionConfig(
-                                                    type="open_article",
-                                                    payload={"id": article.id},
-                                                    handler="client",
-                                                ),
-                                            )
-                                        ],
-                                    ),
-                                ],
-                            ),
-                        ],
-                    )
-                ],
-            )
-        ],
-    )
+article_list_widget_template = WidgetTemplate.from_file("article_list.widget")
 
 
-def build_article_list_widget(articles: Iterable[ArticleMetadata]) -> ListView:
-    """Render an article list widget using featured-card styling."""
-    items: List[ListViewItem] = [_article_item(article) for article in articles]
-    return ListView(children=items)
+def build_article_list_widget(articles: list[ArticleMetadata]) -> WidgetRoot:
+    """Render an article list widget using the .widget template."""
+    payload = {"articles": [_serialize_article(article) for article in articles]}
+    return article_list_widget_template.build(payload)
+
+
+def _serialize_article(article: ArticleMetadata) -> dict[str, Any]:
+    return {
+        "id": article.id,
+        "title": article.title,
+        "author": article.author,
+        "heroImageUrl": article.heroImageUrl,
+        "date": _format_date(article.date),
+    }

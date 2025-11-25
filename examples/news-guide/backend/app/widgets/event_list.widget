@@ -1,0 +1,308 @@
+{
+  "version": "1.0",
+  "name": "event_list",
+  "template": "\n{%- set ns = namespace(children=[]) -%}\n{%- set selected_id = selectedEventId | default(None) -%}\n{%- set all_event_ids = eventIds | default([]) -%}\n{%- for group in groups|default([]) -%}\n  {%- set header = {\n    \"type\": \"ListViewItem\",\n    \"key\": (group.dateLabel|default('')) ~ '-header',\n    \"children\": [{\n      \"type\": \"Box\",\n      \"padding\": {\"bottom\": 1, \"top\": 2},\n      \"children\": [{\"type\": \"Text\", \"value\": group.dateLabel|default(''), \"weight\": \"medium\", \"size\": \"sm\"}],\n    }],\n  } -%}\n  {%- set _ = ns.children.append(header) -%}\n  {%- for event in group.events|default([]) -%}\n    {%- set is_selected = selected_id == (event.id|default(None)) -%}\n    {%- set item = {\n      \"type\": \"ListViewItem\",\n      \"key\": event.id|default(''),\n      \"children\": [{\n        \"type\": \"Box\",\n        \"width\": 400,\n        \"border\": {\n          \"top\": {\"size\": 1, \"color\": \"gray-900\"},\n          \"right\": {\"size\": 1, \"color\": \"gray-900\"},\n          \"bottom\": {\"size\": 1, \"color\": \"gray-900\"},\n          \"left\": {\"size\": 5, \"color\": event.color|default('gray-400')},\n        },\n        \"padding\": {\"right\": 1},\n        \"children\": [{\n          \"type\": \"Col\",\n          \"flex\": 1,\n          \"gap\": 2,\n          \"padding\": {\"left\": 2, \"y\": 2},\n          \"children\": [\n            {\n              \"type\": \"Row\",\n              \"align\": \"center\",\n              \"children\": [\n                {\"type\": \"Text\", \"value\": event.timeLabel|default(''), \"color\": event.color|default('gray-400'), \"size\": \"sm\"},\n                {\"type\": \"Spacer\"},\n                {\n                  \"type\": \"Button\",\n                  \"label\": \"Show details ↓\",\n                  \"size\": \"sm\",\n                  \"iconSize\": \"sm\",\n                  \"pill\": true,\n                  \"variant\": \"ghost\",\n                  \"color\": is_selected and \"secondary\" or \"warning\",\n                  \"onClickAction\": {\n                    \"type\": \"view_event_details\",\n                    \"handler\": \"server\",\n                    \"payload\": {\n                      \"id\": event.id|default(''),\n                      \"event_ids\": all_event_ids,\n                      \"is_selected\": is_selected,\n                    },\n                  },\n                },\n              ],\n            },\n            {\"type\": \"Title\", \"value\": event.title|default(''), \"size\": \"sm\"},\n            {\"type\": \"Text\", \"value\": event.location|default(''), \"color\": \"alpha-70\", \"size\": \"xs\"},\n            {\"type\": \"Text\", \"value\": is_selected and (event.selectedEventDescription|default(event.details|default(''))) or \"\", \"size\": \"sm\", \"color\": \"alpha-90\"},\n          ],\n        }],\n      }],\n    } -%}\n    {%- set _ = ns.children.append(item) -%}\n  {%- endfor -%}\n{%- endfor -%}\n{{ {\"type\": \"ListView\", \"limit\": 6, \"children\": ns.children} | tojson }}\n",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "selectedEventId": {
+        "type": "string",
+        "minLength": 1
+      },
+      "eventIds": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "groups": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "dateLabel": {
+              "type": "string",
+              "minLength": 1
+            },
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "location": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "timeLabel": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "dateLabel": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "color": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "details": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "location",
+                  "timeLabel",
+                  "dateLabel"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "dateLabel",
+            "events"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "groups"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "ListView",
+    "limit": 6,
+    "children": [
+      {
+        "type": "ListViewItem",
+        "key": "Thursday, Feb 20-header",
+        "children": [
+          {
+            "type": "Box",
+            "padding": {
+              "bottom": 1,
+              "top": 2
+            },
+            "children": [
+              {
+                "type": "Text",
+                "value": "Thursday, Feb 20",
+                "weight": "medium",
+                "size": "sm"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "council-coffee-briefing",
+        "children": [
+          {
+            "type": "Box",
+            "width": 400,
+            "border": {
+              "top": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "right": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "bottom": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "left": {
+                "size": 5,
+                "color": "blue-400"
+              }
+            },
+            "padding": {
+              "right": 1
+            },
+            "children": [
+              {
+                "type": "Col",
+                "flex": 1,
+                "gap": 2,
+                "padding": {
+                  "left": 2,
+                  "y": 2
+                },
+                "children": [
+                  {
+                    "type": "Row",
+                    "align": "center",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "value": "8:00 AM",
+                        "color": "blue-400",
+                        "size": "sm"
+                      },
+                      {
+                        "type": "Spacer"
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Show details ↓",
+                        "size": "sm",
+                        "iconSize": "sm",
+                        "pill": true,
+                        "variant": "ghost",
+                        "color": "info",
+                        "onClickAction": {
+                          "type": "view_event_details",
+                          "handler": "server",
+                          "payload": {
+                            "id": "council-coffee-briefing",
+                            "event_ids": [
+                              "council-coffee-briefing",
+                              "loft-gallery-preview"
+                            ],
+                            "is_selected": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Title",
+                    "value": "Council Coffee Briefing",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Foxhollow Press Club",
+                    "color": "alpha-70",
+                    "size": "xs"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "City beat reporters host a breezy drop-in with council members previewing the night's zoning votes; Corner Hearth pastries mysteriously vanish faster than anyone can refill them.",
+                    "size": "sm",
+                    "color": "alpha-90"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "loft-gallery-preview",
+        "children": [
+          {
+            "type": "Box",
+            "width": 400,
+            "border": {
+              "top": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "right": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "bottom": {
+                "size": 1,
+                "color": "gray-900"
+              },
+              "left": {
+                "size": 5,
+                "color": "pink-400"
+              }
+            },
+            "padding": {
+              "right": 1
+            },
+            "children": [
+              {
+                "type": "Col",
+                "flex": 1,
+                "gap": 2,
+                "padding": {
+                  "left": 2,
+                  "y": 2
+                },
+                "children": [
+                  {
+                    "type": "Row",
+                    "align": "center",
+                    "children": [
+                      {
+                        "type": "Text",
+                        "value": "6:30 PM",
+                        "color": "pink-400",
+                        "size": "sm"
+                      },
+                      {
+                        "type": "Spacer"
+                      },
+                      {
+                        "type": "Button",
+                        "label": "Show details ↓",
+                        "size": "sm",
+                        "iconSize": "sm",
+                        "pill": true,
+                        "variant": "ghost",
+                        "color": "warning",
+                        "onClickAction": {
+                          "type": "view_event_details",
+                          "handler": "server",
+                          "payload": {
+                            "id": "loft-gallery-preview",
+                            "event_ids": [
+                              "council-coffee-briefing",
+                              "loft-gallery-preview"
+                            ],
+                            "is_selected": false
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Title",
+                    "value": "Dispatch Photo Archive Preview",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Mill Row Art Loft",
+                    "color": "alpha-70",
+                    "size": "xs"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "",
+                    "size": "sm",
+                    "color": "alpha-90"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ19wMWZxaG83ZCIsIm5hbWUiOiJVbnRpdGxlZCB3aWRnZXQiLCJ2aWV3IjoiPExpc3RWaWV3IGxpbWl0PXs2fT5cbiAge2dyb3Vwcy5tYXAoKGdyb3VwKSA9PiBbXG4gICAgPExpc3RWaWV3SXRlbSBrZXk9e2Ake2dyb3VwLmRhdGVMYWJlbH0taGVhZGVyYH0-XG4gICAgICA8Qm94IHBhZGRpbmc9e3sgYm90dG9tOiAxLCB0b3A6IDIgfX0-XG4gICAgICAgIDxUZXh0IHZhbHVlPXtncm91cC5kYXRlTGFiZWx9IHdlaWdodD1cIm1lZGl1bVwiIHNpemU9XCJzbVwiIC8-XG4gICAgICA8L0JveD5cbiAgICA8L0xpc3RWaWV3SXRlbT4sXG4gICAgLi4uZ3JvdXAuZXZlbnRzLm1hcCgoZXZlbnQpID0-IChcbiAgICAgIDxMaXN0Vmlld0l0ZW0ga2V5PXtldmVudC5pZH0-XG4gICAgICAgIDxCb3hcbiAgICAgICAgICB3aWR0aD17NDAwfVxuICAgICAgICAgIGJvcmRlcj17e1xuICAgICAgICAgICAgdG9wOiB7IHNpemU6IDEsIGNvbG9yOiBcImdyYXktOTAwXCIgfSxcbiAgICAgICAgICAgIHJpZ2h0OiB7IHNpemU6IDEsIGNvbG9yOiBcImdyYXktOTAwXCIgfSxcbiAgICAgICAgICAgIGJvdHRvbTogeyBzaXplOiAxLCBjb2xvcjogXCJncmF5LTkwMFwiIH0sXG4gICAgICAgICAgICBsZWZ0OiB7IHNpemU6IDUsIGNvbG9yOiBldmVudC5jb2xvciB8fCBcImdyYXktNDAwXCIgfSxcbiAgICAgICAgICB9fVxuICAgICAgICAgIHBhZGRpbmc9e3tyaWdodDogMX19XG4gICAgICAgID5cbiAgICAgICAgICA8Q29sIGZsZXg9ezF9IGdhcD17Mn0gcGFkZGluZz17eyBsZWZ0OiAyLCB5OiAyIH19PlxuICAgICAgICAgICAgPFJvdyBhbGlnbj1cImNlbnRlclwiPlxuICAgICAgICAgICAgICA8VGV4dCB2YWx1ZT17ZXZlbnQudGltZUxhYmVsfSBjb2xvcj17ZXZlbnQuY29sb3IgfHwgXCJncmF5LTQwMFwifSBzaXplPVwic21cIiAvPlxuICAgICAgICAgICAgICA8U3BhY2VyIC8-XG4gICAgICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgICAgICBsYWJlbD1cIlNob3cgZGV0YWlscyDihpNcIlxuICAgICAgICAgICAgICAgIHNpemU9XCJzbVwiXG4gICAgICAgICAgICAgICAgaWNvblNpemU9XCJzbVwiXG4gICAgICAgICAgICAgICAgcGlsbFxuICAgICAgICAgICAgICAgIHZhcmlhbnQ9XCJnaG9zdFwiXG4gICAgICAgICAgICAgICAgY29sb3I9e1xuICAgICAgICAgICAgICAgICAgc2VsZWN0ZWRFdmVudElkICYmIHNlbGVjdGVkRXZlbnRJZCA9PT0gZXZlbnQuaWQgPyBcImluZm9cIiA6IFwid2FybmluZ1wiXG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIG9uQ2xpY2tBY3Rpb249e3tcbiAgICAgICAgICAgICAgICAgIHR5cGU6IFwidmlld19ldmVudF9kZXRhaWxzXCIsXG4gICAgICAgICAgICAgICAgICBoYW5kbGVyOiBcInNlcnZlclwiLFxuICAgICAgICAgICAgICAgICAgcGF5bG9hZDoge1xuICAgICAgICAgICAgICAgICAgICBpZDogZXZlbnQuaWQsXG4gICAgICAgICAgICAgICAgICAgIGV2ZW50X2lkczogZXZlbnRJZHMgfHwgW10sXG4gICAgICAgICAgICAgICAgICAgIGlzX3NlbGVjdGVkOiBzZWxlY3RlZEV2ZW50SWQgJiYgc2VsZWN0ZWRFdmVudElkID09PSBldmVudC5pZCxcbiAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgfX1cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvUm93PlxuICAgICAgICAgICAgPFRpdGxlIHZhbHVlPXtldmVudC50aXRsZX0gc2l6ZT1cInNtXCIgLz5cbiAgICAgICAgICAgIDxUZXh0IHZhbHVlPXtldmVudC5sb2NhdGlvbn0gY29sb3I9XCJhbHBoYS03MFwiIHNpemU9XCJ4c1wiIC8-XG4gICAgICAgICAgICA8VGV4dCAgICAgICAgICAgICAgXG4gICAgICAgICAgICAgIHZhbHVlPXtcbiAgICAgICAgICAgICAgICBzZWxlY3RlZEV2ZW50SWQgJiYgc2VsZWN0ZWRFdmVudElkID09PSBldmVudC5pZFxuICAgICAgICAgICAgICAgICAgPyBldmVudC5kZXRhaWxzIHx8IFwiXCJcbiAgICAgICAgICAgICAgICAgIDogXCJcIlxuICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgIHNpemU9XCJzbVwiXG4gICAgICAgICAgICAgIGNvbG9yPVwiYWxwaGEtOTBcIlxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L0NvbD5cbiAgICAgICAgPC9Cb3g-XG4gICAgICA8L0xpc3RWaWV3SXRlbT5cbiAgICApKSxcbiAgXSkubWFwKCh2YWx1ZSkgPT4gdmFsdWUpfVxuPC9MaXN0Vmlldz4iLCJkZWZhdWx0U3RhdGUiOnsic2VsZWN0ZWRFdmVudElkIjoiY291bmNpbC1jb2ZmZWUtYnJpZWZpbmciLCJldmVudElkcyI6WyJjb3VuY2lsLWNvZmZlZS1icmllZmluZyIsImxvZnQtZ2FsbGVyeS1wcmV2aWV3Il0sImdyb3VwcyI6W3siZGF0ZUxhYmVsIjoiVGh1cnNkYXksIEZlYiAyMCIsImV2ZW50cyI6W3siaWQiOiJjb3VuY2lsLWNvZmZlZS1icmllZmluZyIsInRpdGxlIjoiQ291bmNpbCBDb2ZmZWUgQnJpZWZpbmciLCJsb2NhdGlvbiI6IkZveGhvbGxvdyBQcmVzcyBDbHViIiwidGltZUxhYmVsIjoiODowMCBBTSIsImRhdGVMYWJlbCI6IlRodXJzZGF5LCBGZWIgMjAiLCJjb2xvciI6ImJsdWUtNDAwIiwiZGV0YWlscyI6IkNpdHkgYmVhdCByZXBvcnRlcnMgaG9zdCBhIGJyZWV6eSBkcm9wLWluIHdpdGggY291bmNpbCBtZW1iZXJzIHByZXZpZXdpbmcgdGhlIG5pZ2h0J3Mgem9uaW5nIHZvdGVzOyBDb3JuZXIgSGVhcnRoIHBhc3RyaWVzIG15c3RlcmlvdXNseSB2YW5pc2ggZmFzdGVyIHRoYW4gYW55b25lIGNhbiByZWZpbGwgdGhlbS4ifSx7ImlkIjoibG9mdC1nYWxsZXJ5LXByZXZpZXciLCJ0aXRsZSI6IkRpc3BhdGNoIFBob3RvIEFyY2hpdmUgUHJldmlldyIsImxvY2F0aW9uIjoiTWlsbCBSb3cgQXJ0IExvZnQiLCJ0aW1lTGFiZWwiOiI2OjMwIFBNIiwiZGF0ZUxhYmVsIjoiVGh1cnNkYXksIEZlYiAyMCIsImNvbG9yIjoicGluay00MDAiLCJkZXRhaWxzIjoiQSBzb2Z0bHkgbGl0IHdhbGstdGhyb3VnaCBvZiBuZXZlci1iZWZvcmUtc2VlbiBEaXNwYXRjaCBuZWdhdGl2ZXMsIHdoZXJlIGN1cmF0b3IgU2ltb25lIFJleWVzIHNoYXJlcyBiZWhpbmQtdGhlLWxlbnMgc3RvcmllcyB0aGF0IGZlZWwgYWxtb3N0IGxpa2UgRm94aG9sbG93IGZvbGtsb3JlLiJ9XX1dfSwic2NoZW1hTW9kZSI6InpvZCIsImpzb25TY2hlbWEiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsidGl0bGUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsidGl0bGUiXSwiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlfSwic2NoZW1hIjoiaW1wb3J0IHsgeiB9IGZyb20gXCJ6b2RcIjtcblxuY29uc3QgRXZlbnRJdGVtID0gei5vYmplY3Qoe1xuICBpZDogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICB0aXRsZTogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICBsb2NhdGlvbjogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICB0aW1lTGFiZWw6IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKSwgLy8gZS5nLiwgXCI4OjAwIEFNXCJcbiAgZGF0ZUxhYmVsOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksIC8vIGUuZy4sIFwiVGh1cnNkYXksIEZlYiAyMFwiXG4gIGNvbG9yOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSkub3B0aW9uYWwoKSwgLy8gZS5nLiwgXCJibHVlLTQwMFwiXG4gIGRldGFpbHM6IHouc3RyaW5nKCkudHJpbSgpLm9wdGlvbmFsKCksXG59KTtcblxuY29uc3QgRXZlbnRHcm91cCA9IHoub2JqZWN0KHtcbiAgZGF0ZUxhYmVsOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksXG4gIGV2ZW50czogei5hcnJheShFdmVudEl0ZW0pLFxufSk7XG5cbmNvbnN0IEV2ZW50R3JvdXBzRGF0YSA9IHoub2JqZWN0KHtcbiAgc2VsZWN0ZWRFdmVudElkOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSkub3B0aW9uYWwoKSxcbiAgZXZlbnRJZHM6IHouYXJyYXkoei5zdHJpbmcoKS50cmltKCkubWluKDEpKS5vcHRpb25hbCgpLFxuICBncm91cHM6IHouYXJyYXkoRXZlbnRHcm91cCksXG59KTtcblxuZXhwb3J0IGRlZmF1bHQgRXZlbnRHcm91cHNEYXRhOyIsInN0YXRlcyI6W10sInNjaGVtYVZhbGlkaXR5IjoidmFsaWQiLCJ2aWV3VmFsaWRpdHkiOiJ2YWxpZCIsImRlZmF1bHRTdGF0ZVZhbGlkaXR5IjoidmFsaWQifQ"
+}

@@ -1,0 +1,105 @@
+{
+  "version": "1.0",
+  "name": "Article preview",
+  "template": "{\"type\":\"Basic\",\"children\":[{\"type\":\"Row\",\"gap\":3,\"padding\":0,\"align\":\"start\",\"children\":[{\"type\":\"Box\",\"border\":{\"color\":\"gray-900\",\"size\":1},\"width\":100,\"children\":[{\"type\":\"Image\",\"src\":{{ (heroImageUrl) | tojson }},\"alt\":{{ (title) | tojson }},\"fit\":\"cover\",\"position\":\"top\",\"width\":98,\"height\":98,\"frame\":true}]},{\"type\":\"Col\",\"gap\":1,\"children\":[{\"type\":\"Title\",\"value\":{{ (title) | tojson }},\"size\":\"sm\"},{\"type\":\"Row\",\"gap\":1,\"children\":[{\"type\":\"Text\",\"value\":{{ ((\"by \" ~ author)) | tojson }},\"size\":\"xs\"},{\"type\":\"Icon\",\"name\":\"dot\",\"size\":\"sm\"},{\"type\":\"Text\",\"value\":{{ (date) | tojson }},\"size\":\"xs\"}]}]}]}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "author": {
+        "type": "string",
+        "minLength": 1
+      },
+      "heroImageUrl": {
+        "type": "string",
+        "format": "uri"
+      },
+      "date": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "author",
+      "heroImageUrl",
+      "date"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Basic",
+    "children": [
+      {
+        "type": "Row",
+        "gap": 3,
+        "padding": 0,
+        "align": "start",
+        "children": [
+          {
+            "type": "Box",
+            "border": {
+              "color": "gray-900",
+              "size": 1
+            },
+            "width": 100,
+            "children": [
+              {
+                "type": "Image",
+                "src": "https://i.imgur.com/qjpXOcJ.jpeg",
+                "alt": "New Bench Installed Near Willow Path; Residents Debate Optimal Orientation",
+                "fit": "cover",
+                "position": "top",
+                "width": 98,
+                "height": 98,
+                "frame": true
+              }
+            ]
+          },
+          {
+            "type": "Col",
+            "gap": 1,
+            "children": [
+              {
+                "type": "Title",
+                "value": "New Bench Installed Near Willow Path; Residents Debate Optimal Orientation",
+                "size": "sm"
+              },
+              {
+                "type": "Row",
+                "gap": 1,
+                "children": [
+                  {
+                    "type": "Text",
+                    "value": "by Elowen Wilder",
+                    "size": "xs"
+                  },
+                  {
+                    "type": "Icon",
+                    "name": "dot",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "Text",
+                    "value": "Feb 4, 2025",
+                    "size": "xs"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ18zZHl6dmtvNSIsIm5hbWUiOiJBcnRpY2xlIHByZXZpZXciLCJ2aWV3IjoiPEJhc2ljPlxuICA8Um93IGdhcD17M30gcGFkZGluZz17MH0gYWxpZ249XCJzdGFydFwiPlxuICA8Qm94IGJvcmRlcj17eyBjb2xvcjogXCJncmF5LTkwMFwiLCBzaXplOiAxIH19IHdpZHRoPXsxMDB9PlxuICAgIDxJbWFnZVxuICAgICAgc3JjPXtoZXJvSW1hZ2VVcmx9XG4gICAgICBhbHQ9e3RpdGxlfVxuICAgICAgZml0PVwiY292ZXJcIlxuICAgICAgcG9zaXRpb249XCJ0b3BcIlxuICAgICAgd2lkdGg9ezk4fVxuICAgICAgaGVpZ2h0PXs5OH1cbiAgICAgIGZyYW1lXG4gICAgLz5cbiAgPC9Cb3g-XG4gIDxDb2wgZ2FwPXsxfT5cbiAgICA8VGl0bGUgdmFsdWU9e3RpdGxlfSBzaXplPVwic21cIiAvPlxuICAgIDxSb3cgZ2FwPXsxfT5cbiAgICAgIDxUZXh0IHZhbHVlPXtgYnkgJHthdXRob3J9YH0gc2l6ZT1cInhzXCIgLz5cbiAgICAgIDxJY29uIG5hbWU9XCJkb3RcIiBzaXplPVwic21cIiAvPlxuICAgICAgPFRleHQgdmFsdWU9e2RhdGV9IHNpemU9XCJ4c1wiIC8-XG4gICAgPC9Sb3c-XG4gIDwvQ29sPlxuPC9Sb3c-XG48L0Jhc2ljPiIsImRlZmF1bHRTdGF0ZSI6eyJpZCI6ImJlbmNoLW9yaWVudGF0aW9uLWRlYmF0ZSIsInRpdGxlIjoiTmV3IEJlbmNoIEluc3RhbGxlZCBOZWFyIFdpbGxvdyBQYXRoOyBSZXNpZGVudHMgRGViYXRlIE9wdGltYWwgT3JpZW50YXRpb24iLCJhdXRob3IiOiJFbG93ZW4gV2lsZGVyIiwiaGVyb0ltYWdlVXJsIjoiaHR0cHM6Ly9pLmltZ3VyLmNvbS9xanBYT2NKLmpwZWciLCJkYXRlIjoiRmViIDQsIDIwMjUifSwic2NoZW1hTW9kZSI6InpvZCIsImpzb25TY2hlbWEiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsidGl0bGUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsidGl0bGUiXSwiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlfSwic2NoZW1hIjoiaW1wb3J0IHsgeiB9IGZyb20gXCJ6b2RcIlxuXG5jb25zdCBBcnRpY2xlID0gei5vYmplY3Qoe1xuICBpZDogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICB0aXRsZTogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICBhdXRob3I6IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKSxcbiAgaGVyb0ltYWdlVXJsOiB6LnVybCgpLFxuICBkYXRlOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksIC8vIGRpc3BsYXkgc3RyaW5nXG59KTtcblxuZXhwb3J0IGRlZmF1bHQgQXJ0aWNsZSIsInN0YXRlcyI6W10sInNjaGVtYVZhbGlkaXR5IjoidmFsaWQiLCJ2aWV3VmFsaWRpdHkiOiJ2YWxpZCIsImRlZmF1bHRTdGF0ZVZhbGlkaXR5IjoidmFsaWQifQ"
+}

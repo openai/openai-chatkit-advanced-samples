@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from typing import Annotated, Any, List
 
@@ -17,6 +18,9 @@ from ..data.event_store import EventRecord, EventStore
 from ..memory_store import MemoryStore
 from ..request_context import RequestContext
 from ..widgets.event_list_widget import build_event_list_widget
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 INSTRUCTIONS = """
     You help Foxhollow residents discover local happenings. When a reader asks for events,
@@ -61,7 +65,7 @@ async def search_events_by_date(
     ctx: RunContextWrapper[EventFinderContext],
     date: str,
 ) -> dict[str, Any]:
-    print("[TOOL CALL] search_events_by_date", date)
+    logger.info("[TOOL CALL] search_events_by_date", date)
     if not date:
         raise ValueError("Provide a valid date in YYYY-MM-DD format.")
     await ctx.context.stream(ProgressUpdateEvent(text=f"Looking up events on {date}"))
@@ -74,7 +78,7 @@ async def search_events_by_day_of_week(
     ctx: RunContextWrapper[EventFinderContext],
     day: str,
 ) -> dict[str, Any]:
-    print("[TOOL CALL] search_events_by_day_of_week", day)
+    logger.info("[TOOL CALL] search_events_by_day_of_week", day)
     if not day:
         raise ValueError("Provide a day of the week to search for (e.g., Saturday).")
     await ctx.context.stream(ProgressUpdateEvent(text=f"Checking {day} events"))
@@ -89,7 +93,7 @@ async def search_events_by_keyword(
     ctx: RunContextWrapper[EventFinderContext],
     keywords: List[str],
 ) -> dict[str, Any]:
-    print("[TOOL CALL] search_events_by_keyword", keywords)
+    logger.info("[TOOL CALL] search_events_by_keyword", keywords)
     tokens = [keyword.strip() for keyword in keywords if keyword and keyword.strip()]
     if not tokens:
         raise ValueError("Provide at least one keyword to search for.")
@@ -103,7 +107,7 @@ async def search_events_by_keyword(
 async def list_available_event_keywords(
     ctx: RunContextWrapper[EventFinderContext],
 ) -> EventKeywords:
-    print("[TOOL CALL] list_available_event_keywords")
+    logger.info("[TOOL CALL] list_available_event_keywords")
     await ctx.context.stream(ProgressUpdateEvent(text="Referencing available event keywords..."))
     return EventKeywords(keywords=ctx.context.events.list_available_keywords())
 
@@ -114,7 +118,7 @@ async def show_event_list_widget(
     events: List[EventRecord],
     message: str | None = None,
 ):
-    print("[TOOL CALL] show_event_list_widget", events)
+    logger.info("[TOOL CALL] show_event_list_widget", events)
     records: List[EventRecord] = [event for event in events if event]
 
     # Gracefully handle case where agent mistakenly calls this tool with no events.
@@ -133,7 +137,11 @@ async def show_event_list_widget(
             )
         )
 
-    widget = build_event_list_widget(records)
+    try:
+        widget = build_event_list_widget(records)
+    except Exception as exc:
+        logger.error(f"[ERROR] build_event_list_widget: {exc}")
+        raise
     copy_text = ", ".join(filter(None, (event.title for event in records)))
     await ctx.context.stream_widget(widget, copy_text=copy_text or "Local events")
 

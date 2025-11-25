@@ -155,7 +155,6 @@ class NewsAssistantServer(ChatKitServer[RequestContext]):
         ]
         is_selected = bool(action.payload.get("is_selected"))
         record = self.event_store.get_event(selected_event_id) if selected_event_id else None
-        description = record.details if record else None
 
         # If the event is already selected, no need to show the details again.
         if (
@@ -176,7 +175,6 @@ class NewsAssistantServer(ChatKitServer[RequestContext]):
         updated_widget = build_event_list_widget(
             records,
             selected_event_id=selected_event_id,
-            selected_event_description=description,
         )
 
         if not updated_widget:
