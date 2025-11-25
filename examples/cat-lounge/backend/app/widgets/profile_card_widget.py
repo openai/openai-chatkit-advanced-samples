@@ -5,10 +5,9 @@ This is an example of a static presentation widget.
 
 from __future__ import annotations
 
-from chatkit.widgets import WidgetRoot
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 
 from ..cat_state import CatState
-from .widget_template import WidgetTemplate
 
 cat_profile_widget_template = WidgetTemplate.from_file("cat_profile.widget")
 

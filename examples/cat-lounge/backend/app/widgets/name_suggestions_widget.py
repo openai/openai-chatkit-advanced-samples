@@ -5,10 +5,8 @@ This widget wires up two client action configs.
 
 from __future__ import annotations
 
-from chatkit.widgets import WidgetRoot
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 from pydantic import BaseModel, Field
-
-from .widget_template import WidgetTemplate
 
 
 class CatNameSuggestion(BaseModel):
