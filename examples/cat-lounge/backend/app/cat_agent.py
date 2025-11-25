@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-import logging
 from typing import Annotated, Any, Callable
 
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
