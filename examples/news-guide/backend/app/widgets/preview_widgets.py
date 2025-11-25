@@ -1,7 +1,8 @@
 from typing import Any
 
+from chatkit.widgets import BasicRoot, WidgetTemplate
+
 from ..data.article_store import ArticleMetadata
-from .widget_template import BasicRoot, WidgetTemplate
 
 AUTHOR_PROFILES: dict[str, dict[str, str]] = {
     "elowen-wilder": {
