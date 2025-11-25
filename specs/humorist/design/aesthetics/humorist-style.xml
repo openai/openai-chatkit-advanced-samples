@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aesthetic name="humorist" version="1.0">
+  <meta>
+    <title>The Humorist - Witty Warmth</title>
+    <description>Intelligent humor meets approachable warmth. A publication-meets-app-hub aesthetic - editorial sophistication with interactive accessibility. Smart but never pretentious, colorful but never garish. The aesthetic of wit, wisdom, and a knowing wink.</description>
+    <influences>
+      <influence>McSweeney's literary humor</influence>
+      <influence>Solarized color scheme (Ethan Schoonover)</influence>
+      <influence>1960s educational design</influence>
+      <influence>Penguin paperback covers</influence>
+      <influence>Modern app launchers (Raycast, Linear)</influence>
+      <influence>Sunday supplement magazines</influence>
+    </influences>
+    <mood>Witty, warm, approachable, intelligent, playful-but-refined</mood>
+    <product-type>Publication-style hub with app-like navigation to AI agents</product-type>
+  </meta>
+
+  <typography>
+    <principle>Wide geometric sans-serif conveys friendly confidence. The Lexend superfamily provides warmth and readability while maintaining visual hierarchy through width variation.</principle>
+
+    <fonts>
+      <font role="display" name="Lexend Giga" fallback="sans-serif" weight="400">
+        <usage>Page titles, hero text, masthead</usage>
+        <note>Extra-wide geometric sans. The width commands attention while remaining approachable.</note>
+      </font>
+      <font role="headline" name="Lexend Giga" fallback="sans-serif" weight="600">
+        <usage>Section headers, primary headings</usage>
+        <note>SemiBold weight in muted color creates visual depth without severity</note>
+      </font>
+      <font role="nav" name="Lexend Giga" fallback="sans-serif" weight="900">
+        <usage>Navigation brand name, app links</usage>
+        <note>Black weight for small but impactful text</note>
+      </font>
+      <font role="emphasis" name="Lexend Peta" fallback="sans-serif" weight="700">
+        <usage>Pull quotes, callouts, emphasized text</usage>
+        <note>Extra-wide for maximum impact. Use sparingly.</note>
+      </font>
+      <font role="body" name="Lexend" fallback="sans-serif" weight="300">
+        <usage>Body text, paragraphs, descriptions</usage>
+        <note>Light weight keeps large body text readable and friendly</note>
+      </font>
+    </fonts>
+
+    <google-fonts-import>
+      <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&amp;family=Lexend+Peta:wght@700&amp;family=Lexend:wght@300;400;500&amp;display=swap"/>
+    </google-fonts-import>
+
+    <avoid>
+      <family>Times New Roman</family>
+      <family>Georgia</family>
+      <family>Playfair Display</family>
+      <family>Courier</family>
+      <reason>Serif fonts undermine the friendly, modern personality. This aesthetic is decisively sans-serif.</reason>
+    </avoid>
+
+    <scale>
+      <size name="display" value="64px" line-height="1.1" letter-spacing="-0.01em"/>
+      <size name="h1" value="42px" line-height="1.2" letter-spacing="0"/>
+      <size name="h2" value="32px" line-height="1.3" letter-spacing="0"/>
+      <size name="h3" value="32px" line-height="1.3" letter-spacing="0"/>
+      <size name="body" value="24px" line-height="1.5" letter-spacing="0.01em"/>
+      <size name="blockquote" value="20px" line-height="1.4" letter-spacing="0"/>
+      <size name="nav" value="16px" line-height="1" letter-spacing="0.02em"/>
+      <size name="caption" value="14px" line-height="1.4" letter-spacing="0.01em"/>
+    </scale>
+  </typography>
+
+  <color>
+    <principle>Warm and welcoming as a foundation, with a rainbow spectrum of accents that bring playfulness without chaos. Colors are soft, never neon. The Solarized-inspired base provides visual comfort for extended reading.</principle>
+
+    <palette>
+      <!-- Core: Warm Solarized foundation -->
+      <color name="cream" value="#FDF6E3" role="background">
+        <description>Warm cream background - easy on eyes, inviting. Solarized base3.</description>
+      </color>
+      <color name="text" value="#464646" role="primary-text">
+        <description>Soft black - readable without harshness</description>
+      </color>
+      <color name="header" value="#657B83" role="secondary-text">
+        <description>Muted blue-gray for headers and secondary content. Solarized base00.</description>
+      </color>
+      <color name="muted" value="#93A1A1" role="tertiary-text">
+        <description>Light gray for captions, metadata. Solarized base1.</description>
+      </color>
+
+      <!-- Surface variations -->
+      <color name="surface" value="#F5EFE0" role="background-alt">
+        <description>Slightly darker cream for cards and elevated surfaces</description>
+      </color>
+
+      <!-- Accent spectrum: The rainbow that brings wit and life -->
+      <color name="red" value="#D74E39" role="accent-primary">
+        <description>Warm coral red - passion, emphasis, primary actions</description>
+      </color>
+      <color name="orange" value="#DA6800" role="accent-warm">
+        <description>Burnt orange - warmth, secondary emphasis</description>
+      </color>
+      <color name="yellow" value="#FFC922" role="accent-bright">
+        <description>Golden yellow - optimism, highlights, stars</description>
+      </color>
+      <color name="pink" value="#E7B5A0" role="accent-soft">
+        <description>Dusty rose - soft romantic moments, gentle emphasis</description>
+      </color>
+      <color name="green" value="#8AA47D" role="accent-growth">
+        <description>Sage green - positive changes, growth, success</description>
+      </color>
+      <color name="blue" value="#6CC2FF" role="accent-calm">
+        <description>Sky blue - clarity, communication, air</description>
+      </color>
+      <color name="purple" value="#9B85B7" role="accent-mystical">
+        <description>Lavender purple - intuition, creativity, mystery</description>
+      </color>
+    </palette>
+
+    <semantic>
+      <token name="--color-text-primary" value="var(--text)"/>
+      <token name="--color-text-secondary" value="var(--header)"/>
+      <token name="--color-text-muted" value="var(--muted)"/>
+      <token name="--color-bg-primary" value="var(--cream)"/>
+      <token name="--color-bg-surface" value="var(--surface)"/>
+      <token name="--color-accent" value="var(--red)"/>
+      <token name="--color-success" value="var(--green)"/>
+      <token name="--color-warning" value="var(--yellow)"/>
+      <token name="--color-error" value="var(--red)"/>
+    </semantic>
+
+    <fleuron-colors>
+      <description>The signature decorative element - a row of colored dots used as subtle section dividers</description>
+      <sequence>red, orange, yellow, pink, green, blue, purple</sequence>
+      <usage>Section breaks, footer accent, subtle personality marker</usage>
+    </fleuron-colors>
+  </color>
+
+  <motion>
+    <principle>Gentle and friendly. Movement should feel welcoming, like being greeted by a clever friend. A slight bounce is acceptable - this aesthetic has personality. Content should slide in smoothly, never jarring.</principle>
+
+    <animations>
+      <animation name="gentle-enter" duration="350ms" easing="cubic-bezier(0.34, 1.56, 0.64, 1)">
+        <description>Content enters with a friendly slight bounce</description>
+        <keyframes>
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        </keyframes>
+      </animation>
+
+      <animation name="slide-up" duration="300ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Smooth upward slide for cards and panels</description>
+        <keyframes>
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        </keyframes>
+      </animation>
+
+      <animation name="fade-in" duration="250ms" easing="ease-out">
+        <description>Simple fade for subtle transitions</description>
+      </animation>
+
+      <animation name="button-press" duration="100ms" easing="ease-out">
+        <description>Satisfying click feedback</description>
+        <keyframes>
+          0% { transform: scale(1); }
+          50% { transform: scale(0.97); }
+          100% { transform: scale(1); }
+        </keyframes>
+      </animation>
+
+      <animation name="fleuron-appear" duration="600ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Dots appear sequentially with stagger</description>
+        <stagger>50ms</stagger>
+      </animation>
+    </animations>
+
+    <stagger>
+      <pattern name="friendly-cascade" base-delay="50ms" increment="30ms">
+        <description>Content blocks reveal in a quick, friendly cascade</description>
+      </pattern>
+      <pattern name="app-grid" base-delay="40ms" increment="20ms">
+        <description>App link cards appear in a snappy grid pattern</description>
+      </pattern>
+    </stagger>
+
+    <allowed>
+      <effect>Subtle bounce (cubic-bezier with overshoot)</effect>
+      <effect>Smooth slide transitions</effect>
+      <effect>Scale feedback on interaction</effect>
+      <reason>This aesthetic embraces warmth and playfulness</reason>
+    </allowed>
+
+    <avoid>
+      <effect>Aggressive shake effects</effect>
+      <effect>Excessive particle systems</effect>
+      <effect>Jarring snaps</effect>
+      <reason>Playful doesn't mean chaotic. Wit is controlled.</reason>
+    </avoid>
+  </motion>
+
+  <backgrounds>
+    <principle>Warm and inviting. The cream base provides comfort. Subtle texture adds depth without distraction. Backgrounds should feel like quality paper stock.</principle>
+
+    <treatments>
+      <treatment name="cream-base">
+        <css>background: var(--cream);</css>
+        <description>Primary warm cream background</description>
+      </treatment>
+
+      <treatment name="surface-card">
+        <css>
+          background: var(--surface);
+          box-shadow: 0 2px 8px rgba(70, 70, 70, 0.06);
+        </css>
+        <description>Elevated surface for cards with soft shadow</description>
+      </treatment>
+
+      <treatment name="paper-texture">
+        <css>
+          background: var(--cream);
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        </css>
+        <description>Subtle paper texture for rich, tactile feel</description>
+      </treatment>
+
+      <treatment name="gradient-warm">
+        <css>
+          background: linear-gradient(180deg, var(--cream) 0%, #FAF0D4 100%);
+        </css>
+        <description>Subtle warm gradient for hero sections</description>
+      </treatment>
+    </treatments>
+
+    <avoid>
+      <pattern>Dark mode (undermines warmth)</pattern>
+      <pattern>Pure white backgrounds (too sterile)</pattern>
+      <pattern>Heavy gradients</pattern>
+      <pattern>Glassmorphism/blur effects</pattern>
+    </avoid>
+  </backgrounds>
+
+  <components>
+    <principle>Friendly and touchable. Rounded corners convey approachability. Generous padding gives content room to breathe. Components should feel like well-designed app elements within a publication context.</principle>
+
+    <cards>
+      <style name="content-card">
+        <css>
+          background: var(--cream);
+          border: 1px solid rgba(101, 123, 131, 0.15);
+          border-radius: 12px;
+          padding: 1.5rem;
+          box-shadow: 0 2px 8px rgba(70, 70, 70, 0.04);
+        </css>
+      </style>
+      <style name="app-link-card">
+        <css>
+          background: var(--surface);
+          border-radius: 16px;
+          padding: 1.25rem;
+          transition: transform 200ms ease, box-shadow 200ms ease;
+        </css>
+        <hover>
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(70, 70, 70, 0.08);
+        </hover>
+        <description>Interactive card for app/agent navigation links</description>
+      </style>
+    </cards>
+
+    <buttons>
+      <style name="primary">
+        <css>
+          background: var(--red);
+          color: var(--cream);
+          font-family: var(--font-body);
+          font-weight: 500;
+          font-size: 16px;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+          transition: background 150ms ease;
+        </css>
+        <hover>
+          background: #C44432;
+        </hover>
+      </style>
+      <style name="secondary">
+        <css>
+          background: var(--surface);
+          color: var(--text);
+          border: 1px solid rgba(101, 123, 131, 0.25);
+          border-radius: 8px;
+          padding: 0.75rem 1.5rem;
+        </css>
+        <hover>
+          background: #EDE8D9;
+        </hover>
+      </style>
+      <style name="ghost">
+        <css>
+          background: transparent;
+          color: var(--header);
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+        </css>
+        <hover>
+          background: rgba(101, 123, 131, 0.08);
+        </hover>
+      </style>
+    </buttons>
+
+    <dividers>
+      <style name="subtle">
+        <css>height: 1px; background: rgba(101, 123, 131, 0.15);</css>
+      </style>
+      <style name="section-break">
+        <css>height: 2px; background: var(--header); width: 4rem; border-radius: 1px;</css>
+        <description>Short rule for section breaks</description>
+      </style>
+    </dividers>
+
+    <badges>
+      <style name="tag">
+        <css>
+          display: inline-flex;
+          align-items: center;
+          gap: 0.375rem;
+          padding: 0.375rem 0.75rem;
+          background: var(--surface);
+          border-radius: 20px;
+          font-family: var(--font-body);
+          font-size: 14px;
+          font-weight: 400;
+          color: var(--header);
+        </css>
+        <description>Soft pill-shaped tags for categorization</description>
+      </style>
+      <style name="status">
+        <css>
+          display: inline-flex;
+          align-items: center;
+          padding: 0.25rem 0.625rem;
+          border-radius: 6px;
+          font-size: 13px;
+          font-weight: 500;
+        </css>
+        <variants>
+          <variant name="success" background="rgba(138, 164, 125, 0.15)" color="var(--green)"/>
+          <variant name="warning" background="rgba(255, 201, 34, 0.15)" color="#B8900A"/>
+          <variant name="error" background="rgba(215, 78, 57, 0.15)" color="var(--red)"/>
+        </variants>
+      </style>
+    </badges>
+
+    <inputs>
+      <style name="text-input">
+        <css>
+          background: var(--cream);
+          border: 1px solid rgba(101, 123, 131, 0.25);
+          border-radius: 8px;
+          padding: 0.75rem 1rem;
+          font-family: var(--font-body);
+          font-size: 16px;
+          font-weight: 300;
+          color: var(--text);
+          transition: border-color 150ms ease, box-shadow 150ms ease;
+        </css>
+        <focus>
+          border-color: var(--header);
+          box-shadow: 0 0 0 3px rgba(101, 123, 131, 0.1);
+        </focus>
+      </style>
+    </inputs>
+  </components>
+
+  <layout>
+    <principle>Generous whitespace is essential. Content needs room to breathe. The publication heritage means thoughtful margins; the app nature means clear, tappable targets. Balance editorial elegance with interactive usability.</principle>
+
+    <spacing>
+      <scale>4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px, 96px, 128px</scale>
+      <note>Default to larger spacing. Cramped layouts feel anxious, not witty.</note>
+    </spacing>
+
+    <patterns>
+      <pattern name="hub-grid">
+        <description>Grid of app link cards - responsive, generous gaps</description>
+        <css>
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
+        </css>
+      </pattern>
+      <pattern name="editorial-column">
+        <description>Single column content with comfortable max-width</description>
+        <css>
+          max-width: 720px;
+          margin: 0 auto;
+          padding: 0 24px;
+        </css>
+      </pattern>
+      <pattern name="masthead">
+        <description>Publication-style header with centered title</description>
+        <css>
+          text-align: center;
+          padding: 48px 24px;
+        </css>
+      </pattern>
+    </patterns>
+
+    <container-widths>
+      <width name="narrow" value="540px">For focused reading content</width>
+      <width name="default" value="720px">Standard content column</width>
+      <width name="wide" value="960px">Hub grids and dashboards</width>
+      <width name="full" value="1200px">Maximum content width</width>
+    </container-widths>
+  </layout>
+
+  <iconography>
+    <principle>Friendly line icons with rounded terminals. Think of well-designed app icons that feel approachable. Consistent stroke weight, balanced proportions.</principle>
+
+    <style>
+      <stroke-width>1.5px - 2px</stroke-width>
+      <corners>Rounded (2-4px radius)</corners>
+      <fill>Outline preferred, filled for emphasis</fill>
+      <color>Inherit from text color or use accent for interactive</color>
+    </style>
+
+    <recommendations>
+      <library>Lucide Icons</library>
+      <library>Heroicons (outline)</library>
+      <library>Phosphor Icons</library>
+    </recommendations>
+
+    <avoid>
+      <type>Sharp/angular icon sets</type>
+      <type>Overly detailed illustrations</type>
+      <type>Inconsistent stroke weights</type>
+    </avoid>
+  </iconography>
+
+  <decorative>
+    <principle>The fleuron (row of colored dots) is the signature decorative element. Use as a subtle accent - a wink, not a shout. It represents the full spectrum of personality while maintaining restraint.</principle>
+
+    <fleuron>
+      <description>A horizontal row of small colored circles, one for each accent color in sequence</description>
+      <usage>
+        <use>Subtle section dividers</use>
+        <use>Footer accent</use>
+        <use>Loading state indicator</use>
+        <use>Brand signature in masthead</use>
+      </usage>
+      <specifications>
+        <dot-size>6px - 8px</dot-size>
+        <gap>8px - 12px</gap>
+        <colors>red, orange, yellow, pink, green, blue, purple</colors>
+      </specifications>
+      <css-example>
+        .fleuron {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+        }
+        .fleuron-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+        }
+        .fleuron-dot:nth-child(1) { background: #D74E39; }
+        .fleuron-dot:nth-child(2) { background: #DA6800; }
+        .fleuron-dot:nth-child(3) { background: #FFC922; }
+        .fleuron-dot:nth-child(4) { background: #E7B5A0; }
+        .fleuron-dot:nth-child(5) { background: #8AA47D; }
+        .fleuron-dot:nth-child(6) { background: #6CC2FF; }
+        .fleuron-dot:nth-child(7) { background: #9B85B7; }
+      </css-example>
+      <note>As a subtle accent, do not overuse. One or two instances per page maximum.</note>
+    </fleuron>
+
+    <blockquote-indicator>
+      <description>Vertical colored bar indicating pull quotes or callouts</description>
+      <css>
+        border-left: 3px solid var(--orange);
+        padding-left: 1.25rem;
+      </css>
+      <note>Color can vary by context - use any accent color</note>
+    </blockquote-indicator>
+  </decorative>
+</aesthetic>

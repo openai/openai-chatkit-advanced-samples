@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humorist - Novelties</title>
+
+    <!-- Google Fonts: Lexend Family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&family=Lexend+Peta:wght@700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           CSS VARIABLES - LIGHT & DARK MODE
+           ============================================ */
+        :root {
+            /* Light mode (default) */
+            --bg-primary: #FDF6E3;
+            --bg-surface: #F5EFE0;
+            --text-primary: #464646;
+            --text-secondary: #657B83;
+            --text-muted: #93A1A1;
+            --border-color: rgba(101, 123, 131, 0.1);
+            --border-color-hover: rgba(101, 123, 131, 0.2);
+
+            /* Accent Spectrum (same in both modes) */
+            --red: #D74E39;
+            --orange: #DA6800;
+            --yellow: #FFC922;
+            --pink: #E7B5A0;
+            --green: #8AA47D;
+            --blue: #6CC2FF;
+            --purple: #9B85B7;
+
+            /* Typography */
+            --font-display: 'Lexend Giga', sans-serif;
+            --font-emphasis: 'Lexend Peta', sans-serif;
+            --font-body: 'Lexend', sans-serif;
+
+            /* Spacing */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-2xl: 64px;
+            --space-3xl: 96px;
+
+            /* Shadows */
+            --shadow-subtle: 0 1px 3px rgba(70, 70, 70, 0.04);
+            --shadow-medium: 0 4px 16px rgba(70, 70, 70, 0.06);
+            --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
+        }
+
+        /* Dark mode - respects prefers-color-scheme */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1a1a;
+                --bg-surface: #2d2d2d;
+                --text-primary: #E8E8E8;
+                --text-secondary: #A8A8A8;
+                --text-muted: #6B6B6B;
+                --border-color: rgba(168, 168, 168, 0.1);
+                --border-color-hover: rgba(168, 168, 168, 0.2);
+
+                /* Shadows - lighter for dark mode */
+                --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+                --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+                --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        /* Dark mode - class-based toggle */
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-surface: #2d2d2d;
+            --text-primary: #E8E8E8;
+            --text-secondary: #A8A8A8;
+            --text-muted: #6B6B6B;
+            --border-color: rgba(168, 168, 168, 0.1);
+            --border-color-hover: rgba(168, 168, 168, 0.2);
+
+            /* Shadows - lighter for dark mode */
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color-scheme: light dark;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 200ms ease, color 200ms ease;
+        }
+
+        /* ============================================
+           THIN NAVBAR WITH LOGIN/ABOUT
+           ============================================ */
+        .navbar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 200ms ease, border-color 200ms ease;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .navbar-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .navbar-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(16px, 5vw, 18px);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .navbar-title {
+                display: none;
+            }
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-left: auto;
+        }
+
+        .navbar-link {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: clamp(13px, 3vw, 15px);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 200ms ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-link:hover {
+            color: var(--text-primary);
+            background: var(--border-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            min-width: 44px;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
+        /* ============================================
+           LAYOUT STRUCTURE
+           ============================================ */
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(24px, 8vw, 48px) clamp(16px, 5vw, 32px) clamp(48px, 10vw, 96px);
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ============================================
+           MASTHEAD
+           ============================================ */
+        .masthead {
+            text-align: center;
+            margin-bottom: clamp(24px, 6vw, 48px);
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
+        }
+
+        .masthead-title {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(36px, 10vw, 56px);
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+            line-height: 1.1;
+        }
+
+        .masthead-subtitle {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(16px, 4vw, 20px);
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: clamp(16px, 4vw, 24px);
+        }
+
+        /* Fleuron - Signature Decorative Element */
+        .fleuron {
+            display: flex;
+            gap: clamp(8px, 2vw, 10px);
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .fleuron-dot {
+            width: clamp(5px, 1.5vw, 7px);
+            height: clamp(5px, 1.5vw, 7px);
+            border-radius: 50%;
+            animation: fleuron-appear 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .fleuron-dot:nth-child(1) {
+            background: var(--red);
+            animation-delay: 300ms;
+        }
+        .fleuron-dot:nth-child(2) {
+            background: var(--orange);
+            animation-delay: 350ms;
+        }
+        .fleuron-dot:nth-child(3) {
+            background: var(--yellow);
+            animation-delay: 400ms;
+        }
+        .fleuron-dot:nth-child(4) {
+            background: var(--pink);
+            animation-delay: 450ms;
+        }
+        .fleuron-dot:nth-child(5) {
+            background: var(--green);
+            animation-delay: 500ms;
+        }
+        .fleuron-dot:nth-child(6) {
+            background: var(--blue);
+            animation-delay: 550ms;
+        }
+        .fleuron-dot:nth-child(7) {
+            background: var(--purple);
+            animation-delay: 600ms;
+        }
+
+        @keyframes fleuron-appear {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ============================================
+           AGENT CARDS GRID
+           ============================================ */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 100vw, 340px), 1fr));
+            gap: clamp(16px, 4vw, 32px);
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .agent-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: clamp(16px, 3vw, 20px);
+            padding: clamp(16px, 4vw, 32px);
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 3vw, 24px);
+            min-height: 180px;
+            position: relative;
+            overflow: hidden;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .agent-card:nth-child(1) { animation-delay: 200ms; }
+        .agent-card:nth-child(2) { animation-delay: 250ms; }
+        .agent-card:nth-child(3) { animation-delay: 300ms; }
+        .agent-card:nth-child(4) { animation-delay: 350ms; }
+        .agent-card:nth-child(5) { animation-delay: 400ms; }
+        .agent-card:nth-child(6) { animation-delay: 450ms; }
+        .agent-card:nth-child(7) { animation-delay: 500ms; }
+
+        .agent-card:hover {
+            transform: translateY(clamp(-2px, -1vw, -4px));
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--border-color-hover);
+        }
+
+        .agent-card:active {
+            transform: translateY(clamp(-1px, -0.5vw, -2px));
+        }
+
+        /* Accent Indicator Dot */
+        .agent-indicator {
+            width: clamp(12px, 2vw, 16px);
+            height: clamp(12px, 2vw, 16px);
+            border-radius: 50%;
+            position: absolute;
+            top: clamp(12px, 3vw, 24px);
+            right: clamp(12px, 3vw, 24px);
+            transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .agent-card:hover .agent-indicator {
+            transform: scale(1.4);
+        }
+
+        /* Agent Content */
+        .agent-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 2vw, 16px);
+        }
+
+        .agent-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(20px, 5vw, 28px);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .agent-description {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(14px, 3.5vw, 16px);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+        }
+
+        /* Individual Agent Colors */
+        .agent-card[data-agent="news"] .agent-indicator { background: var(--red); }
+        .agent-card[data-agent="metro"] .agent-indicator { background: var(--orange); }
+        .agent-card[data-agent="cupid"] .agent-indicator { background: var(--pink); }
+        .agent-card[data-agent="cat"] .agent-indicator { background: var(--yellow); }
+        .agent-card[data-agent="travel"] .agent-indicator { background: var(--blue); }
+        .agent-card[data-agent="support"] .agent-indicator { background: var(--green); }
+        .agent-card[data-agent="advisor"] .agent-indicator { background: var(--purple); }
+
+        @keyframes gentle-enter {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            margin-top: clamp(48px, 8vw, 96px);
+            padding-top: clamp(16px, 4vw, 32px);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 1200px;
+            transition: border-color 200ms ease;
+        }
+
+        .footer .fleuron {
+            margin-bottom: clamp(12px, 3vw, 24px);
+        }
+
+        .footer .fleuron-dot {
+            animation: none;
+            opacity: 1;
+        }
+
+        .footer-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(12px, 2.5vw, 14px);
+            color: var(--text-muted);
+            letter-spacing: 0.01em;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: var(--space-xs) var(--space-sm);
+                gap: var(--space-xs);
+            }
+
+            .navbar-left {
+                gap: var(--space-xs);
+            }
+
+            .navbar-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .navbar-right {
+                gap: var(--space-sm);
+            }
+
+            .navbar-link {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+
+            .agents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-wrapper {
+                padding: var(--space-md) var(--space-sm) var(--space-xl);
+            }
+
+            .navbar {
+                padding: 8px 12px;
+            }
+
+            .navbar-title {
+                font-size: 14px;
+            }
+
+            .navbar-link {
+                font-size: 12px;
+                padding: 4px 8px;
+                min-height: 40px;
+            }
+
+            .agent-card {
+                min-height: 160px;
+            }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Thin Navbar with Login/About -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <svg class="navbar-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="25" cy="7" r="4" fill="currentColor" opacity="0.8"/>
+                <circle cx="7" cy="25" r="4" fill="currentColor" opacity="0.6"/>
+                <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.7"/>
+                <circle cx="7" cy="7" r="4" fill="currentColor" opacity="0.75"/>
+                <circle cx="25" cy="25" r="4" fill="currentColor" opacity="0.7"/>
+            </svg>
+            <span class="navbar-title">The Humorist</span>
+        </div>
+        <div class="navbar-right">
+            <button class="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+                <svg id="sun-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="moon-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                </svg>
+            </button>
+            <a href="./humorist-about-v01.html" class="navbar-link">About</a>
+            <a href="/login" class="navbar-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <!-- Masthead -->
+        <section class="masthead">
+            <h1 class="masthead-title">Humorist</h1>
+            <p class="masthead-subtitle">Novelties.</p>
+
+            <!-- Fleuron -->
+            <div class="fleuron" role="presentation" aria-hidden="true">
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+            </div>
+        </section>
+
+        <!-- Agent Cards Grid -->
+        <main class="agents-grid">
+            <a href="/news-guide" class="agent-card" data-agent="news">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">News Guide</h2>
+                    <p class="agent-description">Your witty companion through the daily headlines</p>
+                </div>
+            </a>
+
+            <a href="/metro-map" class="agent-card" data-agent="metro">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Metro Map</h2>
+                    <p class="agent-description">Navigate the city with friendly intelligence</p>
+                </div>
+            </a>
+
+            <a href="/cupid" class="agent-card" data-agent="cupid">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Cupid</h2>
+                    <p class="agent-description">Astrological compatibility with cosmic charm</p>
+                </div>
+            </a>
+
+            <a href="/cat-lounge" class="agent-card" data-agent="cat">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Cat Lounge</h2>
+                    <p class="agent-description">Adopt your perfect feline friend with personality</p>
+                </div>
+            </a>
+
+            <a href="/travel-planner" class="agent-card" data-agent="travel">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Travel Planner</h2>
+                    <p class="agent-description">Adventures curated with care and curiosity</p>
+                </div>
+            </a>
+
+            <a href="/customer-support" class="agent-card" data-agent="support">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Support Agent</h2>
+                    <p class="agent-description">Help that's actually helpful and human</p>
+                </div>
+            </a>
+
+            <a href="/wisdom-advisor" class="agent-card" data-agent="advisor">
+                <span class="agent-indicator"></span>
+                <div class="agent-content">
+                    <h2 class="agent-name">Wisdom Advisor</h2>
+                    <p class="agent-description">Thoughtful guidance with a gentle touch</p>
+                </div>
+            </a>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="fleuron" role="presentation" aria-hidden="true">
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+                <span class="fleuron-dot"></span>
+            </div>
+            <p class="footer-text">© 2025 The Humorist. AI agents with intelligence and personality.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            var html = document.documentElement;
+            var sunIcon = document.getElementById('sun-icon');
+            var moonIcon = document.getElementById('moon-icon');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                html.classList.add('dark');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aesthetic name="newyorker" version="1.0">
+  <meta>
+    <title>The New Yorker Literary</title>
+    <description>Understated elegance meets stark editorial drama. Eustace Tilley sophistication - refined typography, intellectual restraint, subtle wit. High contrast black and white with surgical precision.</description>
+    <influences>
+      <influence>The New Yorker magazine (1925-present)</influence>
+      <influence>Rea Irvin's Eustace Tilley</influence>
+      <influence>Editorial broadsheet design</influence>
+      <influence>Literary journals and quarterlies</influence>
+    </influences>
+    <mood>Intellectual, arch, sophisticated, dramatic, restrained</mood>
+  </meta>
+
+  <typography>
+    <principle>Typography IS the design. Every letterform matters. Favor classical proportions and generous whitespace.</principle>
+
+    <fonts>
+      <font role="display" name="Playfair Display" fallback="Georgia, serif" weight="700,900">
+        <usage>Headlines, titles, dramatic moments</usage>
+        <note>High contrast serif with sharp, refined hairlines</note>
+      </font>
+      <font role="body" name="Libre Baskerville" fallback="Baskerville, Georgia, serif" weight="400,700">
+        <usage>Body text, dialogue, narrative prose</usage>
+        <note>Optimized for screen reading while retaining classical elegance</note>
+      </font>
+      <font role="accent" name="Cormorant Garamond" fallback="Garamond, serif" weight="300,400,600">
+        <usage>Pull quotes, captions, subtle emphasis</usage>
+        <note>Lighter, more delicate for supporting text</note>
+      </font>
+      <font role="ui" name="Spectral" fallback="Times New Roman, serif" weight="400,500">
+        <usage>UI elements, labels, metadata</usage>
+        <note>Readable at small sizes while maintaining serif character</note>
+      </font>
+    </fonts>
+
+    <avoid>
+      <family>Inter</family>
+      <family>Roboto</family>
+      <family>Space Grotesk</family>
+      <family>Arial</family>
+      <family>Helvetica</family>
+      <family>system-ui</family>
+      <reason>Sans-serif fonts destroy the literary atmosphere. This aesthetic is uncompromisingly serif.</reason>
+    </avoid>
+
+    <scale>
+      <size name="display-xl" value="3.5rem" line-height="1.1" letter-spacing="-0.02em"/>
+      <size name="display" value="2.5rem" line-height="1.15" letter-spacing="-0.015em"/>
+      <size name="headline" value="1.75rem" line-height="1.25" letter-spacing="-0.01em"/>
+      <size name="subhead" value="1.25rem" line-height="1.35" letter-spacing="0"/>
+      <size name="body" value="1.0625rem" line-height="1.65" letter-spacing="0.01em"/>
+      <size name="caption" value="0.8125rem" line-height="1.5" letter-spacing="0.02em"/>
+      <size name="label" value="0.6875rem" line-height="1.4" letter-spacing="0.08em" transform="uppercase"/>
+    </scale>
+  </typography>
+
+  <color>
+    <principle>Stark, dramatic, uncompromising. Black ink on white paper. Color is earned - use sparingly for maximum impact.</principle>
+
+    <palette>
+      <!-- Core: The B&W foundation -->
+      <color name="ink" value="#0D0D0D" role="primary-text">
+        <description>Rich black ink - not pure #000, but close. Authoritative.</description>
+      </color>
+      <color name="paper" value="#FAFAFA" role="background">
+        <description>Bright white paper with the faintest warmth</description>
+      </color>
+      <color name="newsprint" value="#F5F5F5" role="background-alt">
+        <description>Slightly off-white for layered surfaces</description>
+      </color>
+
+      <!-- Grays: The editorial spectrum -->
+      <color name="charcoal" value="#2B2B2B" role="secondary-text">
+        <description>Dark gray for secondary content</description>
+      </color>
+      <color name="graphite" value="#4A4A4A" role="tertiary-text">
+        <description>Medium gray for metadata, captions</description>
+      </color>
+      <color name="silver" value="#9A9A9A" role="muted">
+        <description>Light gray for disabled states, subtle dividers</description>
+      </color>
+      <color name="ash" value="#E5E5E5" role="border">
+        <description>Hairline rules and borders</description>
+      </color>
+
+      <!-- Accent: The New Yorker red (earned, not default) -->
+      <color name="vermillion" value="#E63946" role="accent">
+        <description>Classic editorial red. Use for: active states, critical moments, Cupid's arrow</description>
+      </color>
+      <color name="vermillion-muted" value="#D4535F" role="accent-hover">
+        <description>Slightly desaturated for hover states</description>
+      </color>
+    </palette>
+
+    <semantic>
+      <token name="--color-text-primary" value="var(--ink)"/>
+      <token name="--color-text-secondary" value="var(--charcoal)"/>
+      <token name="--color-text-muted" value="var(--graphite)"/>
+      <token name="--color-bg-primary" value="var(--paper)"/>
+      <token name="--color-bg-surface" value="var(--newsprint)"/>
+      <token name="--color-border" value="var(--ash)"/>
+      <token name="--color-accent" value="var(--vermillion)"/>
+    </semantic>
+  </color>
+
+  <motion>
+    <principle>Restrained and purposeful. Movement should feel like turning pages, not bouncing balls. Elegance over energy.</principle>
+
+    <animations>
+      <animation name="page-enter" duration="400ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Content fades up from below like a revealed page</description>
+        <keyframes>
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        </keyframes>
+      </animation>
+
+      <animation name="typewriter" duration="50ms" easing="steps(1)">
+        <description>Text reveals character by character</description>
+        <usage>Dramatic dialogue moments, scene introductions</usage>
+      </animation>
+
+      <animation name="rule-draw" duration="600ms" easing="cubic-bezier(0.25, 0.1, 0.25, 1)">
+        <description>Horizontal rules draw themselves from left to right</description>
+        <keyframes>
+          from { transform: scaleX(0); transform-origin: left; }
+          to { transform: scaleX(1); }
+        </keyframes>
+      </animation>
+
+      <animation name="fade-subtle" duration="200ms" easing="ease-out">
+        <description>Subtle opacity transitions for hover states</description>
+      </animation>
+    </animations>
+
+    <stagger>
+      <pattern name="editorial-reveal" base-delay="80ms" increment="40ms">
+        <description>Content blocks reveal in sequence like a magazine spread unfolding</description>
+      </pattern>
+    </stagger>
+
+    <avoid>
+      <effect>Bounce</effect>
+      <effect>Elastic overshoot</effect>
+      <effect>Playful wiggles</effect>
+      <effect>Particle effects</effect>
+      <reason>This is a literary magazine, not a children's app</reason>
+    </avoid>
+  </motion>
+
+  <backgrounds>
+    <principle>White space is sacred. Backgrounds should recede, never compete. Texture is optional and subtle.</principle>
+
+    <treatments>
+      <treatment name="paper-base">
+        <css>background: var(--paper);</css>
+        <description>Clean white - the default</description>
+      </treatment>
+
+      <treatment name="editorial-surface">
+        <css>
+          background: var(--newsprint);
+          box-shadow: inset 0 1px 0 var(--ash);
+        </css>
+        <description>Slightly recessed surface for cards and panels</description>
+      </treatment>
+
+      <treatment name="crosshatch-subtle">
+        <css>
+          background:
+            var(--paper)
+            repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 2px,
+              rgba(0,0,0,0.02) 2px,
+              rgba(0,0,0,0.02) 3px
+            );
+        </css>
+        <description>Barely-visible crosshatch suggesting engraved illustration</description>
+      </treatment>
+
+      <treatment name="ruled-paper">
+        <css>
+          background:
+            var(--paper)
+            repeating-linear-gradient(
+              to bottom,
+              transparent,
+              transparent 1.625rem,
+              var(--ash) 1.625rem,
+              var(--ash) calc(1.625rem + 1px)
+            );
+        </css>
+        <description>Faint horizontal rules like a composition notebook</description>
+      </treatment>
+    </treatments>
+
+    <avoid>
+      <pattern>Gradients (except functional overlays)</pattern>
+      <pattern>Blur/glassmorphism</pattern>
+      <pattern>Vivid colors in backgrounds</pattern>
+      <pattern>Busy patterns</pattern>
+    </avoid>
+  </backgrounds>
+
+  <components>
+    <principle>Every element should look like it belongs in a beautifully typeset magazine. Borders are hairlines. Corners are sharp or gently rounded - never pill-shaped.</principle>
+
+    <cards>
+      <style name="editorial-card">
+        <css>
+          background: var(--paper);
+          border: 1px solid var(--ash);
+          border-radius: 2px;
+          padding: 1.5rem;
+        </css>
+      </style>
+    </cards>
+
+    <buttons>
+      <style name="primary">
+        <css>
+          background: var(--ink);
+          color: var(--paper);
+          font-family: var(--font-ui);
+          font-size: var(--size-label);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 0.875rem 1.75rem;
+          border: none;
+          border-radius: 0;
+        </css>
+        <hover>
+          background: var(--charcoal);
+        </hover>
+      </style>
+      <style name="ghost">
+        <css>
+          background: transparent;
+          color: var(--ink);
+          border: 1px solid var(--ink);
+          border-radius: 0;
+        </css>
+      </style>
+    </buttons>
+
+    <dividers>
+      <style name="hairline">
+        <css>height: 1px; background: var(--ash);</css>
+      </style>
+      <style name="editorial-rule">
+        <css>height: 2px; background: var(--ink); width: 3rem;</css>
+        <description>Short, bold rule used as a section marker</description>
+      </style>
+      <style name="double-rule">
+        <css>
+          height: 4px;
+          background: linear-gradient(
+            to bottom,
+            var(--ink) 0px,
+            var(--ink) 1px,
+            transparent 1px,
+            transparent 3px,
+            var(--ink) 3px,
+            var(--ink) 4px
+          );
+        </css>
+        <description>Classic double rule for major section breaks</description>
+      </style>
+    </dividers>
+
+    <badges>
+      <style name="astrological">
+        <css>
+          display: inline-flex;
+          align-items: center;
+          gap: 0.25rem;
+          padding: 0.25rem 0.5rem;
+          background: transparent;
+          border: 1px solid var(--graphite);
+          border-radius: 0;
+          font-family: var(--font-ui);
+          font-size: var(--size-caption);
+          color: var(--charcoal);
+        </css>
+        <description>Stark, outlined badges for astrological placements</description>
+      </style>
+    </badges>
+  </components>
+
+  <layout>
+    <principle>Magazine-inspired grids. Generous margins. Let content breathe. Asymmetry can be powerful when intentional.</principle>
+
+    <spacing>
+      <scale>4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px, 96px</scale>
+      <note>Prefer larger spacing. Cramped layouts betray the aesthetic.</note>
+    </spacing>
+
+    <patterns>
+      <pattern name="magazine-spread">
+        <description>Two-column layout with generous gutter, asymmetric content weighting</description>
+      </pattern>
+      <pattern name="editorial-stack">
+        <description>Single column with large margins, content centered or left-aligned</description>
+      </pattern>
+    </patterns>
+  </layout>
+
+  <iconography>
+    <principle>Line illustrations over solid icons. Think New Yorker spot illustrations - refined, witty, hand-drawn quality.</principle>
+
+    <style>
+      <stroke-width>1.5px</stroke-width>
+      <fill>none (outline only)</fill>
+      <corners>Slightly rounded or sharp</corners>
+    </style>
+
+    <avoid>
+      <type>Filled/solid icons</type>
+      <type>Emoji (except astrological symbols)</type>
+      <type>Colorful illustrations</type>
+    </avoid>
+  </iconography>
+</aesthetic>
