@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aesthetic name="seventies-occult" version="1.0">
+  <meta>
+    <title>1970s Occult</title>
+    <description>Counterculture mysticism meets cosmic consciousness. Zodiac paperback covers, psychedelic earth tones, and the earnest spirituality of the Me Decade. Linda Goodman's Sun Signs energy.</description>
+    <influences>
+      <influence>Linda Goodman's Sun Signs (1968)</influence>
+      <influence>1970s zodiac paperbacks</influence>
+      <influence>Psychedelic poster art</influence>
+      <influence>Herb Lubalin typography</influence>
+      <influence>Earth Day aesthetic</influence>
+    </influences>
+    <mood>Mystical, earthy, cosmic, warm, countercultural</mood>
+  </meta>
+
+  <typography>
+    <principle>Groovy meets mystical. Bold display faces with personality, warm body text that invites you in. Think zodiac book covers and album art.</principle>
+
+    <fonts>
+      <font role="display" name="Fraunces" fallback="Georgia, serif" weight="700,900">
+        <usage>Headlines, zodiac signs, dramatic moments</usage>
+        <note>Soft, 'wonky' serif with 70s character</note>
+      </font>
+      <font role="body" name="Newsreader" fallback="Georgia, serif" weight="400,500">
+        <usage>Body text - inviting and readable like a paperback</usage>
+        <note>Newspaper-inspired serif, warm and familiar</note>
+      </font>
+      <font role="accent" name="Vollkorn" fallback="Georgia, serif" weight="400,700">
+        <usage>Quotes, mystical text, emphasis</usage>
+        <note>Warm, slightly quirky serif</note>
+      </font>
+      <font role="ui" name="Work Sans" fallback="sans-serif" weight="400,500,600">
+        <usage>UI elements, labels - clean contrast</usage>
+        <note>Friendly sans-serif for functional text</note>
+      </font>
+    </fonts>
+
+    <avoid>
+      <family>Inter</family>
+      <family>Roboto</family>
+      <family>Arial</family>
+      <family>Helvetica</family>
+      <reason>Too cold and corporate for this mystical, warm aesthetic</reason>
+    </avoid>
+
+    <scale>
+      <size name="display-xl" value="3.5rem" line-height="1.05" letter-spacing="-0.01em"/>
+      <size name="display" value="2.5rem" line-height="1.1" letter-spacing="0"/>
+      <size name="headline" value="1.75rem" line-height="1.2" letter-spacing="0"/>
+      <size name="subhead" value="1.25rem" line-height="1.35" letter-spacing="0.01em"/>
+      <size name="body" value="1.0625rem" line-height="1.7" letter-spacing="0.01em"/>
+      <size name="caption" value="0.875rem" line-height="1.5" letter-spacing="0.02em"/>
+      <size name="label" value="0.75rem" line-height="1.4" letter-spacing="0.06em" transform="uppercase"/>
+    </scale>
+  </typography>
+
+  <color>
+    <principle>Earth tones meet cosmic mystery. Burnt oranges, harvest golds, avocado greens - grounded by deep purples and midnight blues that suggest the cosmos.</principle>
+
+    <palette>
+      <!-- Core: Earth foundation -->
+      <color name="soil" value="#2D2418" role="primary-text">
+        <description>Rich earth brown-black</description>
+      </color>
+      <color name="parchment" value="#F5EEE0" role="background">
+        <description>Aged paper cream - like a vintage paperback</description>
+      </color>
+      <color name="sand" value="#E8DECE" role="background-alt">
+        <description>Sandy surface color</description>
+      </color>
+
+      <!-- Earth spectrum -->
+      <color name="umber" value="#5C4033" role="secondary-text">
+        <description>Raw umber brown</description>
+      </color>
+      <color name="clay" value="#8B6914" role="tertiary-text">
+        <description>Golden clay tone</description>
+      </color>
+      <color name="dust" value="#B5A590" role="muted">
+        <description>Dusty neutral</description>
+      </color>
+      <color name="hemp" value="#D4C9B5" role="border">
+        <description>Natural fiber tone</description>
+      </color>
+
+      <!-- Accents: Cosmic & earthy -->
+      <color name="harvest" value="#D2691E" role="accent">
+        <description>Burnt sienna/harvest orange - primary accent</description>
+      </color>
+      <color name="gold" value="#B8860B" role="accent-secondary">
+        <description>Dark goldenrod - mystical gold</description>
+      </color>
+      <color name="avocado" value="#568203" role="accent-earth">
+        <description>70s avocado green</description>
+      </color>
+      <color name="cosmic-purple" value="#4A2C6A" role="accent-mystic">
+        <description>Deep mystical purple</description>
+      </color>
+      <color name="midnight" value="#1A1A3E" role="accent-dark">
+        <description>Cosmic midnight blue</description>
+      </color>
+    </palette>
+
+    <semantic>
+      <token name="--color-text-primary" value="var(--soil)"/>
+      <token name="--color-text-secondary" value="var(--umber)"/>
+      <token name="--color-text-muted" value="var(--clay)"/>
+      <token name="--color-bg-primary" value="var(--parchment)"/>
+      <token name="--color-bg-surface" value="var(--sand)"/>
+      <token name="--color-border" value="var(--hemp)"/>
+      <token name="--color-accent" value="var(--harvest)"/>
+    </semantic>
+  </color>
+
+  <motion>
+    <principle>Dreamy, flowing, slightly psychedelic. Like watching incense smoke or gazing at the stars. Nothing abrupt.</principle>
+
+    <animations>
+      <animation name="cosmic-fade" duration="700ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Slow, dreamy fade-in</description>
+        <keyframes>
+          from { opacity: 0; transform: scale(0.98); }
+          to { opacity: 1; transform: scale(1); }
+        </keyframes>
+      </animation>
+
+      <animation name="orbit" duration="20s" easing="linear" iteration="infinite">
+        <description>Slow rotation for decorative celestial elements</description>
+        <keyframes>
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        </keyframes>
+      </animation>
+
+      <animation name="pulse-glow" duration="3s" easing="ease-in-out" iteration="infinite">
+        <description>Subtle pulsing glow for mystical emphasis</description>
+        <keyframes>
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+        </keyframes>
+      </animation>
+
+      <animation name="rise" duration="600ms" easing="cubic-bezier(0.25, 0.1, 0.25, 1)">
+        <description>Content rises like the sun</description>
+        <keyframes>
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        </keyframes>
+      </animation>
+    </animations>
+
+    <stagger>
+      <pattern name="zodiac-reveal" base-delay="100ms" increment="80ms">
+        <description>Unhurried reveal like stars appearing at dusk</description>
+      </pattern>
+    </stagger>
+  </motion>
+
+  <backgrounds>
+    <principle>Textured and warm, suggesting aged paper and cosmic depth. Gradients welcome - think sunset skies and cosmic voids.</principle>
+
+    <treatments>
+      <treatment name="aged-paper">
+        <css>
+          background: var(--parchment);
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        </css>
+        <description>Paper texture like a vintage zodiac book</description>
+      </treatment>
+
+      <treatment name="cosmic-gradient">
+        <css>
+          background: linear-gradient(
+            180deg,
+            var(--parchment) 0%,
+            var(--sand) 60%,
+            rgba(74, 44, 106, 0.1) 100%
+          );
+        </css>
+        <description>Gradient suggesting the transition from earth to cosmos</description>
+      </treatment>
+
+      <treatment name="sunset-glow">
+        <css>
+          background: radial-gradient(
+            ellipse at 50% 100%,
+            rgba(210, 105, 30, 0.1) 0%,
+            transparent 70%
+          ),
+          var(--parchment);
+        </css>
+        <description>Warm glow from below like a horizon sunset</description>
+      </treatment>
+
+      <treatment name="starfield">
+        <css>
+          background: var(--midnight);
+          background-image:
+            radial-gradient(circle at 25% 25%, rgba(255,255,255,0.8) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(255,255,255,0.6) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 1px, transparent 1px);
+          background-size: 100px 100px, 150px 150px, 200px 200px;
+        </css>
+        <description>Dark cosmic background with stars - for dramatic sections</description>
+      </treatment>
+    </treatments>
+  </backgrounds>
+
+  <components>
+    <principle>Organic, rounded, mystical. Zodiac symbols, celestial ornaments, warm borders. Everything should feel like it belongs in a zodiac guidebook.</principle>
+
+    <cards>
+      <style name="zodiac-card">
+        <css>
+          background: var(--parchment);
+          border: 2px solid var(--hemp);
+          border-radius: 12px;
+          padding: 1.5rem;
+          position: relative;
+        </css>
+        <decoration>Optional zodiac corner ornaments</decoration>
+      </style>
+      <style name="cosmic-card">
+        <css>
+          background: linear-gradient(135deg, var(--midnight) 0%, var(--cosmic-purple) 100%);
+          border: 1px solid rgba(184, 134, 11, 0.3);
+          border-radius: 12px;
+          padding: 1.5rem;
+          color: var(--parchment);
+        </css>
+        <description>Dark mystical card for special moments</description>
+      </style>
+    </cards>
+
+    <buttons>
+      <style name="primary">
+        <css>
+          background: var(--harvest);
+          color: var(--parchment);
+          font-family: var(--font-ui);
+          font-size: var(--size-caption);
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          padding: 0.875rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+        </css>
+      </style>
+      <style name="mystic">
+        <css>
+          background: var(--cosmic-purple);
+          color: var(--parchment);
+          border-radius: 8px;
+        </css>
+      </style>
+    </buttons>
+
+    <dividers>
+      <style name="earth-rule">
+        <css>height: 2px; background: var(--hemp);</css>
+      </style>
+      <style name="celestial">
+        <css>
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        </css>
+        <description>Rule with sun/moon/star symbol in center</description>
+      </style>
+    </dividers>
+
+    <badges>
+      <style name="astrological">
+        <css>
+          display: inline-flex;
+          align-items: center;
+          gap: 0.375rem;
+          padding: 0.375rem 0.75rem;
+          background: rgba(210, 105, 30, 0.15);
+          border: 1px solid var(--harvest);
+          border-radius: 6px;
+          font-family: var(--font-ui);
+          font-size: var(--size-caption);
+          font-weight: 500;
+          color: var(--umber);
+        </css>
+        <description>Warm-tinted badges for zodiac placements</description>
+      </style>
+      <style name="element-badge">
+        <variants>
+          <variant name="fire" color="var(--harvest)"/>
+          <variant name="earth" color="var(--avocado)"/>
+          <variant name="air" color="var(--gold)"/>
+          <variant name="water" color="var(--cosmic-purple)"/>
+        </variants>
+      </style>
+    </badges>
+
+    <decorative>
+      <element name="sun-symbol">
+        <description>Radiating sun for fire signs and solar aspects</description>
+      </element>
+      <element name="moon-phases">
+        <description>Moon phase icons for lunar aspects</description>
+      </element>
+      <element name="zodiac-wheel">
+        <description>Simplified zodiac wheel as decorative element</description>
+      </element>
+      <element name="celestial-border">
+        <description>Border with stars, moons, suns as ornaments</description>
+      </element>
+    </decorative>
+  </components>
+
+  <layout>
+    <principle>Centered, contemplative, with room for the mystical. Like opening a zodiac guidebook - inviting you to discover your cosmic destiny.</principle>
+
+    <spacing>
+      <scale>4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px, 96px</scale>
+      <note>Generous spacing creates a meditative feel</note>
+    </spacing>
+  </layout>
+
+  <iconography>
+    <principle>Zodiac symbols are first-class citizens. Celestial imagery - suns, moons, stars, planets. Hand-drawn quality preferred over geometric precision.</principle>
+
+    <style>
+      <stroke-width>1.5-2px</stroke-width>
+      <fill>Both outline and filled versions</fill>
+      <character>Organic, slightly imperfect, mystical</character>
+    </style>
+
+    <special>
+      <zodiac-symbols>All 12 zodiac glyphs should feel era-appropriate</zodiac-symbols>
+      <planet-symbols>Sun, Moon, Mercury, Venus, Mars should be prominent</planet-symbols>
+    </special>
+  </iconography>
+</aesthetic>

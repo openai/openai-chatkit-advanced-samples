@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aesthetic name="humorist" version="2.0">
+  <meta>
+    <title>The Humorist - Witty Warmth</title>
+    <description>Intelligent humor meets approachable warmth. A publication-meets-app-hub aesthetic - editorial sophistication with interactive accessibility. Smart but never pretentious, colorful but never garish. The aesthetic of wit, wisdom, and a knowing wink. Now with full dark mode support.</description>
+    <influences>
+      <influence>McSweeney's literary humor</influence>
+      <influence>Solarized color scheme (Ethan Schoonover)</influence>
+      <influence>1960s educational design</influence>
+      <influence>Penguin paperback covers</influence>
+      <influence>Modern app launchers (Raycast, Linear)</influence>
+      <influence>Sunday supplement magazines</influence>
+    </influences>
+    <mood>Witty, warm, approachable, intelligent, playful-but-refined</mood>
+    <product-type>Publication-style hub with app-like navigation to AI agents</product-type>
+    <screenshots>
+      <screenshot file="humorist-homepage-light-desktop.png" description="Homepage in light mode - desktop view"/>
+      <screenshot file="humorist-homepage-dark-desktop.png" description="Homepage in dark mode - desktop view"/>
+      <screenshot file="humorist-about-light-desktop.png" description="About page (article layout) in light mode"/>
+      <screenshot file="humorist-about-dark-desktop.png" description="About page (article layout) in dark mode"/>
+    </screenshots>
+  </meta>
+
+  <pages>
+    <page name="homepage" file="humorist-homepage-hybrid-v04.html">
+      <description>Main hub page with masthead, agent cards grid, and footer</description>
+      <components>navbar, masthead, agent-cards-grid, footer</components>
+    </page>
+    <page name="about" file="humorist-about-v01.html">
+      <description>Article/reading layout with full typography hierarchy</description>
+      <components>navbar, article-container, article-header, article-body, footer</components>
+    </page>
+  </pages>
+
+  <typography>
+    <principle>Wide geometric sans-serif conveys friendly confidence. The Lexend superfamily provides warmth and readability while maintaining visual hierarchy through width variation. Responsive sizing via clamp() ensures readability across all devices.</principle>
+
+    <fonts>
+      <font role="display" name="Lexend Giga" fallback="sans-serif" weight="400">
+        <usage>Page titles, hero text, masthead</usage>
+        <note>Extra-wide geometric sans. The width commands attention while remaining approachable.</note>
+      </font>
+      <font role="headline" name="Lexend Giga" fallback="sans-serif" weight="600">
+        <usage>Section headers, primary headings, card titles</usage>
+        <note>SemiBold weight in muted color creates visual depth without severity</note>
+      </font>
+      <font role="nav" name="Lexend Giga" fallback="sans-serif" weight="900">
+        <usage>Navigation brand name, app links</usage>
+        <note>Black weight for small but impactful text</note>
+      </font>
+      <font role="emphasis" name="Lexend Peta" fallback="sans-serif" weight="700">
+        <usage>Pull quotes, callouts, emphasized text</usage>
+        <note>Extra-wide for maximum impact. Use sparingly.</note>
+      </font>
+      <font role="body" name="Lexend" fallback="sans-serif" weight="300">
+        <usage>Body text, paragraphs, descriptions</usage>
+        <note>Light weight keeps large body text readable and friendly</note>
+      </font>
+    </fonts>
+
+    <google-fonts-import>
+      <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&amp;family=Lexend+Peta:wght@700&amp;family=Lexend:wght@300;400;500&amp;display=swap"/>
+    </google-fonts-import>
+
+    <avoid>
+      <family>Times New Roman</family>
+      <family>Georgia</family>
+      <family>Playfair Display</family>
+      <family>Courier</family>
+      <reason>Serif fonts undermine the friendly, modern personality. This aesthetic is decisively sans-serif.</reason>
+    </avoid>
+
+    <scale>
+      <note>All sizes use clamp() for fluid responsive scaling</note>
+      <size name="masthead-title" value="clamp(48px, 12vw, 72px)" line-height="1.1" letter-spacing="-0.02em"/>
+      <size name="article-title" value="clamp(32px, 8vw, 48px)" line-height="1.2"/>
+      <size name="h2" value="clamp(24px, 6vw, 32px)" line-height="1.3"/>
+      <size name="h3" value="clamp(20px, 5vw, 24px)" line-height="1.4"/>
+      <size name="card-title" value="clamp(18px, 4vw, 24px)" line-height="1.3"/>
+      <size name="body" value="clamp(16px, 4vw, 18px)" line-height="1.75" letter-spacing="0.01em"/>
+      <size name="card-description" value="clamp(14px, 3vw, 16px)" line-height="1.5"/>
+      <size name="nav" value="14px" line-height="1" letter-spacing="0.01em"/>
+      <size name="caption" value="14px" line-height="1.4" letter-spacing="0.01em"/>
+    </scale>
+  </typography>
+
+  <color>
+    <principle>Warm and welcoming as a foundation, with a rainbow spectrum of accents that bring playfulness without chaos. Colors are soft, never neon. The Solarized-inspired base provides visual comfort for extended reading. Full dark mode support maintains warmth while reducing eye strain.</principle>
+
+    <palette>
+      <!-- Light Mode: Warm Solarized foundation -->
+      <color name="cream" value="#FDF6E3" role="background-light">
+        <description>Warm cream background - easy on eyes, inviting. Solarized base3.</description>
+      </color>
+      <color name="surface-light" value="#F5EFE0" role="surface-light">
+        <description>Slightly darker cream for cards and elevated surfaces</description>
+      </color>
+      <color name="text-light" value="#464646" role="primary-text-light">
+        <description>Soft black - readable without harshness</description>
+      </color>
+      <color name="text-secondary-light" value="#657B83" role="secondary-text-light">
+        <description>Muted blue-gray for headers and secondary content. Solarized base00.</description>
+      </color>
+      <color name="text-muted-light" value="#93A1A1" role="tertiary-text-light">
+        <description>Light gray for captions, metadata. Solarized base1.</description>
+      </color>
+
+      <!-- Dark Mode: Sophisticated dark palette -->
+      <color name="dark-bg" value="#1a1a1a" role="background-dark">
+        <description>Deep charcoal background - comfortable for extended dark mode use</description>
+      </color>
+      <color name="dark-surface" value="#2d2d2d" role="surface-dark">
+        <description>Elevated surface color for cards in dark mode</description>
+      </color>
+      <color name="text-dark" value="#E8E8E8" role="primary-text-dark">
+        <description>Off-white text - softer than pure white for reduced eye strain</description>
+      </color>
+      <color name="text-secondary-dark" value="#A8A8A8" role="secondary-text-dark">
+        <description>Medium gray for secondary content in dark mode</description>
+      </color>
+      <color name="text-muted-dark" value="#6B6B6B" role="tertiary-text-dark">
+        <description>Darker gray for muted text in dark mode</description>
+      </color>
+
+      <!-- Accent spectrum: The rainbow that brings wit and life (same in both modes) -->
+      <color name="red" value="#D74E39" role="accent-primary">
+        <description>Warm coral red - passion, emphasis, primary actions. News Guide indicator.</description>
+      </color>
+      <color name="orange" value="#DA6800" role="accent-warm">
+        <description>Burnt orange - warmth, secondary emphasis. Metro Map indicator.</description>
+      </color>
+      <color name="yellow" value="#FFC922" role="accent-bright">
+        <description>Golden yellow - optimism, highlights, stars. Cat Lounge indicator.</description>
+      </color>
+      <color name="pink" value="#E7B5A0" role="accent-soft">
+        <description>Dusty rose - soft romantic moments, gentle emphasis. Cupid indicator.</description>
+      </color>
+      <color name="green" value="#8AA47D" role="accent-growth">
+        <description>Sage green - positive changes, growth, success. Support Agent indicator.</description>
+      </color>
+      <color name="blue" value="#6CC2FF" role="accent-calm">
+        <description>Sky blue - clarity, communication, air. Travel Planner indicator.</description>
+      </color>
+      <color name="purple" value="#9B85B7" role="accent-mystical">
+        <description>Lavender purple - intuition, creativity, mystery. Wisdom Advisor indicator.</description>
+      </color>
+    </palette>
+
+    <css-variables>
+      <description>CSS custom properties that automatically switch between light and dark modes</description>
+      <example>
+        :root {
+          --bg-primary: #FDF6E3;
+          --bg-surface: #F5EFE0;
+          --text-primary: #464646;
+          --text-secondary: #657B83;
+          --text-muted: #93A1A1;
+          --border-color: rgba(101, 123, 131, 0.1);
+          --border-color-hover: rgba(101, 123, 131, 0.2);
+        }
+
+        html.dark {
+          --bg-primary: #1a1a1a;
+          --bg-surface: #2d2d2d;
+          --text-primary: #E8E8E8;
+          --text-secondary: #A8A8A8;
+          --text-muted: #6B6B6B;
+          --border-color: rgba(168, 168, 168, 0.1);
+          --border-color-hover: rgba(168, 168, 168, 0.2);
+        }
+      </example>
+    </css-variables>
+
+    <fleuron-colors>
+      <description>The signature decorative element - a row of colored dots used as subtle section dividers</description>
+      <sequence>red, orange, yellow, pink, green, blue, purple</sequence>
+      <usage>Section breaks, footer accent, subtle personality marker, masthead decoration</usage>
+    </fleuron-colors>
+  </color>
+
+  <dark-mode>
+    <principle>Dark mode is a first-class citizen, not an afterthought. It maintains the warm, approachable personality while providing comfortable viewing in low-light environments. Accent colors remain vibrant against the dark background.</principle>
+
+    <implementation>
+      <method>Class-based toggle via html.dark class</method>
+      <toggle-button>
+        <location>Navbar, positioned before About link</location>
+        <icons>Lucide sun icon (light mode), Lucide moon icon (dark mode)</icons>
+        <behavior>Click toggles between modes, state persisted in localStorage</behavior>
+      </toggle-button>
+      <persistence>localStorage key: 'theme', values: 'light' | 'dark'</persistence>
+      <default>Light mode (respects system preference on first visit)</default>
+    </implementation>
+
+    <javascript-pattern>
+      <description>Simple, reliable theme toggle implementation</description>
+      <code>
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+          const html = document.documentElement;
+          const isDark = html.classList.toggle('dark');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          updateIcons(isDark);
+        });
+      </code>
+    </javascript-pattern>
+  </dark-mode>
+
+  <motion>
+    <principle>Gentle and friendly. Movement should feel welcoming, like being greeted by a clever friend. A slight bounce is acceptable - this aesthetic has personality. Content should slide in smoothly, never jarring.</principle>
+
+    <animations>
+      <animation name="gentle-enter" duration="600ms" easing="cubic-bezier(0.34, 1.56, 0.64, 1)">
+        <description>Content enters with a friendly slight bounce</description>
+        <keyframes>
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        </keyframes>
+      </animation>
+
+      <animation name="card-hover" duration="300ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Cards lift on hover with elevated shadow</description>
+        <transform>translateY(-4px)</transform>
+        <shadow>var(--shadow-elevated)</shadow>
+      </animation>
+
+      <animation name="fleuron-appear" duration="600ms" easing="cubic-bezier(0.4, 0, 0.2, 1)">
+        <description>Dots appear sequentially with stagger</description>
+        <stagger>50ms</stagger>
+      </animation>
+    </animations>
+
+    <stagger>
+      <pattern name="card-cascade" base-delay="200ms" increment="50ms">
+        <description>Agent cards appear in sequence for playful entrance</description>
+      </pattern>
+    </stagger>
+  </motion>
+
+  <components>
+    <principle>Friendly and touchable. Rounded corners convey approachability. Generous padding gives content room to breathe. Components should feel like well-designed app elements within a publication context.</principle>
+
+    <navbar>
+      <description>Thin, elegant navigation bar with logo, theme toggle, and links</description>
+      <height>60px</height>
+      <layout>
+        <left>Logo icon (5 dots pattern) + "The Humorist" text (hidden on mobile)</left>
+        <right>Theme toggle button + About link + Login link</right>
+      </layout>
+      <border>1px solid var(--border-color) on bottom</border>
+      <responsive>
+        <mobile>Logo text hidden, only icon visible</mobile>
+      </responsive>
+    </navbar>
+
+    <theme-toggle>
+      <description>Button to switch between light and dark modes</description>
+      <style>
+        background: var(--bg-surface);
+        border: none;
+        padding: 8px;
+        border-radius: 6px;
+        min-height: 44px;
+        min-width: 44px;
+        color: var(--text-secondary);
+      </style>
+      <hover>
+        background: var(--border-color);
+        color: var(--text-primary);
+      </hover>
+      <icons>
+        <sun>Lucide sun icon, 20x20, visible in light mode</sun>
+        <moon>Lucide moon icon, 20x20, visible in dark mode</moon>
+      </icons>
+    </theme-toggle>
+
+    <masthead>
+      <description>Publication-style centered header with title and subtitle</description>
+      <layout>Centered text with fleuron decoration below</layout>
+      <title font="Lexend Giga" weight="400" size="clamp(48px, 12vw, 72px)"/>
+      <subtitle font="Lexend" weight="300" color="var(--text-secondary)"/>
+    </masthead>
+
+    <agent-cards>
+      <description>Grid of interactive cards linking to AI agents</description>
+      <grid>
+        <columns>repeat(auto-fit, minmax(280px, 1fr))</columns>
+        <gap>clamp(16px, 4vw, 32px)</gap>
+        <max-width>1200px</max-width>
+      </grid>
+      <card-style>
+        <background>var(--bg-surface)</background>
+        <border>1px solid var(--border-color)</border>
+        <border-radius>clamp(16px, 3vw, 20px)</border-radius>
+        <padding>clamp(16px, 4vw, 32px)</padding>
+        <min-height>180px</min-height>
+      </card-style>
+      <indicator>
+        <description>Colored dot in top-right corner, unique color per agent</description>
+        <size>clamp(12px, 2vw, 16px)</size>
+        <colors>Each agent has assigned accent color</colors>
+      </indicator>
+      <hover>
+        <transform>translateY(-4px)</transform>
+        <shadow>var(--shadow-elevated)</shadow>
+        <border-color>var(--border-color-hover)</border-color>
+      </hover>
+    </agent-cards>
+
+    <article-container>
+      <description>Optimal reading width container for long-form content</description>
+      <max-width>720px</max-width>
+      <padding>clamp(32px, 8vw, 64px) clamp(16px, 5vw, 32px)</padding>
+      <typography>
+        <line-height>1.75</line-height>
+        <paragraph-spacing>var(--space-md)</paragraph-spacing>
+      </typography>
+    </article-container>
+
+    <blockquote>
+      <description>Styled pull quote for emphasis</description>
+      <style>
+        border-left: 4px solid var(--border-color);
+        padding-left: var(--space-md);
+        margin: var(--space-xl) 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      </style>
+    </blockquote>
+
+    <footer>
+      <description>Simple footer with fleuron and copyright</description>
+      <border>1px solid var(--border-color) on top</border>
+      <padding>var(--space-xl) var(--space-md)</padding>
+      <content>Fleuron (7 dots) + copyright text</content>
+    </footer>
+  </components>
+
+  <layout>
+    <principle>Generous whitespace is essential. Content needs room to breathe. The publication heritage means thoughtful margins; the app nature means clear, tappable targets. Balance editorial elegance with interactive usability. Fully responsive with mobile-first approach.</principle>
+
+    <spacing>
+      <scale>
+        <token name="--space-xs" value="8px"/>
+        <token name="--space-sm" value="16px"/>
+        <token name="--space-md" value="24px"/>
+        <token name="--space-lg" value="32px"/>
+        <token name="--space-xl" value="48px"/>
+        <token name="--space-2xl" value="64px"/>
+        <token name="--space-3xl" value="96px"/>
+      </scale>
+      <note>Default to larger spacing. Cramped layouts feel anxious, not witty.</note>
+    </spacing>
+
+    <responsive-breakpoints>
+      <breakpoint name="mobile" max="480px">
+        <adjustments>
+          <item>Navbar title hidden</item>
+          <item>Single column card grid</item>
+          <item>Reduced padding</item>
+        </adjustments>
+      </breakpoint>
+      <breakpoint name="tablet" min="481px" max="768px">
+        <adjustments>
+          <item>Two column card grid where space allows</item>
+          <item>Medium padding</item>
+        </adjustments>
+      </breakpoint>
+      <breakpoint name="desktop" min="769px">
+        <adjustments>
+          <item>Full three column card grid</item>
+          <item>Maximum content width: 1200px</item>
+        </adjustments>
+      </breakpoint>
+    </responsive-breakpoints>
+
+    <container-widths>
+      <width name="article" value="720px">Optimal reading line length (~60-75 characters)</width>
+      <width name="hub" value="1200px">Maximum width for card grids</width>
+    </container-widths>
+  </layout>
+
+  <iconography>
+    <principle>Friendly line icons with rounded terminals. Think of well-designed app icons that feel approachable. Consistent stroke weight, balanced proportions.</principle>
+
+    <style>
+      <stroke-width>2px</stroke-width>
+      <corners>Rounded</corners>
+      <fill>Outline preferred, stroke inherits currentColor</fill>
+    </style>
+
+    <library>Lucide Icons</library>
+    <icons-used>
+      <icon name="sun" usage="Light mode indicator in theme toggle"/>
+      <icon name="moon" usage="Dark mode indicator in theme toggle"/>
+    </icons-used>
+  </iconography>
+
+  <decorative>
+    <principle>The fleuron (row of colored dots) is the signature decorative element. Use as a subtle accent - a wink, not a shout. It represents the full spectrum of personality while maintaining restraint.</principle>
+
+    <fleuron>
+      <description>A horizontal row of small colored circles, one for each accent color in sequence</description>
+      <usage>
+        <use>Masthead decoration (below subtitle)</use>
+        <use>Footer accent (above copyright)</use>
+        <use>Article header decoration</use>
+      </usage>
+      <specifications>
+        <dot-size>7px</dot-size>
+        <gap>10px</gap>
+        <colors>red, orange, yellow, pink, green, blue, purple</colors>
+      </specifications>
+      <css-example>
+        .fleuron {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+        }
+        .fleuron-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+        }
+        .fleuron-dot:nth-child(1) { background: var(--red); }
+        .fleuron-dot:nth-child(2) { background: var(--orange); }
+        .fleuron-dot:nth-child(3) { background: var(--yellow); }
+        .fleuron-dot:nth-child(4) { background: var(--pink); }
+        .fleuron-dot:nth-child(5) { background: var(--green); }
+        .fleuron-dot:nth-child(6) { background: var(--blue); }
+        .fleuron-dot:nth-child(7) { background: var(--purple); }
+      </css-example>
+      <animation>Sequential fade-in with 50ms stagger delay per dot</animation>
+    </fleuron>
+
+    <agent-indicator>
+      <description>Small colored dot in top-right of each agent card</description>
+      <purpose>Visual identifier linking card to specific agent personality</purpose>
+      <assignments>
+        <agent name="News Guide" color="var(--red)"/>
+        <agent name="Metro Map" color="var(--orange)"/>
+        <agent name="Cupid" color="var(--pink)"/>
+        <agent name="Cat Lounge" color="var(--yellow)"/>
+        <agent name="Travel Planner" color="var(--blue)"/>
+        <agent name="Support Agent" color="var(--green)"/>
+        <agent name="Wisdom Advisor" color="var(--purple)"/>
+      </assignments>
+    </agent-indicator>
+  </decorative>
+
+  <accessibility>
+    <principle>All interactive elements must be accessible. Color is never the only indicator. Touch targets are generously sized.</principle>
+
+    <requirements>
+      <item>Minimum 44x44px touch targets for buttons</item>
+      <item>aria-label on icon-only buttons (theme toggle)</item>
+      <item>Sufficient color contrast in both light and dark modes</item>
+      <item>Keyboard navigable interface</item>
+      <item>Respects prefers-color-scheme for initial theme</item>
+    </requirements>
+  </accessibility>
+</aesthetic>

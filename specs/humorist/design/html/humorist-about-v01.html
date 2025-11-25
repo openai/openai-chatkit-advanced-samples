@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About The Humorist - AI Agents with Wit</title>
+
+    <!-- Google Fonts: Lexend Family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&family=Lexend+Peta:wght@700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           CSS VARIABLES - LIGHT & DARK MODE
+           ============================================ */
+        :root {
+            /* Light mode (default) */
+            --bg-primary: #FDF6E3;
+            --bg-surface: #F5EFE0;
+            --text-primary: #464646;
+            --text-secondary: #657B83;
+            --text-muted: #93A1A1;
+            --border-color: rgba(101, 123, 131, 0.1);
+            --border-color-hover: rgba(101, 123, 131, 0.2);
+
+            /* Accent Spectrum (same in both modes) */
+            --red: #D74E39;
+            --orange: #DA6800;
+            --yellow: #FFC922;
+            --pink: #E7B5A0;
+            --green: #8AA47D;
+            --blue: #6CC2FF;
+            --purple: #9B85B7;
+
+            /* Typography */
+            --font-display: 'Lexend Giga', sans-serif;
+            --font-emphasis: 'Lexend Peta', sans-serif;
+            --font-body: 'Lexend', sans-serif;
+
+            /* Spacing */
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-2xl: 64px;
+            --space-3xl: 96px;
+
+            /* Shadows */
+            --shadow-subtle: 0 1px 3px rgba(70, 70, 70, 0.04);
+            --shadow-medium: 0 4px 16px rgba(70, 70, 70, 0.06);
+            --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
+        }
+
+        /* Dark mode - class-based toggle */
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-surface: #2d2d2d;
+            --text-primary: #E8E8E8;
+            --text-secondary: #A8A8A8;
+            --text-muted: #6B6B6B;
+            --border-color: rgba(168, 168, 168, 0.1);
+            --border-color-hover: rgba(168, 168, 168, 0.2);
+
+            /* Shadows - lighter for dark mode */
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color-scheme: light dark;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 200ms ease, color 200ms ease;
+        }
+
+        /* ============================================
+           THIN NAVBAR WITH LOGIN/ABOUT
+           ============================================ */
+        .navbar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 200ms ease, border-color 200ms ease;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .navbar-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .navbar-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(16px, 5vw, 18px);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            white-space: nowrap;
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .navbar-title {
+                display: none;
+            }
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-left: auto;
+        }
+
+        .navbar-link {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: clamp(13px, 3vw, 15px);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 200ms ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-link:hover {
+            color: var(--text-primary);
+            background: var(--border-color);
+        }
+
+        .navbar-link.current {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 200ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            min-width: 44px;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+
+        /* ============================================
+           ARTICLE LAYOUT
+           ============================================ */
+        .page-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(24px, 8vw, 48px) clamp(16px, 5vw, 32px) clamp(48px, 10vw, 96px);
+            width: 100%;
+        }
+
+        .article-container {
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: clamp(32px, 8vw, 64px);
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
+        }
+
+        .article-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(32px, 8vw, 48px);
+            line-height: 1.2;
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.01em;
+        }
+
+        .article-subtitle {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(18px, 4vw, 22px);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            line-height: 1.5;
+        }
+
+        .fleuron {
+            display: flex;
+            gap: clamp(8px, 2vw, 10px);
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .fleuron-dot {
+            width: clamp(5px, 1.5vw, 7px);
+            height: clamp(5px, 1.5vw, 7px);
+            border-radius: 50%;
+            animation: fleuron-appear 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .fleuron-dot:nth-child(1) {
+            background: var(--red);
+            animation-delay: 300ms;
+        }
+        .fleuron-dot:nth-child(2) {
+            background: var(--orange);
+            animation-delay: 350ms;
+        }
+        .fleuron-dot:nth-child(3) {
+            background: var(--yellow);
+            animation-delay: 400ms;
+        }
+        .fleuron-dot:nth-child(4) {
+            background: var(--pink);
+            animation-delay: 450ms;
+        }
+        .fleuron-dot:nth-child(5) {
+            background: var(--green);
+            animation-delay: 500ms;
+        }
+        .fleuron-dot:nth-child(6) {
+            background: var(--blue);
+            animation-delay: 550ms;
+        }
+        .fleuron-dot:nth-child(7) {
+            background: var(--purple);
+            animation-delay: 600ms;
+        }
+
+        @keyframes fleuron-appear {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .article-body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(16px, 4vw, 18px);
+            line-height: 1.75;
+            color: var(--text-primary);
+        }
+
+        .article-body p {
+            margin-bottom: var(--space-md);
+        }
+
+        .article-body h2 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(24px, 6vw, 32px);
+            line-height: 1.3;
+            margin-top: clamp(48px, 10vw, 64px);
+            margin-bottom: var(--space-md);
+            letter-spacing: -0.01em;
+        }
+
+        .article-body h3 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(20px, 5vw, 24px);
+            line-height: 1.4;
+            margin-top: var(--space-xl);
+            margin-bottom: var(--space-sm);
+            letter-spacing: -0.01em;
+        }
+
+        .article-body ul, .article-body ol {
+            margin-bottom: var(--space-md);
+            margin-left: var(--space-lg);
+        }
+
+        .article-body li {
+            margin-bottom: var(--space-xs);
+            line-height: 1.75;
+        }
+
+        .article-body blockquote {
+            border-left: 4px solid var(--border-color);
+            padding-left: var(--space-md);
+            margin: var(--space-xl) 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        .article-body strong {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .article-body em {
+            font-style: italic;
+        }
+
+        .article-body a {
+            color: var(--text-primary);
+            text-decoration: underline;
+            transition: color 200ms ease;
+        }
+
+        .article-body a:hover {
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            margin-top: auto;
+            padding-top: clamp(16px, 4vw, 32px);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            transition: border-color 200ms ease;
+        }
+
+        .footer .fleuron {
+            margin-bottom: clamp(12px, 3vw, 24px);
+        }
+
+        .footer .fleuron-dot {
+            animation: none;
+            opacity: 1;
+        }
+
+        .footer-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: clamp(12px, 2.5vw, 14px);
+            color: var(--text-muted);
+            letter-spacing: 0.01em;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: var(--space-xs) var(--space-sm);
+                gap: var(--space-xs);
+            }
+
+            .navbar-left {
+                gap: var(--space-xs);
+            }
+
+            .navbar-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .navbar-right {
+                gap: var(--space-sm);
+            }
+
+            .navbar-link {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-wrapper {
+                padding: var(--space-md) var(--space-sm) var(--space-xl);
+            }
+
+            .navbar {
+                padding: 8px 12px;
+            }
+
+            .navbar-link {
+                font-size: 12px;
+                padding: 4px 8px;
+                min-height: 40px;
+            }
+
+            .article-body h2 {
+                margin-top: var(--space-xl);
+            }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="./humorist-homepage-hybrid-v04.html" style="display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit;">
+                <svg class="navbar-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="4" fill="#D74E39"/>
+                    <circle cx="25" cy="7" r="4" fill="#DA6800"/>
+                    <circle cx="16" cy="16" r="4" fill="#FFC922"/>
+                    <circle cx="7" cy="25" r="4" fill="#8AA47D"/>
+                    <circle cx="25" cy="25" r="4" fill="#6CC2FF"/>
+                </svg>
+                <span class="navbar-title">The Humorist</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <button class="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+                <svg id="sun-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="moon-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                </svg>
+            </button>
+            <a href="./humorist-homepage-hybrid-v04.html" class="navbar-link">Home</a>
+            <a href="#" class="navbar-link current">About</a>
+            <a href="./index.html#login" class="navbar-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <article class="article-container">
+            <!-- Article Header -->
+            <header class="article-header">
+                <h1 class="article-title">About The Humorist</h1>
+                <p class="article-subtitle">AI agents with wit, wisdom, and personality</p>
+                <div class="fleuron" role="presentation" aria-hidden="true">
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                    <span class="fleuron-dot"></span>
+                </div>
+            </header>
+
+            <!-- Article Body -->
+            <div class="article-body">
+                <p>Welcome to <strong>The Humorist</strong>, where artificial intelligence meets actual charm. We believe that the future of AI doesn't have to be sterile, robotic, or about maximizing engagement metrics. Instead, we've created a collection of intelligent agents designed to be genuinely helpful—and delightfully human in the process.</p>
+
+                <h2>The Origin Story</h2>
+                <p>Once upon a time, a group of bored engineers sat around a café debating an age-old question: "Why is talking to AI so... boring?" The conversation spiraled into a beautiful mess of ideas—what if an AI could make you laugh? What if it could understand context with actual nuance? What if it could feel <em>like a person you'd want to talk to</em>?</p>
+                <p>That café conversation became The Humorist. We started with a simple belief:</p>
+                <blockquote>
+                    "Technology should amplify human connection and intelligence, not replace it. And honestly, life's too short for dull conversations."
+                </blockquote>
+                <p>Today, we're building a suite of AI agents—each with personality, each with purpose, each ready to help you navigate the modern world with a little more wit and wisdom.</p>
+
+                <h2>Our Mission</h2>
+                <p>The Humorist exists at the intersection of <strong>intelligence and personality</strong>. We're not here to replace human judgment, creativity, or friendship. We're here to enhance your daily life through agents that actually understand context, appreciate nuance, and—gasp—can engage in genuine conversation.</p>
+                <p>Our mission is threefold:</p>
+                <ul>
+                    <li><strong>Empower:</strong> Give you tools that make you smarter, better informed, and more capable</li>
+                    <li><strong>Delight:</strong> Make those tools genuinely enjoyable to use, with personality and wit</li>
+                    <li><strong>Connect:</strong> Help you engage with information, ideas, and the world in a more human way</li>
+                </ul>
+
+                <h2>Meet the Agents</h2>
+                <p>Each agent on The Humorist is crafted with a distinct personality and purpose. They're not interchangeable—they're designed to be <em>exactly</em> what you need for their specific domain.</p>
+
+                <h3>News Guide</h3>
+                <p>Your witty companion through the daily headlines. News Guide doesn't just summarize—it contextualizes, explains the "why" behind the news, and occasionally makes you smile while you're learning about world events. Think of it as a friend who actually reads the news and has thoughtful opinions about it.</p>
+
+                <h3>Metro Map</h3>
+                <p>Navigate the city with friendly intelligence. Metro Map understands that getting around isn't just about point A to point B—it's about discovering the neighborhood, finding the best coffee shops, and maybe stumbling upon something unexpected. It's your personal guide with local knowledge and a sense of adventure.</p>
+
+                <h3>Cupid</h3>
+                <p>Astrological compatibility with cosmic charm. Whether you're a believer in the stars or just curious about what the universe thinks of your crush, Cupid brings wisdom, humor, and actual useful insights to questions of the heart. It's equal parts fortune teller, therapist, and your most optimistic friend.</p>
+
+                <h3>Cat Lounge</h3>
+                <p>Adopt your perfect feline friend with personality. Cat Lounge is obsessed—and we mean <em>obsessed</em>—with cats. It helps you find your purr-fect match from available rescues, explains feline behavior, and occasionally waxes poetic about why cats are objectively superior pets. (Other opinions are available, but wrong.)</p>
+
+                <h3>Travel Planner</h3>
+                <p>Adventures curated with care and curiosity. Travel Planner doesn't just book flights—it helps you discover experiences. Whether you're planning a weekend getaway or a multi-month expedition, it understands that great travel is about connection, discovery, and creating memories worth retelling.</p>
+
+                <h3>Support Agent</h3>
+                <p>Help that's actually helpful and human. We all know support chatbots that make you want to scream. Support Agent is different. It listens, understands frustration, and solves problems with genuine care and zero condescension. It's support the way you actually want to receive it.</p>
+
+                <h3>Wisdom Advisor</h3>
+                <p>Thoughtful guidance with a gentle touch. When life gets complicated and you need to talk things through, Wisdom Advisor is there. It combines philosophical insight, practical advice, and genuine empathy. It's like having access to the wisest person you know, but available 24/7.</p>
+
+                <h2>Technology & Approach</h2>
+                <p>Behind the wit and warmth, The Humorist is built on advanced AI architecture designed for genuine understanding. We don't just process keywords—we understand context, nuance, and what you're actually trying to accomplish. Each agent combines:</p>
+                <ul>
+                    <li><strong>Deep language understanding</strong> that grasps context and subtext</li>
+                    <li><strong>Domain expertise</strong> tailored to specific knowledge areas</li>
+                    <li><strong>Personality frameworks</strong> that make interactions feel natural and human</li>
+                    <li><strong>Continuous learning</strong> that makes agents smarter over time</li>
+                </ul>
+                <p>What makes us different isn't just the technology—it's the philosophy behind it. We believe AI should be transparent about its limitations, honest about uncertainty, and humble about what it doesn't know. That's how you build trust.</p>
+
+                <h2>Meet the Team</h2>
+                <p>The Humorist is built by a team of engineers, designers, and thinkers who believe that technology works best when it serves humanity, not the other way around. A few key players:</p>
+                <ul>
+                    <li><strong>Dr. Alex Chen</strong> — Co-founder & Chief Architect. Recovering academic with a passion for making AI more human.</li>
+                    <li><strong>Jordan "J" Martinez</strong> — Creative Director. Wordsmith, personality designer, and the reason our agents don't all sound like robots.</li>
+                    <li><strong>Casey Wong</strong> — Lead Engineer. Builds the infrastructure that makes personality-driven AI actually work at scale.</li>
+                    <li><strong>Morgan Riley</strong> — Head of Research & Ethics. Makes sure we're building responsibly, transparently, and with genuine care.</li>
+                </ul>
+
+                <h2>Get Started</h2>
+                <p>Ready to meet your new favorite AI agents? Head back to the <a href="./">home page</a> and explore. Each agent is designed to be immediately useful, genuinely engaging, and hopefully, a little bit delightful.</p>
+                <p>Welcome to The Humorist. We're excited you're here.</p>
+            </div>
+        </article>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="fleuron" role="presentation" aria-hidden="true">
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+            <span class="fleuron-dot"></span>
+        </div>
+        <p class="footer-text">© 2025 The Humorist. AI agents with intelligence and personality.</p>
+    </footer>
+
+    <script>
+        // Theme management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+                updateIcons(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateIcons(false);
+            }
+        }
+
+        function updateIcons(isDark) {
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            if (isDark) {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        });
+
+        // Initialize on load
+        initTheme();
+    </script>
+</body>
+</html>
