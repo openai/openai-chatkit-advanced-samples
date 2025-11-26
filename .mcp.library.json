@@ -11,6 +11,24 @@
     "chrome-devtools": {
       "command": "npx",
       "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "NanoBanana": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/johnsteven/GITHUB/MCP/mcp-servers/mcps/nano-mcp",
+        "run",
+        "server.py"
+      ]
+    },
+    "GPTChing": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/johnsteven/GITHUB/MCP/mcp-servers/mcps/gptching-mcp",
+        "run",
+        "server.py"
+      ]
     }
   }
 }

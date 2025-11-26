@@ -30,3 +30,5 @@ coverage/
 .obsidian/
 .playwright-mcp/
 .vscode/
+
+specs/humorist/output/
