@@ -132,12 +132,18 @@
             width: 100%;
         }
 
-        .article-container { max-width: 600px; width: 100%; margin: 0 auto; }
+        .article-container { max-width: 720px; width: 100%; margin: 0 auto; }
 
         .article-header {
             text-align: center;
             margin-bottom: clamp(24px, 6vw, 48px);
             animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
+        }
+        .article-logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--space-md);
+            display: block;
         }
 
         .article-title {
@@ -200,6 +206,14 @@
             line-height: 1.3;
             margin-top: var(--space-xl);
             margin-bottom: var(--space-sm);
+        }
+        .agent-heading {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        .agent-heading svg {
+            flex-shrink: 0;
         }
         .article-body ul, .article-body ol { margin-bottom: var(--space-md); margin-left: var(--space-lg); }
         .article-body li { margin-bottom: var(--space-xs); line-height: 1.65; }
@@ -276,6 +290,17 @@
     <div class="page-wrapper">
         <article class="article-container">
             <header class="article-header">
+                <div style="text-align: center; margin-bottom: var(--space-md);">
+                    <svg width="48" height="48" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">
+                        <circle cx="256" cy="254" r="48" fill="#E7B5A0"/>
+                        <circle cx="368" cy="142" r="48" fill="#DA6800"/>
+                        <circle cx="368" cy="255" r="48" fill="#6CC2FF"/>
+                        <circle cx="148" cy="370" r="48" fill="#D74E39"/>
+                        <circle cx="144" cy="142" r="48" fill="#9B85B7"/>
+                        <circle cx="144" cy="254" r="48" fill="#FFC922"/>
+                        <circle cx="368" cy="366" r="48" fill="#8AA47D"/>
+                    </svg>
+                </div>
                 <h1 class="article-title">About The Humorist</h1>
                 <p class="article-subtitle">AI agents with wit, wisdom, and personality</p>
                 <div class="fleuron" role="presentation" aria-hidden="true">
@@ -305,12 +330,48 @@
                 </ul>
 
                 <h2>Meet the Agents</h2>
-                <h3>News Guide</h3>
-                <p>Your witty companion through the daily headlines.</p>
-                <h3>Cupid</h3>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#9B85B7"/>
+                    </svg>
+                    GPTChing
+                </h3>
+                <p>Ancient wisdom from the Book of Changes.</p>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#E7B5A0"/>
+                    </svg>
+                    Cupid
+                </h3>
                 <p>Astrological compatibility with cosmic charm.</p>
-                <h3>Cat Lounge</h3>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#DA6800"/>
+                    </svg>
+                    Metro Map
+                </h3>
+                <p>Navigate the city with friendly intelligence.</p>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#D74E39"/>
+                    </svg>
+                    News Guide
+                </h3>
+                <p>Your witty companion through the daily headlines.</p>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#FFC922"/>
+                    </svg>
+                    Cat Lounge
+                </h3>
                 <p>Adopt your perfect feline friend with personality.</p>
+                <h3 class="agent-heading">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" fill="#8AA47D"/>
+                    </svg>
+                    Support Agent
+                </h3>
+                <p>Help that's actually helpful and human.</p>
 
                 <h2>Get Started</h2>
                 <p>Ready to meet your new favorite AI agents? Head back to the <a href="./humorist-homepage.html">home page</a> and explore.</p>
