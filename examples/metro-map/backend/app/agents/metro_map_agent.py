@@ -274,6 +274,7 @@ async def get_selected_stations(
     ctx: RunContextWrapper[MetroAgentContext],
 ) -> SelectedStationsResult:
     logger.info("[TOOL CALL] get_selected_stations")
+    # This progress update will persist while waiting for the client tool output to be send back to the server.
     await ctx.context.stream(ProgressUpdateEvent(text="Fetching selected stations from the map..."))
     ctx.context.client_tool_call = ClientToolCall(
         name="get_selected_stations",
