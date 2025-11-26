@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Map - The Humorist</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&family=Lexend+Peta:wght@700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* v02-COMPACT: Tighter spacing, smaller radius, denser layout */
+        :root {
+            --bg-primary: #FDF6E3;
+            --bg-surface: #F5EFE0;
+            --text-primary: #464646;
+            --text-secondary: #657B83;
+            --text-muted: #93A1A1;
+            --border-color: rgba(101, 123, 131, 0.1);
+            --border-color-hover: rgba(101, 123, 131, 0.2);
+            --red: #D74E39;
+            --orange: #DA6800;
+            --yellow: #FFC922;
+            --pink: #E7B5A0;
+            --green: #8AA47D;
+            --blue: #6CC2FF;
+            --purple: #9B85B7;
+            --font-display: 'Lexend Giga', sans-serif;
+            --font-body: 'Lexend', sans-serif;
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 20px;
+            --space-lg: 28px;
+            --space-xl: 40px;
+            --shadow-subtle: 0 1px 3px rgba(70, 70, 70, 0.04);
+            --shadow-medium: 0 4px 16px rgba(70, 70, 70, 0.06);
+            --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
+        }
+
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-surface: #2d2d2d;
+            --text-primary: #E8E8E8;
+            --text-secondary: #A8A8A8;
+            --text-muted: #6B6B6B;
+            --border-color: rgba(168, 168, 168, 0.1);
+            --border-color-hover: rgba(168, 168, 168, 0.2);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 200ms ease;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .navbar-left { display: flex; align-items: center; gap: var(--space-sm); }
+        .navbar-icon { width: 24px; height: 24px; }
+        .navbar-title { font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--text-primary); }
+        @media (max-width: 480px) { .navbar-title { display: none; } }
+
+        .navbar-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; }
+        .navbar-link {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-link:hover { color: var(--text-primary); background: var(--border-color); }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 40px;
+            min-width: 40px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { background: var(--border-color); color: var(--text-primary); }
+        .theme-toggle-icon { width: 18px; height: 18px; stroke: currentColor; }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            padding: var(--space-sm);
+            gap: var(--space-sm);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+        }
+
+        /* MAP PANEL */
+        .map-panel {
+            flex: 7;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both;
+        }
+
+        .map-container {
+            flex: 1;
+            background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-primary) 50%, var(--bg-surface) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .map-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .add-station-btn {
+            position: absolute;
+            bottom: var(--space-md);
+            left: var(--space-md);
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 9999px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: var(--shadow-elevated);
+            transition: all 200ms ease;
+            z-index: 10;
+        }
+        .add-station-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(218, 104, 0, 0.3);
+        }
+
+        /* CHAT PANEL */
+        .chat-panel {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both;
+        }
+
+        @media (max-width: 768px) {
+            .map-panel, .chat-panel {
+                flex: 1;
+                min-height: 300px;
+            }
+        }
+
+        .chat-card {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .chat-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-greeting {
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        .chat-greeting-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--space-md);
+            background: rgba(218, 104, 0, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-greeting-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--orange);
+        }
+
+        .chat-greeting-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(20px, 4vw, 24px);
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .chat-greeting-subtitle {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .chat-prompts {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .chat-prompt-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: all 200ms ease;
+        }
+        .chat-prompt-btn:hover {
+            border-color: var(--orange);
+            background: rgba(218, 104, 0, 0.05);
+            transform: translateX(4px);
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .chat-input:focus { border-color: var(--orange); box-shadow: 0 0 0 2px rgba(218, 104, 0, 0.2); }
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .chat-send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms ease;
+            flex-shrink: 0;
+        }
+        .chat-send-button:hover { opacity: 0.9; transform: scale(1.05); }
+        .send-icon { width: 18px; height: 18px; stroke: white; }
+
+        /* Metro Line Styles */
+        .metro-line {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+        .metro-line.orange { stroke: var(--orange); }
+        .metro-line.blue { stroke: var(--blue); }
+        .metro-line.purple { stroke: var(--purple); }
+
+        .station-dot {
+            fill: var(--bg-primary);
+            stroke-width: 3;
+        }
+        .station-dot.orange { stroke: var(--orange); }
+        .station-dot.blue { stroke: var(--blue); }
+        .station-dot.purple { stroke: var(--purple); }
+        .station-dot.transfer {
+            stroke: var(--text-primary);
+            stroke-width: 4;
+        }
+
+        .station-label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            fill: var(--text-secondary);
+        }
+
+        html.dark .station-dot {
+            fill: var(--bg-surface);
+        }
+
+        @keyframes gentle-enter {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="../../humorist-homepage.html" style="display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit;">
+                <svg class="navbar-icon" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="256" cy="254" r="48" fill="#E7B5A0"/>
+                    <circle cx="368" cy="142" r="48" fill="#DA6800"/>
+                    <circle cx="368" cy="255" r="48" fill="#6CC2FF"/>
+                    <circle cx="148" cy="370" r="48" fill="#D74E39"/>
+                    <circle cx="144" cy="142" r="48" fill="#9B85B7"/>
+                    <circle cx="144" cy="254" r="48" fill="#FFC922"/>
+                    <circle cx="368" cy="366" r="48" fill="#8AA47D"/>
+                </svg>
+                <span class="navbar-title">Humorist</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <button class="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+                <svg id="sun-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="moon-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                </svg>
+            </button>
+            <a href="../../humorist-homepage.html" class="navbar-link">Home</a>
+            <a href="../../humorist-about.html" class="navbar-link">About</a>
+            <a href="/login" class="navbar-link">Login</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <!-- Map Panel -->
+        <div class="map-panel">
+            <div class="map-container">
+                <svg class="map-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+                    <!-- Grid pattern for background -->
+                    <defs>
+                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--border-color)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" opacity="0.5"/>
+
+                    <!-- Orange Line (Vertical) -->
+                    <path class="metro-line orange" d="M 200 80 L 200 200 L 200 350 L 200 520"/>
+
+                    <!-- Blue Line (Horizontal) -->
+                    <path class="metro-line blue" d="M 80 300 L 200 300 L 400 300 L 600 300 L 720 300"/>
+
+                    <!-- Purple Line (Diagonal) -->
+                    <path class="metro-line purple" d="M 120 120 L 200 200 L 400 300 L 550 400 L 680 480"/>
+
+                    <!-- Station: North End (Orange) -->
+                    <circle class="station-dot orange" cx="200" cy="80" r="10"/>
+                    <text class="station-label" x="220" y="85">North End</text>
+
+                    <!-- Station: University (Orange + Purple transfer) -->
+                    <circle class="station-dot transfer" cx="200" cy="200" r="12"/>
+                    <text class="station-label" x="220" y="195">University</text>
+                    <text class="station-label" x="220" y="210" style="font-size: 9px; fill: var(--text-muted);">Transfer</text>
+
+                    <!-- Station: Central (Orange + Blue + Purple transfer) -->
+                    <circle class="station-dot transfer" cx="200" cy="300" r="14"/>
+                    <text class="station-label" x="145" y="340">Central</text>
+
+                    <!-- Station: Harbor (Orange) -->
+                    <circle class="station-dot orange" cx="200" cy="350" r="10"/>
+                    <text class="station-label" x="220" y="355">Harbor</text>
+
+                    <!-- Station: South Bay (Orange) -->
+                    <circle class="station-dot orange" cx="200" cy="520" r="10"/>
+                    <text class="station-label" x="220" y="525">South Bay</text>
+
+                    <!-- Station: West Gate (Blue) -->
+                    <circle class="station-dot blue" cx="80" cy="300" r="10"/>
+                    <text class="station-label" x="60" y="330">West Gate</text>
+
+                    <!-- Station: Central Park (Blue + Purple) -->
+                    <circle class="station-dot transfer" cx="400" cy="300" r="12"/>
+                    <text class="station-label" x="420" y="295">Central Park</text>
+
+                    <!-- Station: East Side (Blue) -->
+                    <circle class="station-dot blue" cx="600" cy="300" r="10"/>
+                    <text class="station-label" x="620" y="305">East Side</text>
+
+                    <!-- Station: Airport (Blue) -->
+                    <circle class="station-dot blue" cx="720" cy="300" r="10"/>
+                    <text class="station-label" x="680" y="330">Airport</text>
+
+                    <!-- Station: Old Town (Purple) -->
+                    <circle class="station-dot purple" cx="120" cy="120" r="10"/>
+                    <text class="station-label" x="75" y="110">Old Town</text>
+
+                    <!-- Station: Arts District (Purple) -->
+                    <circle class="station-dot purple" cx="550" cy="400" r="10"/>
+                    <text class="station-label" x="570" y="405">Arts District</text>
+
+                    <!-- Station: Sunset (Purple) -->
+                    <circle class="station-dot purple" cx="680" cy="480" r="10"/>
+                    <text class="station-label" x="700" y="485">Sunset</text>
+
+                    <!-- Legend -->
+                    <g transform="translate(600, 80)">
+                        <rect x="0" y="0" width="150" height="100" rx="8" fill="var(--bg-surface)" stroke="var(--border-color)"/>
+                        <text class="station-label" x="12" y="24" style="font-weight: 600; fill: var(--text-primary);">Lines</text>
+                        <line x1="12" y1="40" x2="32" y2="40" stroke="var(--orange)" stroke-width="4" stroke-linecap="round"/>
+                        <text class="station-label" x="42" y="44">Orange Line</text>
+                        <line x1="12" y1="58" x2="32" y2="58" stroke="var(--blue)" stroke-width="4" stroke-linecap="round"/>
+                        <text class="station-label" x="42" y="62">Blue Line</text>
+                        <line x1="12" y1="76" x2="32" y2="76" stroke="var(--purple)" stroke-width="4" stroke-linecap="round"/>
+                        <text class="station-label" x="42" y="80">Purple Line</text>
+                    </g>
+                </svg>
+
+                <button class="add-station-btn">Add station</button>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <div class="chat-card">
+                <div class="chat-content">
+                    <div class="chat-greeting">
+                        <div class="chat-greeting-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <h2 class="chat-greeting-title">Metro Map</h2>
+                        <p class="chat-greeting-subtitle">Navigate the city with friendly intelligence. Ask about routes, stations, or add new locations to the map.</p>
+
+                        <div class="chat-prompts">
+                            <button class="chat-prompt-btn">Show me the Blue Line route</button>
+                            <button class="chat-prompt-btn">How do I get from Central to Airport?</button>
+                            <button class="chat-prompt-btn">What's near University station?</button>
+                            <button class="chat-prompt-btn">Add a new station to the map</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Ask about routes or stations...">
+                    <button class="chat-send-button" aria-label="Send message">
+                        <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+                updateIcons(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateIcons(false);
+            }
+        }
+        function updateIcons(isDark) {
+            document.getElementById('sun-icon').style.display = isDark ? 'none' : 'block';
+            document.getElementById('moon-icon').style.display = isDark ? 'block' : 'none';
+        }
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        });
+        initTheme();
+    </script>
+</body>
+</html>

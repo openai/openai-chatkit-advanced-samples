@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "name": "Hexagram",
+  "template": "{\"type\":\"Card\",\"size\":\"full\",\"children\":[{\"type\":\"Col\",\"align\":\"center\",\"gap\":3,\"padding\":{\"y\":4},\"children\":[{\"type\":\"Title\",\"value\":{{ (symbol) | tojson }},\"size\":\"5xl\",\"textAlign\":\"center\"},{\"type\":\"Title\",\"value\":{{ ((number ~ \" · \" ~ englishName)) | tojson }},\"size\":\"md\"},{\"type\":\"Row\",\"gap\":2,\"children\":[{\"type\":\"Badge\",\"label\":{{ (chinese) | tojson }},\"color\":\"discovery\"},{\"type\":\"Badge\",\"label\":{{ ((\"Pinyin: \" ~ pinyin)) | tojson }}}]},{\"type\":\"Text\",\"value\":{{ (description) | tojson }},\"color\":\"secondary\",\"textAlign\":\"center\"}]}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "symbol": {
+        "type": "string"
+      },
+      "englishName": {
+        "type": "string"
+      },
+      "number": {
+        "type": "string"
+      },
+      "chinese": {
+        "type": "string"
+      },
+      "pinyin": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "symbol",
+      "englishName",
+      "number",
+      "chinese",
+      "pinyin",
+      "description"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Card",
+    "size": "full",
+    "children": [
+      {
+        "type": "Col",
+        "align": "center",
+        "gap": 3,
+        "padding": {
+          "y": 4
+        },
+        "children": [
+          {
+            "type": "Title",
+            "value": "䷀",
+            "size": "5xl",
+            "textAlign": "center"
+          },
+          {
+            "type": "Title",
+            "value": "1 · The Creative / Force",
+            "size": "md"
+          },
+          {
+            "type": "Row",
+            "gap": 2,
+            "children": [
+              {
+                "type": "Badge",
+                "label": "乾",
+                "color": "discovery"
+              },
+              {
+                "type": "Badge",
+                "label": "Pinyin: qián"
+              }
+            ]
+          },
+          {
+            "type": "Text",
+            "value": "Pure creative force and initiating power. Leadership, vision, and continuous development.",
+            "color": "secondary",
+            "textAlign": "center"
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6ImZhMjQxMWJjLTcxYjEtNDc4Ny1iNTNjLTkxOWJjMjEwOWZkNCIsIm5hbWUiOiJIZXhhZ3JhbSAxIENhcmQiLCJ2aWV3IjoiPENhcmQgc2l6ZT1cImZ1bGxcIj5cbiAgPENvbCBhbGlnbj1cImNlbnRlclwiIGdhcD17M30gcGFkZGluZz17eyB5OiA0IH19PlxuICAgIDxUaXRsZSB2YWx1ZT17c3ltYm9sfSBzaXplPVwiNXhsXCIgdGV4dEFsaWduPVwiY2VudGVyXCIgLz5cbiAgICA8VGl0bGUgdmFsdWU9e2Ake251bWJlcn0gwrcgJHtlbmdsaXNoTmFtZX1gfSBzaXplPVwibWRcIiAvPlxuICAgIDxSb3cgZ2FwPXsyfT5cbiAgICAgIDxCYWRnZSBsYWJlbD17Y2hpbmVzZX0gY29sb3I9XCJkaXNjb3ZlcnlcIiAvPlxuICAgICAgPEJhZGdlIGxhYmVsPXtgUGlueWluOiAke3Bpbnlpbn1gfSAvPlxuICAgIDwvUm93PlxuICAgIDxUZXh0IHZhbHVlPXtkZXNjcmlwdGlvbn0gY29sb3I9XCJzZWNvbmRhcnlcIiB0ZXh0QWxpZ249XCJjZW50ZXJcIiAvPlxuICA8L0NvbD5cbjwvQ2FyZD4iLCJkZWZhdWx0U3RhdGUiOnsic3ltYm9sIjoi5LeAIiwiZW5nbGlzaE5hbWUiOiJUaGUgQ3JlYXRpdmUgLyBGb3JjZSIsIm51bWJlciI6IjEiLCJjaGluZXNlIjoi5Lm-IiwicGlueWluIjoicWnDoW4iLCJkZXNjcmlwdGlvbiI6IlB1cmUgY3JlYXRpdmUgZm9yY2UgYW5kIGluaXRpYXRpbmcgcG93ZXIuIExlYWRlcnNoaXAsIHZpc2lvbiwgYW5kIGNvbnRpbnVvdXMgZGV2ZWxvcG1lbnQuIn0sInN0YXRlcyI6W10sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCJcblxuY29uc3QgV2lkZ2V0U3RhdGUgPSB6LnN0cmljdE9iamVjdCh7XG4gIHN5bWJvbDogei5zdHJpbmcoKSxcbiAgZW5nbGlzaE5hbWU6IHouc3RyaW5nKCksXG4gIG51bWJlcjogei5zdHJpbmcoKSxcbiAgY2hpbmVzZTogei5zdHJpbmcoKSxcbiAgcGlueWluOiB6LnN0cmluZygpLFxuICBkZXNjcmlwdGlvbjogei5zdHJpbmcoKSxcbn0pXG5cbmV4cG9ydCBkZWZhdWx0IFdpZGdldFN0YXRlIiwianNvblNjaGVtYSI6e30sInNjaGVtYU1vZGUiOiJ6b2QiLCJzY2hlbWFWYWxpZGl0eSI6InZhbGlkIiwidmlld1ZhbGlkaXR5IjoidmFsaWQiLCJkZWZhdWx0U3RhdGVWYWxpZGl0eSI6InZhbGlkIn0"
+}

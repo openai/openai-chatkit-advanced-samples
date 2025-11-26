@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupid - The Humorist</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&family=Lexend+Peta:wght@700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* v02-COMPACT: Tighter spacing, smaller radius, denser layout */
+        :root {
+            --bg-primary: #FDF6E3;
+            --bg-surface: #F5EFE0;
+            --text-primary: #464646;
+            --text-secondary: #657B83;
+            --text-muted: #93A1A1;
+            --border-color: rgba(101, 123, 131, 0.1);
+            --border-color-hover: rgba(101, 123, 131, 0.2);
+            --red: #D74E39;
+            --orange: #DA6800;
+            --yellow: #FFC922;
+            --pink: #E7B5A0;
+            --green: #8AA47D;
+            --blue: #6CC2FF;
+            --purple: #9B85B7;
+            --font-display: 'Lexend Giga', sans-serif;
+            --font-body: 'Lexend', sans-serif;
+            /* COMPACT spacing */
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 20px;
+            --space-lg: 28px;
+            --space-xl: 40px;
+            --shadow-subtle: 0 1px 3px rgba(70, 70, 70, 0.04);
+            --shadow-medium: 0 4px 16px rgba(70, 70, 70, 0.06);
+            --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
+        }
+
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-surface: #2d2d2d;
+            --text-primary: #E8E8E8;
+            --text-secondary: #A8A8A8;
+            --text-muted: #6B6B6B;
+            --border-color: rgba(168, 168, 168, 0.1);
+            --border-color-hover: rgba(168, 168, 168, 0.2);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 200ms ease;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-left { display: flex; align-items: center; gap: var(--space-sm); }
+        .navbar-icon { width: 24px; height: 24px; }
+        .navbar-title { font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--text-primary); }
+        @media (max-width: 480px) { .navbar-title { display: none; } }
+
+        .navbar-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; }
+        .navbar-link {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-link:hover { color: var(--text-primary); background: var(--border-color); }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 40px;
+            min-width: 40px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { background: var(--border-color); color: var(--text-primary); }
+        .theme-toggle-icon { width: 18px; height: 18px; stroke: currentColor; }
+
+        .cupid-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-md);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .cupid-chat-container {
+            width: 100%;
+            max-width: 720px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both;
+        }
+
+        .cupid-chat-card {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; /* COMPACT */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 360px;
+            max-height: calc(100vh - 100px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            justify-content: center;
+        }
+
+        .agent-intro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--space-sm);
+            padding: var(--space-lg) var(--space-md);
+        }
+
+        .agent-intro .agent-icon {
+            width: clamp(40px, 10vw, 60px);
+            height: clamp(40px, 10vw, 60px);
+            fill: currentColor;
+            margin-bottom: var(--space-xs);
+        }
+
+        .agent-intro .agent-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(24px, 5vw, 34px);
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .agent-intro .agent-subtitle {
+            font-family: var(--font-body);
+            font-size: clamp(14px, 3.5vw, 18px);
+            color: var(--text-secondary);
+            margin: var(--space-xs) 0 0 0;
+        }
+
+        .agent-intro .agent-description {
+            font-family: var(--font-body);
+            font-size: clamp(13px, 3vw, 15px);
+            color: var(--text-muted);
+            margin: var(--space-sm) 0 0 0;
+            max-width: 300px;
+        }
+
+        .agent-intro .agent-play-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-top: var(--space-md);
+            background: var(--pink);
+            border: 1px solid var(--pink);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 14px;
+            cursor: pointer;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 4px;
+            transition: all 200ms ease;
+        }
+        .agent-intro .agent-play-btn:hover { opacity: 0.9; }
+        .agent-intro .agent-play-btn .play-icon { width: 16px; height: 16px; stroke: var(--text-primary); }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .chat-input:focus { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(231, 181, 160, 0.2); }
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .chat-send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--pink);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms ease;
+        }
+        .chat-send-button:hover { opacity: 0.9; transform: scale(1.05); }
+        .send-icon { width: 18px; height: 18px; stroke: var(--text-primary); }
+
+        @keyframes gentle-enter {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="../../humorist-homepage.html" style="display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit;">
+                <svg class="navbar-icon" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="256" cy="254" r="48" fill="#E7B5A0"/>
+                    <circle cx="368" cy="142" r="48" fill="#DA6800"/>
+                    <circle cx="368" cy="255" r="48" fill="#6CC2FF"/>
+                    <circle cx="148" cy="370" r="48" fill="#D74E39"/>
+                    <circle cx="144" cy="142" r="48" fill="#9B85B7"/>
+                    <circle cx="144" cy="254" r="48" fill="#FFC922"/>
+                    <circle cx="368" cy="366" r="48" fill="#8AA47D"/>
+                </svg>
+                <span class="navbar-title">Humorist</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <button class="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+                <svg id="sun-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="moon-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                </svg>
+            </button>
+            <a href="../../humorist-homepage.html" class="navbar-link">Home</a>
+            <a href="../../humorist-about.html" class="navbar-link">About</a>
+            <a href="/login" class="navbar-link">Login</a>
+        </div>
+    </nav>
+
+    <main class="cupid-page">
+        <div class="cupid-chat-container">
+            <div class="cupid-chat-card">
+                <div class="chat-messages">
+                    <div class="agent-intro">
+                        <svg class="agent-icon" viewBox="0 0 1200 1200" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m1168.7 430.61c6.8086-10.82 12.371-22.453 15.863-34.777 3.793-13.395 5.7266-28.039 1.4766-41.566-3-9.5508-9.8789-22.195-21.773-20.613-12.004 1.5977-17.41 15.703-22.465 24.875-5.6016 10.16-11.801 19.992-18.496 29.469-13.312 18.844-28.582 36.242-44.984 52.449-37.418 36.977-80.152 68.254-123.2 98.273-21.418 14.938-43.125 29.449-64.551 44.371-18.227 12.695-42.996 27.57-51.363 49.254-8.7344 22.633 4.5 43.684 5.1055 66.207 0.68359 25.371-19 39.309-36.77 53.762-18.527-16.129-39.074-28.613-62.23-36.918 15.051-23.375 23.316-48.285 25.516-74.855 45.348-20.051 53.035-29.754 59.062-74.121 41.84-27.281 54.145-46.152 61.246-93.766 20.484-17.133 33.273-40.863 27.391-67.992-5.2383-24.156-23.73-40.383-45.898-49.426-6.9375-71.438-66.527-121.74-134.16-135.29-9.3398-1.8711-16.523-2.2031-24.168-8.2031-6.918-5.4258-13.91-10.594-21.562-14.973-14.469-8.2812-30.316-13.973-46.703-16.992-36.133-6.6562-74.777-2.1367-107.66 14.402-33.992-23.199-78.543-36.961-117.51-16.84-15.297 7.8984-27.895 20.973-34.172 37.109-7.8633 20.215-3.8047 39.082 6.0312 57.805-29.156-12.676-58.945 3.5156-68.766 33.07-9.5234 28.656 3.7266 58.121 26.824 75.785-21.617 3.0859-35.707 15.324-32.547 38.336 2.707 19.695 19.742 29.391 37.605 33.602-20.633 4.7188-41.75-3.8086-50.145-23.938-8.7383-20.949 4.1719-41.555 18.051-56.711-34.004 3.3125-50.562 42.844-47.91 72.742 2.918 32.906 25.746 59.871 57.34 68.68-6.4844 24.789-6.3125 51.156 11.117 71.578 14.879 17.43 36.562 21.609 58.332 17.168 5.668 19.355 17.199 32.762 35.418 41.051 3.4375 39.125 17.578 73.414 50.484 100.04-26.273 2.293-49.027 9.8555-69.379 24.328-21.113-13.27-51.426-28.191-59.484-53.84-7.8828-25.078 11.281-50.492 4.418-76.137-6.1562-22.996-29.102-36.645-47.242-49.664-23.195-16.652-47.32-32.043-70.895-48.156-43.504-29.73-86.496-60.938-123.91-98.242-16.758-16.711-32.328-34.637-45.988-53.98-7.6523-10.836-14.695-22.102-21.039-33.754-4.7969-8.8125-11.336-21.297-23.23-20.434-24.699 1.7969-21.578 43.941-17.559 59.719 6.543 25.703 23.152 48.574 40.219 68.367-6.4531-1.6016-15.543-0.71875-14.047 8.3008 1.0781 6.4883 9.6445 12.547 13.875 16.742-7.5273 0-18.766-1.9258-22.871 6.2656-3.8516 7.6875 1.8008 18.102 5.6758 24.676 12.203 20.703 32.59 35.121 50.559 50.453-15.492-4.543-26.668-18.207-43.93-19.141-6.1953 16.051 16.004 38.48 25.535 49.32 12.293 13.984 26.508 26.219 41.988 36.551 17.391 11.602 36.277 20.664 55.816 28.016 11.344 4.2695 22.879 8.0039 34.453 11.602 6.7695 2.1055 21.82 3.4883 26.176 9.7344-19.805-1.0078-39.57-3.6172-58.719-8.875-9.1641-2.5156-18.148-5.6211-26.879-9.375-5.9297-2.5469-14.09-8.5078-20.75-5.668-19.371 8.2695 10.543 33.422 17.977 38.32 15 9.8906 32.02 15.785 48.984 21.293-15.805 3.9492-40.59-9.7109-53.547 5.5664-12.426 14.652 15.59 30.195 25.473 35.238 38.172 19.477 79.77 16.133 120.98 12.152-17.582 6.5508-37.812 9.3711-53.113 20.941-12.77 9.6602-21.012 27.855-9.4805 41.699 12.152 14.586 34.465 14.676 51.391 11.328 8.9258-1.7656 17.582-4.707 25.891-8.3828 7.2109-3.1914 15.676-10.477 23.824-10.461-17.496 16.594-48.984 43.586-39.246 71.625 11.02 31.719 50.441 7.3086 68.598-1.8555-2.6953 18.332-15.059 23.777-24.945 37.758-10.234 14.473-16.289 33.59-12.75 51.254 5.8125-15.672 12.508-30.23 22.93-43.379 9.4062-11.867 16.922-24.234 22.062-38.535 9.8867-27.488 11.633-56.449 26.965-82.078 13.105-21.906 34.848-42.086 61.223-44.832 29.234-3.0469 47.609 16.457 68.016 33.75 20.035 16.98 44.211 23.281 70.023 18.738 14.82-2.6094 29.113-7.6602 42.578-14.332 11.656-5.7773 22.164-14.27 34.273-19.027 13.195-5.1836 26.746-8.8359 39.465-15.309 11.34-5.7734 21.555-17.344 34.875-14.426 25.656 5.6172 53.379 11.293 76.562 24.113 20.246 11.195 36.68 27.922 48.043 48.031 6.9805 12.352 11.988 25.777 17.781 38.707 4.5469 10.148 9.3828 29.555 18.918 36.195 18.004 1.1875 31.406-11.938 28.117-30.113-4.125-22.797-23.168-40.289-38.539-56.082 18.109 7.0469 33.938 17.629 53.742 19.824 14.727 1.6328 35.191 0 45.203-12.73 10.629-13.512 5.0625-30.023-6.9805-40.141-15.5-13.02-36.562-15.902-55.336-21.426 9.3203-2.2422 20.344 1.2578 29.73 1.9531 11.438 0.84375 22.945 0.90625 34.375-0.13672 18.762-1.7109 37.984-6.0703 54.957-14.414 10.289-5.0586 37.441-18.879 29-34.105-8.4102-15.168-39.508-7.7109-52.996-6.4297 6.7617-5.9648 18.352-7.7266 26.531-11.203 8.5078-3.6172 16.828-7.793 24.395-13.137 7.4844-5.2891 31.586-27.008 16.148-35.559-6.6445-3.6797-16.441 2.6055-22.559 5.1719-8.8242 3.7031-17.785 6.9297-27.027 9.4258-19.672 5.3203-40.082 7.582-60.426 7.9219 38.488-16.137 79.91-23.203 115.06-47.035 16.129-10.934 31.184-24.754 44.203-39.23 10.363-11.523 29.234-31.73 24.52-48.754-17.125 1.6602-28.973 15.16-44.098 20.375 16.805-15.746 37.359-29.668 49.414-49.723 4.0312-6.707 10.68-18.5 6.3008-26.449-4.4141-8.0078-15.359-6.2852-22.82-5.957 4.7344-4.5273 14.738-11.121 14.504-18.562-0.37891-12.039-10.199-3.7383-15.18-6.375 0.61719-4.0234 9.7266-12.012 12.336-15.391 3.918-5.043 7.6406-10.254 11.047-15.664z"/>
+                        </svg>
+                        <h2 class="agent-name">Cupid</h2>
+                        <p class="agent-subtitle">an interactive rom-com</p>
+                        <p class="agent-description">2-3 lines of description</p>
+                        <a href="./humorist-cupid-chat.html" class="agent-play-btn" aria-label="Play introduction">
+                            <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                            </svg>
+                            <span>Play</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Ask about astrological compatibility...">
+                    <button class="chat-send-button" aria-label="Send message">
+                        <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+                updateIcons(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateIcons(false);
+            }
+        }
+        function updateIcons(isDark) {
+            document.getElementById('sun-icon').style.display = isDark ? 'none' : 'block';
+            document.getElementById('moon-icon').style.display = isDark ? 'block' : 'none';
+        }
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        });
+        initTheme();
+    </script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cupid - The Humorist</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@400;600;900&family=Lexend+Peta:wght@700&family=Lexend:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* v02-COMPACT: Tighter spacing, smaller radius, denser layout */
+        :root {
+            --bg-primary: #FDF6E3;
+            --bg-surface: #F5EFE0;
+            --text-primary: #464646;
+            --text-secondary: #657B83;
+            --text-muted: #93A1A1;
+            --border-color: rgba(101, 123, 131, 0.1);
+            --border-color-hover: rgba(101, 123, 131, 0.2);
+            --red: #D74E39;
+            --orange: #DA6800;
+            --yellow: #FFC922;
+            --pink: #E7B5A0;
+            --green: #8AA47D;
+            --blue: #6CC2FF;
+            --purple: #9B85B7;
+            --font-display: 'Lexend Giga', sans-serif;
+            --font-body: 'Lexend', sans-serif;
+            /* COMPACT spacing */
+            --space-xs: 6px;
+            --space-sm: 12px;
+            --space-md: 20px;
+            --space-lg: 28px;
+            --space-xl: 40px;
+            --shadow-subtle: 0 1px 3px rgba(70, 70, 70, 0.04);
+            --shadow-medium: 0 4px 16px rgba(70, 70, 70, 0.06);
+            --shadow-elevated: 0 8px 32px rgba(70, 70, 70, 0.08);
+        }
+
+        html.dark {
+            --bg-primary: #1a1a1a;
+            --bg-surface: #2d2d2d;
+            --text-primary: #E8E8E8;
+            --text-secondary: #A8A8A8;
+            --text-muted: #6B6B6B;
+            --border-color: rgba(168, 168, 168, 0.1);
+            --border-color-hover: rgba(168, 168, 168, 0.2);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 200ms ease;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-left { display: flex; align-items: center; gap: var(--space-sm); }
+        .navbar-icon { width: 24px; height: 24px; }
+        .navbar-title { font-family: var(--font-display); font-weight: 600; font-size: 16px; color: var(--text-primary); }
+        @media (max-width: 480px) { .navbar-title { display: none; } }
+
+        .navbar-right { display: flex; align-items: center; gap: var(--space-md); margin-left: auto; }
+        .navbar-link {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .navbar-link:hover { color: var(--text-primary); background: var(--border-color); }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            min-height: 40px;
+            min-width: 40px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { background: var(--border-color); color: var(--text-primary); }
+        .theme-toggle-icon { width: 18px; height: 18px; stroke: currentColor; }
+
+        .cupid-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-md);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .cupid-chat-container {
+            width: 100%;
+            max-width: 720px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            animation: gentle-enter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms both;
+        }
+
+        .cupid-chat-card {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 500px;
+            max-height: calc(100vh - 100px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        /* Profile Card Widget */
+        .profile-widget {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .profile-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--text-muted);
+        }
+
+        .profile-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .profile-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: clamp(16px, 4vw, 18px);
+            color: var(--text-primary);
+        }
+
+        .profile-occupation {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .profile-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .profile-location svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-secondary);
+        }
+
+        .profile-birth {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .profile-birth-label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .profile-birth-text {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .profile-birth-dot {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .badge-pink {
+            background: rgba(231, 181, 160, 0.25);
+            color: #b07d66;
+        }
+
+        html.dark .badge-pink {
+            background: rgba(231, 181, 160, 0.2);
+            color: #e7b5a0;
+        }
+
+        .profile-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: var(--space-xs) 0;
+        }
+
+        .profile-bio-label {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .profile-bio-text {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .profile-match-btn {
+            display: block;
+            width: 100%;
+            background: var(--pink);
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 6px;
+            transition: all 200ms ease;
+            margin-top: var(--space-xs);
+        }
+        .profile-match-btn:hover { opacity: 0.9; transform: scale(1.01); }
+
+        /* Chat Messages */
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .chat-message-assistant {
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .chat-message-bubble {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .chat-message-label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-left: var(--space-xs);
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .chat-input:focus { border-color: var(--pink); box-shadow: 0 0 0 2px rgba(231, 181, 160, 0.2); }
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .chat-send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--pink);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms ease;
+        }
+        .chat-send-button:hover { opacity: 0.9; transform: scale(1.05); }
+        .send-icon { width: 18px; height: 18px; stroke: var(--text-primary); }
+
+        @keyframes gentle-enter {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="../../humorist-homepage.html" style="display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit;">
+                <svg class="navbar-icon" width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="256" cy="254" r="48" fill="#E7B5A0"/>
+                    <circle cx="368" cy="142" r="48" fill="#DA6800"/>
+                    <circle cx="368" cy="255" r="48" fill="#6CC2FF"/>
+                    <circle cx="148" cy="370" r="48" fill="#D74E39"/>
+                    <circle cx="144" cy="142" r="48" fill="#9B85B7"/>
+                    <circle cx="144" cy="254" r="48" fill="#FFC922"/>
+                    <circle cx="368" cy="366" r="48" fill="#8AA47D"/>
+                </svg>
+                <span class="navbar-title">Humorist</span>
+            </a>
+        </div>
+        <div class="navbar-right">
+            <button class="theme-toggle" aria-label="Toggle theme" id="theme-toggle-btn">
+                <svg id="sun-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="moon-icon" class="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+                </svg>
+            </button>
+            <a href="../../humorist-homepage.html" class="navbar-link">Home</a>
+            <a href="../../humorist-about.html" class="navbar-link">About</a>
+            <a href="/login" class="navbar-link">Login</a>
+        </div>
+    </nav>
+
+    <main class="cupid-page">
+        <div class="cupid-chat-container">
+            <div class="cupid-chat-card">
+                <div class="chat-messages">
+                    <!-- Profile Card Widget -->
+                    <div class="profile-widget">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-name">Zara Patel</div>
+                                <div class="profile-occupation">Personal Trainer & Wellness Coach, 28</div>
+                                <div class="profile-location">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    <span>Greenpoint, Brooklyn</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-birth">
+                            <span class="profile-birth-label">Born</span>
+                            <span class="profile-birth-text">April 2, 1996</span>
+                            <span class="profile-birth-dot">•</span>
+                            <span class="profile-birth-text">Los Angeles, CA</span>
+                        </div>
+
+                        <div class="profile-badges">
+                            <span class="badge badge-pink">☀️ Sun: ARIES</span>
+                            <span class="badge badge-pink">🌙 Moon: VIRGO</span>
+                            <span class="badge badge-pink">💖 Venus: TAURUS</span>
+                            <span class="badge badge-pink">🔥 Mars: ARIES</span>
+                        </div>
+
+                        <div class="profile-divider"></div>
+
+                        <div>
+                            <div class="profile-bio-label">Bio:</div>
+                            <p class="profile-bio-text">Zara is a high-energy personal trainer who moved from LA to Greenpoint two years ago, hungry to compete in NYC's cutthroat fitness scene. With an Aries Sun and Ascendant, she's a natural-born leader who inspires her clients through tough-love coaching and genuine care. Her Virgo Moon means she's obsessed with the details—tracking macros, optimizing workouts, and perfecting form. In love, her Taurus Venus craves stability and sensuality, though her fiery Aries Mars can make her impatient when romance moves too slowly. She's looking for someone who can match her intensity while also helping her slow down and enjoy the moment.</p>
+                        </div>
+
+                        <button class="profile-match-btn">Match</button>
+                    </div>
+
+                    <!-- Assistant Message -->
+                    <div class="chat-message chat-message-assistant">
+                        <span class="chat-message-label">Cupid</span>
+                        <div class="chat-message-bubble">
+                            <p><strong>Ooh, a fiery Aries!</strong> Zara's chart is bursting with cardinal energy—she's the type who starts trends, not follows them.</p>
+                            <p style="margin-top: 12px;">Her double Aries (Sun + Mars) gives her serious go-getter vibes, but that Virgo Moon keeps her grounded in the details. She won't just dream big—she'll have a spreadsheet tracking her progress.</p>
+                            <p style="margin-top: 12px;">The Taurus Venus is interesting here. Beneath all that fire, she's secretly a romantic who wants cozy nights and genuine connection. Just don't make her wait too long—that Aries impatience is real! 💘</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Ask Cupid about compatibility...">
+                    <button class="chat-send-button" aria-label="Send message">
+                        <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+                updateIcons(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateIcons(false);
+            }
+        }
+        function updateIcons(isDark) {
+            document.getElementById('sun-icon').style.display = isDark ? 'none' : 'block';
+            document.getElementById('moon-icon').style.display = isDark ? 'block' : 'none';
+        }
+        document.getElementById('theme-toggle-btn').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        });
+        initTheme();
+    </script>
+</body>
+</html>

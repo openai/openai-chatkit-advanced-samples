@@ -1,12 +1,22 @@
 {
   "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+    "NanoBanana": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/johnsteven/GITHUB/MCP/mcp-servers/mcps/nano-mcp",
+        "run",
+        "server.py"
+      ]
     },
-    "figma-desktop": {
-      "url": "http://127.0.0.1:3845/mcp",
-      "type": "http"
+    "GPTChing": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/johnsteven/GITHUB/MCP/mcp-servers/mcps/gptching-mcp",
+        "run",
+        "server.py"
+      ]
     }
   }
 }
