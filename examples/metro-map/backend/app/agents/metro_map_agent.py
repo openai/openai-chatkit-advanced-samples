@@ -10,6 +10,7 @@ from chatkit.types import (
     Annotation,
     AssistantMessageContent,
     AssistantMessageItem,
+    ClientEffectEvent,
     EntitySource,
     ProgressUpdateEvent,
     ThreadItemDoneEvent,
@@ -68,6 +69,8 @@ INSTRUCTIONS = """
       When this is the latest message, acknowledge the selection.
     - <STATION_TAG>...</STATION_TAG> - contains full station details (id, name, description, coordinates, and served lines with ids/colors/orientations).
       Use the data inside the tag directly; do not call `get_station` just to resolve a tagged station.
+
+    When the user mentions "selected stations" or asks about the current selection, call `get_selected_stations` to fetch the station ids from the client.
 """
 
 
@@ -98,6 +101,10 @@ class LineDetailResult(BaseModel):
 class StationDetailResult(BaseModel):
     station: Station
     lines: list[Line]
+
+
+class SelectedStationsResult(BaseModel):
+    station_ids: list[str]
 
 
 @function_tool(
@@ -229,12 +236,14 @@ async def add_station(
     await ctx.context.stream(ProgressUpdateEvent(text="Adding station..."))
     try:
         updated_map, new_station = ctx.context.metro.add_station(station_name, line_id, append)
-        ctx.context.client_tool_call = ClientToolCall(
-            name="add_station",
-            arguments={
-                "stationId": new_station.id,
-                "map": updated_map.model_dump(mode="json"),
-            },
+        await ctx.context.stream(
+            ClientEffectEvent(
+                name="add_station",
+                data={
+                    "stationId": new_station.id,
+                    "map": updated_map.model_dump(mode="json"),
+                },
+            )
         )
         return MapResult(map=updated_map)
     except Exception as e:
@@ -256,6 +265,23 @@ async def add_station(
         raise
 
 
+@function_tool(
+    description_override=(
+        "Fetch the ids of the currently selected stations from the client UI. No parameters."
+    )
+)
+async def get_selected_stations(
+    ctx: RunContextWrapper[MetroAgentContext],
+) -> SelectedStationsResult:
+    logger.info("[TOOL CALL] get_selected_stations")
+    await ctx.context.stream(ProgressUpdateEvent(text="Fetching selected stations from the map..."))
+    ctx.context.client_tool_call = ClientToolCall(
+        name="get_selected_stations",
+        arguments={},
+    )
+    return SelectedStationsResult(station_ids=[])
+
+
 metro_map_agent = Agent[MetroAgentContext](
     name="metro_map",
     instructions=INSTRUCTIONS,
@@ -272,13 +298,15 @@ metro_map_agent = Agent[MetroAgentContext](
         show_line_selector,
         # Update the metro map
         add_station,
+        # Request client selection
+        get_selected_stations,
     ],
     # Stop inference after client tool call or widget output
     tool_use_behavior=StopAtTools(
         stop_at_tool_names=[
-            add_station.name,
             plan_route.name,
             show_line_selector.name,
+            get_selected_stations.name,
         ]
     ),
 )

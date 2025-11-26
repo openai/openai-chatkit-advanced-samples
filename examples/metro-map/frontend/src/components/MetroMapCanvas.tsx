@@ -6,6 +6,7 @@ import ReactFlow, {
   Handle,
   Position,
   ReactFlowProvider,
+  SelectionMode,
   type Edge,
   type Node,
   type NodeProps,
@@ -36,6 +37,13 @@ const DIRECTION_ICONS: Record<EndpointDirection, typeof ArrowLeft> = {
   right: ArrowRight,
   up: ArrowUp,
   down: ArrowDown,
+};
+
+// Give nodes explicit bounds so React Flow doesn't treat them as unmeasured and
+// auto-select the whole graph when a selection box first appears.
+const STATION_NODE_SIZE = {
+  width: 56,
+  height: 56,
 };
 
 function invertDirection(direction: EndpointDirection): EndpointDirection {
@@ -280,13 +288,13 @@ function StationNode({ data, selected }: NodeProps<StationNodeData>) {
   );
 }
 
-function buildGraph(map: MetroMap, selectedStationId: string | null = null): { nodes: Node[]; edges: Edge[] } {
-  const nodes = buildNodes(map, selectedStationId);
+function buildGraph(map: MetroMap, selectedStationIds: string[] = []): { nodes: Node[]; edges: Edge[] } {
+  const nodes = buildNodes(map, selectedStationIds);
   const edges = buildEdges(map, nodes);
   return { nodes, edges };
 }
 
-function buildNodes(map: MetroMap, selectedStationId: string | null): Node<StationNodeData>[] {
+function buildNodes(map: MetroMap, selectedStationIds: string[]): Node<StationNodeData>[] {
   const lineColor: Record<string, string> = {};
   map.lines.forEach((line) => {
     lineColor[line.id] = line.color;
@@ -303,7 +311,9 @@ function buildNodes(map: MetroMap, selectedStationId: string | null): Node<Stati
       },
       draggable: false,
       selectable: true,
-      selected: selectedStationId === station.id,
+      selected: selectedStationIds.includes(station.id),
+      width: STATION_NODE_SIZE.width,
+      height: STATION_NODE_SIZE.height,
     };
   });
 }
@@ -361,22 +371,24 @@ function buildEdges(map: MetroMap, nodes: Node[]): Edge[] {
 
 export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
   const locationSelectLineId = useMapStore((state) => state.locationSelectLineId);
-  const selectedStationId = useMapStore((state) => state.selectedStationId);
-  const setSelectedStationId = useMapStore((state) => state.setSelectedStationId);
-  const [{ nodes, edges }, setGraph] = useState(() => buildGraph(map, selectedStationId));
+  const selectedStationIds = useMapStore((state) => state.selectedStationIds);
+  const setSelectedStationIds = useMapStore((state) => state.setSelectedStationIds);
+  const interactionLocked = useMapStore((state) => state.interactionLocked);
+  const interactionMode = useMapStore((state) => state.interactionMode);
+  const [{ nodes, edges }, setGraph] = useState(() => buildGraph(map, selectedStationIds));
   const unselectNodesAndEdges = useReactFlowStore((state) => state.unselectNodesAndEdges);
   const setReactFlow = useMapStore((state) => state.setReactFlow);
   const chatkit = useAppStore((state) => state.chatkit);
 
   useEffect(() => {
-    setGraph(buildGraph(map, selectedStationId));
-  }, [map, selectedStationId]);
+    setGraph(buildGraph(map, selectedStationIds));
+  }, [map, selectedStationIds]);
 
   // Clear selection whenever location selection mode is toggled
   useEffect(() => {
-    setSelectedStationId(null);
+    setSelectedStationIds([]);
     unselectNodesAndEdges();
-  }, [locationSelectLineId, unselectNodesAndEdges]);
+  }, [interactionMode, locationSelectLineId, setSelectedStationIds, unselectNodesAndEdges]);
 
   useEffect(() => () => setReactFlow(null), [setReactFlow]);
 
@@ -394,10 +406,10 @@ export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
 
   const handleSelectionChange = useCallback(
     ({ nodes: selectedNodes = [] }: { nodes?: Node[] }) => {
-      const nextSelectedId = selectedNodes[0]?.id ?? null;
-      setSelectedStationId(nextSelectedId);
+      const nextSelectedIds = selectedNodes.map((node) => node.id);
+      setSelectedStationIds(nextSelectedIds);
     },
-    [setSelectedStationId]
+    [setSelectedStationIds]
   );
 
   const handleNodeClick = useCallback(
@@ -418,7 +430,18 @@ export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
     [chatkit, handleSelectionChange, map.stations]
   );
 
+  const handlePaneClick = useCallback(() => {
+    // Clear selection when clicking empty space in select mode.
+    if (interactionMode !== "select") return;
+    setSelectedStationIds([]);
+    unselectNodesAndEdges();
+  }, [interactionMode, setSelectedStationIds, unselectNodesAndEdges]);
+
   return (
+    <div className="relative h-full w-full">
+      {interactionLocked && (
+        <div className="absolute inset-0 z-10 cursor-wait bg-transparent" aria-hidden="true" />
+      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -426,6 +449,7 @@ export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
         onInit={onInit}
         onSelectionChange={handleSelectionChange}
         onNodeClick={handleNodeClick}
+        onPaneClick={handlePaneClick}
         fitView
         minZoom={0.4}
         maxZoom={1.6}
@@ -433,12 +457,19 @@ export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
         snapGrid={[40, 40]}
         proOptions={{ hideAttribution: true }}
         className="rounded-2xl bg-slate-50 dark:bg-slate-900"
+        style={{
+          pointerEvents: interactionLocked ? "none" : "auto",
+          ["--map-cursor" as string]: interactionMode === "select" ? "crosshair" : "grab",
+          ["--map-cursor-active" as string]: interactionMode === "select" ? "crosshair" : "grabbing",
+        }}
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable
         panOnScroll
         zoomOnDoubleClick={false}
-        panOnDrag
+        panOnDrag={interactionMode === "pan"}
+        selectionOnDrag={interactionMode === "select"}
+        selectionMode={SelectionMode.Partial}
       >
         <Background
           id="grid"
@@ -447,6 +478,7 @@ export function MetroMapCanvasContents({ map }: { map: MetroMap }) {
           color="rgba(148,163,184,0.5)"
         />
       </ReactFlow>
+    </div>
   );
 }
 
