@@ -108,3 +108,13 @@
 .StationNode--selected:not(.location-select-mode):hover {
   outline: 4px solid color-mix(in srgb, var(--station-highlight) 90%, transparent);
 }
+
+.react-flow__pane,
+.react-flow__renderer {
+  cursor: var(--map-cursor, crosshair) !important;
+}
+
+.react-flow__pane:active,
+.react-flow__renderer:active {
+  cursor: var(--map-cursor-active, var(--map-cursor, default)) !important;
+}

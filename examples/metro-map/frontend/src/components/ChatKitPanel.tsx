@@ -1,12 +1,12 @@
-import { ChatKit, HeaderIcon, HeaderOption, useChatKit, type Entity } from "@openai/chatkit-react";
+import { ChatKit, HeaderIcon, HeaderOption, StartScreenPrompt, useChatKit, type Entity } from "@openai/chatkit-react";
 import clsx from "clsx";
 import { useCallback, useMemo } from "react";
 
 import {
   CHATKIT_API_DOMAIN_KEY,
   CHATKIT_API_URL,
-  GREETING,
-  STARTER_PROMPTS,
+  getGreeting,
+  getStartScreenPrompts,
   getPlaceholder,
 } from "../lib/config";
 import { OPENAI_SANS_SOURCES } from "../lib/fonts";
@@ -21,6 +21,19 @@ type ChatKitPanelProps = {
   className?: string;
 };
 
+const useStartScreenOption = () => {
+  const selectedStationIds = useMapStore((state) => state.selectedStationIds);
+  const prompts = useMemo(() => {
+    return getStartScreenPrompts(selectedStationIds);
+  }, [selectedStationIds]);
+
+  const greeting = useMemo(() => {
+    return getGreeting(selectedStationIds);
+  }, [selectedStationIds]);
+
+  return { prompts, greeting };
+};
+
 export function ChatKitPanel({
   onChatKitReady,
   className,
@@ -30,11 +43,15 @@ export function ChatKitPanel({
   const setThreadId = useAppStore((state) => state.setThreadId);
   const setMap = useMapStore((state) => state.setMap);
   const currentMap = useMapStore((state) => state.map);
+  const selectedStationIds = useMapStore((state) => state.selectedStationIds);
   const focusStation = useMapStore((state) => state.focusStation);
   const setLocationSelectLineId = useMapStore((state) => state.setLocationSelectLineId);
   const clearLocationSelectMode = useMapStore((state) => state.clearLocationSelectMode);
+  const lockInteraction = useMapStore((state) => state.lockInteraction);
+  const unlockInteraction = useMapStore((state) => state.unlockInteraction);
   const scheme = useAppStore((state) => state.scheme);
   const setScheme = useAppStore((state) => state.setScheme);
+  const setChatkit = useAppStore((state) => state.setChatkit);
 
   const headerRightAction = useMemo((): HeaderOption['rightAction'] => {
     if (scheme === "dark") {
@@ -87,6 +104,8 @@ export function ChatKitPanel({
     [stationEntities]
   );
 
+  const startScreenOption = useStartScreenOption();
+
   const handleEntityClick = useCallback(
     (entity: Entity) => {
       const stationId = (entity.data?.station_id || entity.id || "").trim();
@@ -98,10 +117,27 @@ export function ChatKitPanel({
   );
 
   const handleClientTool = useCallback(
-    (toolCall: { name: string; params: Record<string, unknown> }) => {
-      if (toolCall.name === "add_station") {
-        const stationId = toolCall.params.stationId as string | undefined;
-        const nextMap = toolCall.params.map as MetroMap | undefined;
+    ({name}: { name: string; params: Record<string, unknown> }) => {
+      // Return the station ids that are currently selected on the canvas
+      // so that the agent can take them as input for the continued response.
+      if (name === "get_selected_stations") {
+        return { stationIds: selectedStationIds };
+      }
+    },
+    [clearLocationSelectMode, focusStation, selectedStationIds, setMap]
+  );
+
+  const handleClientEffect = useCallback(
+    ({name, data}: { name: string; data: Record<string, unknown> }) => {
+      if (name === "location_select_mode") {
+        const lineId = data.lineId as string | undefined;
+        if (lineId) {
+          setLocationSelectLineId(lineId);
+        }
+      }
+      if (name === "add_station") {
+        const stationId = data.stationId as string | undefined;
+        const nextMap = data.map as MetroMap | undefined;
         clearLocationSelectMode();
 
         if (nextMap) {
@@ -111,15 +147,7 @@ export function ChatKitPanel({
         if (stationId) {
           requestAnimationFrame(() => focusStation(stationId, nextMap));
         }
-        return { success: true };
       }
-      if (toolCall.name === "location_select_mode") {
-        const lineId = toolCall.params.lineId as string | undefined;
-        if (!lineId) return { success: false };
-        setLocationSelectLineId(lineId);
-        return { success: true };
-      }
-      return { success: false };
     },
     [clearLocationSelectMode, focusStation, setLocationSelectLineId, setMap]
   );
@@ -151,10 +179,7 @@ export function ChatKitPanel({
       },
       radius: "pill",
     },
-    startScreen: {
-      greeting: GREETING,
-      prompts: STARTER_PROMPTS,
-    },
+    startScreen: startScreenOption,
     composer: {
       placeholder: getPlaceholder(Boolean(activeThread)),
     },
@@ -174,6 +199,14 @@ export function ChatKitPanel({
     },
     onReady: () => {
       onChatKitReady?.(chatkit);
+      setChatkit(chatkit);
+    },
+    onEffect: handleClientEffect,
+    onResponseStart: () => {
+      lockInteraction();
+    },
+    onResponseEnd: () => {
+      unlockInteraction();
     },
   });
 

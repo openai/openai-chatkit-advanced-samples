@@ -99,7 +99,7 @@ async def list_article_tags(
     def _build_author_tag(author: dict[str, Any]) -> dict[str, Any]:
         author_id = author["id"]
         author_name = author["name"]
-        article_count = author.get("articleCount")
+        article_count = author["articleCount"]
         data = {
             "author": author_name,
             "author_id": author_id,

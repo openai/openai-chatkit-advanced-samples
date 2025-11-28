@@ -1,19 +1,6 @@
-from typing import Literal
+from typing import Any
 
-from chatkit.widgets import (
-    Box,
-    Col,
-    Icon,
-    Image,
-    Justification,
-    Row,
-    Spacing,
-    Text,
-    Title,
-    WidgetComponent,
-    WidgetComponentBase,
-)
-from pydantic import Field
+from chatkit.widgets import BasicRoot, WidgetTemplate
 
 from ..data.article_store import ArticleMetadata
 
@@ -57,69 +44,19 @@ DEFAULT_PROFILE = {
     "bio": "Foxhollow Dispatch contributor.",
 }
 
-
-# TODO: Add this to chatkit.widgets
-class BasicRoot(WidgetComponentBase):
-    type: Literal["Basic"] = Field(default="Basic", frozen=True)  # pyright: ignore
-    direction: Literal["row", "col"] | None = None
-    theme: Literal["light", "dark"] | None = None
-    children: list[WidgetComponent] | None = None
-    gap: int | str | None = None
-    padding: float | str | Spacing | None = None
-    align: Literal["start", "center", "end"] | None = None
-    justify: Justification | None = None
+article_preview_widget_template = WidgetTemplate.from_file("article_preview.widget")
+author_preview_widget_template = WidgetTemplate.from_file("author_preview.widget")
 
 
 def build_article_preview_widget(article: ArticleMetadata) -> BasicRoot:
-    return BasicRoot(
-        children=[
-            Row(
-                gap=3,
-                padding=0,
-                align="start",
-                children=[
-                    Box(
-                        border={"color": "gray-900", "size": 1},
-                        width=100,
-                        children=[
-                            Image(
-                                src=article.heroImageUrl,
-                                alt=article.title,
-                                fit="cover",
-                                position="top",
-                                width=98,
-                                height=98,
-                                frame=True,
-                            ),
-                        ],
-                    ),
-                    Col(
-                        gap=1,
-                        children=[
-                            Title(
-                                value=article.title,
-                                size="sm",
-                            ),
-                            Row(
-                                gap=1,
-                                children=[
-                                    Text(
-                                        value=f"by {article.author}",
-                                        size="xs",
-                                    ),
-                                    Icon(name="dot", size="sm"),
-                                    Text(
-                                        value=f"{article.date.strftime('%b %d, %Y')}",
-                                        size="xs",
-                                    ),
-                                ],
-                            ),
-                        ],
-                    ),
-                ],
-            ),
-        ],
-    )
+    payload = {
+        "id": article.id,
+        "title": article.title,
+        "author": article.author,
+        "heroImageUrl": article.heroImageUrl,
+        "date": article.date.strftime("%b %d, %Y"),
+    }
+    return article_preview_widget_template.build_basic(payload)
 
 
 def _profile_for_author(author_slug: str) -> dict[str, str]:
@@ -129,51 +66,14 @@ def _profile_for_author(author_slug: str) -> dict[str, str]:
 def build_author_preview_widget(
     author_name: str,
     author_slug: str,
-    article_count: int | None = None,
+    article_count: int,
 ) -> BasicRoot:
     profile = _profile_for_author(author_slug)
-    article_label = (
-        f"{article_count} article{'s' if article_count != 1 else ''} in the archive"
-        if article_count is not None
-        else None
-    )
-
-    texts = [
-        Text(value=profile["bio"], size="sm"),
-    ]
-    if article_label:
-        texts.append(Text(value=article_label, size="xs"))
-
-    return BasicRoot(
-        children=[
-            Row(
-                gap=3,
-                padding=0,
-                align="start",
-                children=[
-                    Box(
-                        border={"color": "gray-900", "size": 1},
-                        width=100,
-                        children=[
-                            Image(
-                                src=profile["image"],
-                                alt=f"Profile for {author_name}",
-                                fit="cover",
-                                position="top",
-                                width=98,
-                                height=98,
-                                frame=True,
-                            ),
-                        ],
-                    ),
-                    Col(
-                        gap=1,
-                        children=[
-                            Title(value=author_name, size="sm"),
-                            *texts,
-                        ],
-                    ),
-                ],
-            ),
-        ],
-    )
+    payload: dict[str, Any] = {
+        "slug": author_slug,
+        "name": author_name,
+        "image": profile["image"],
+        "bio": profile["bio"],
+        "articleCount": article_count,
+    }
+    return author_preview_widget_template.build_basic(payload)

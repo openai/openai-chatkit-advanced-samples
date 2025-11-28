@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from typing import Annotated
 
@@ -9,6 +10,7 @@ from chatkit.types import (
     Annotation,
     AssistantMessageContent,
     AssistantMessageItem,
+    ClientEffectEvent,
     EntitySource,
     ProgressUpdateEvent,
     ThreadItemDoneEvent,
@@ -19,6 +21,9 @@ from ..data.metro_map_store import Line, MetroMap, MetroMapStore, Station
 from ..memory_store import MemoryStore
 from ..request_context import RequestContext
 from ..widgets.line_select_widget import build_line_select_widget
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 INSTRUCTIONS = """
     You are a concise metro planner helping city planners update the Orbital Transit map.
@@ -64,6 +69,8 @@ INSTRUCTIONS = """
       When this is the latest message, acknowledge the selection.
     - <STATION_TAG>...</STATION_TAG> - contains full station details (id, name, description, coordinates, and served lines with ids/colors/orientations).
       Use the data inside the tag directly; do not call `get_station` just to resolve a tagged station.
+
+    When the user mentions "selected stations" or asks about the current selection, call `get_selected_stations` to fetch the station ids from the client.
 """
 
 
@@ -96,6 +103,10 @@ class StationDetailResult(BaseModel):
     lines: list[Line]
 
 
+class SelectedStationsResult(BaseModel):
+    station_ids: list[str]
+
+
 @function_tool(
     description_override=(
         "Show a clickable widget listing metro lines.\n"
@@ -121,7 +132,7 @@ async def show_line_selector(ctx: RunContextWrapper[MetroAgentContext], message:
     description_override=("Load the latest metro map with lines and stations. No parameters.")
 )
 async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
-    print("[TOOL CALL] get_map")
+    logger.info("[TOOL CALL] get_map")
     metro_map = ctx.context.metro.get_map()
     await ctx.context.stream(ProgressUpdateEvent(text="Retrieving the latest metro map..."))
     return MapResult(map=metro_map)
@@ -131,7 +142,7 @@ async def get_map(ctx: RunContextWrapper[MetroAgentContext]) -> MapResult:
     description_override=("List all metro lines with their colors and endpoints. No parameters.")
 )
 async def list_lines(ctx: RunContextWrapper[MetroAgentContext]) -> LineListResult:
-    print("[TOOL CALL] list_lines")
+    logger.info("[TOOL CALL] list_lines")
     return LineListResult(lines=ctx.context.metro.list_lines())
 
 
@@ -139,7 +150,7 @@ async def list_lines(ctx: RunContextWrapper[MetroAgentContext]) -> LineListResul
     description_override=("List all stations and which lines serve them. No parameters.")
 )
 async def list_stations(ctx: RunContextWrapper[MetroAgentContext]) -> StationListResult:
-    print("[TOOL CALL] list_stations")
+    logger.info("[TOOL CALL] list_stations")
     return StationListResult(stations=ctx.context.metro.list_stations())
 
 
@@ -155,7 +166,7 @@ async def plan_route(
     route: list[Station],
     message: str,
 ):
-    print("[TOOL CALL] plan_route", route)
+    logger.info("[TOOL CALL] plan_route %s", route)
     sources = [
         EntitySource(
             id=station.id,
@@ -194,7 +205,7 @@ async def get_station(
     ctx: RunContextWrapper[MetroAgentContext],
     station_id: str,
 ) -> StationDetailResult:
-    print("[TOOL CALL] get_station", station_id)
+    logger.info("[TOOL CALL] get_station %s", station_id)
     station = ctx.context.metro.find_station(station_id)
     if not station:
         raise ValueError(f"Station '{station_id}' was not found.")
@@ -221,20 +232,22 @@ async def add_station(
     append: bool = True,
 ) -> MapResult:
     station_name = station_name.strip().title()
-    print(f"[TOOL CALL] add_station: {station_name} to {line_id}")
+    logger.info("[TOOL CALL] add_station: %s to %s", station_name, line_id)
     await ctx.context.stream(ProgressUpdateEvent(text="Adding station..."))
     try:
         updated_map, new_station = ctx.context.metro.add_station(station_name, line_id, append)
-        ctx.context.client_tool_call = ClientToolCall(
-            name="add_station",
-            arguments={
-                "stationId": new_station.id,
-                "map": updated_map.model_dump(mode="json"),
-            },
+        await ctx.context.stream(
+            ClientEffectEvent(
+                name="add_station",
+                data={
+                    "stationId": new_station.id,
+                    "map": updated_map.model_dump(mode="json"),
+                },
+            )
         )
         return MapResult(map=updated_map)
     except Exception as e:
-        print(f"[ERROR] add_station: {e}")
+        logger.error("[ERROR] add_station: %s", e)
         await ctx.context.stream(
             ThreadItemDoneEvent(
                 item=AssistantMessageItem(
@@ -250,6 +263,24 @@ async def add_station(
             )
         )
         raise
+
+
+@function_tool(
+    description_override=(
+        "Fetch the ids of the currently selected stations from the client UI. No parameters."
+    )
+)
+async def get_selected_stations(
+    ctx: RunContextWrapper[MetroAgentContext],
+) -> SelectedStationsResult:
+    logger.info("[TOOL CALL] get_selected_stations")
+    # This progress update will persist while waiting for the client tool output to be send back to the server.
+    await ctx.context.stream(ProgressUpdateEvent(text="Fetching selected stations from the map..."))
+    ctx.context.client_tool_call = ClientToolCall(
+        name="get_selected_stations",
+        arguments={},
+    )
+    return SelectedStationsResult(station_ids=[])
 
 
 metro_map_agent = Agent[MetroAgentContext](
@@ -268,13 +299,15 @@ metro_map_agent = Agent[MetroAgentContext](
         show_line_selector,
         # Update the metro map
         add_station,
+        # Request client selection
+        get_selected_stations,
     ],
     # Stop inference after client tool call or widget output
     tool_use_behavior=StopAtTools(
         stop_at_tool_names=[
-            add_station.name,
             plan_route.name,
             show_line_selector.name,
+            get_selected_stations.name,
         ]
     ),
 )

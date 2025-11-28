@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "name": "Author preview",
+  "template": "{\"type\":\"Basic\",\"children\":[{\"type\":\"Row\",\"gap\":3,\"padding\":0,\"align\":\"start\",\"children\":[{\"type\":\"Box\",\"border\":{\"color\":\"gray-900\",\"size\":1},\"width\":100,\"children\":[{\"type\":\"Image\",\"src\":{{ (image) | tojson }},\"alt\":{{ ((\"Profile for \" ~ name)) | tojson }},\"fit\":\"cover\",\"position\":\"top\",\"width\":98,\"height\":98,\"frame\":true}]},{\"type\":\"Col\",\"gap\":1,\"children\":[{%- set _c -%},{\"type\":\"Title\",\"value\":{{ (name) | tojson }},\"size\":\"sm\"},{\"type\":\"Text\",\"value\":{{ (bio) | tojson }},\"size\":\"sm\"}{%-if articleCount is not none -%},{\"type\":\"Text\",\"value\":{{ ((articleCount ~ \" article\" ~ (\"\" if articleCount == 1 else \"s\") ~ \" in the archive\")) | tojson }},\"size\":\"xs\"}{%-else-%}{%-endif-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}]}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "slug": {
+        "type": "string",
+        "minLength": 1
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "image": {
+        "type": "string",
+        "format": "uri"
+      },
+      "bio": {
+        "type": "string",
+        "minLength": 1
+      },
+      "articleCount": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "required": [
+      "slug",
+      "name",
+      "image",
+      "bio"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "Basic",
+    "children": [
+      {
+        "type": "Row",
+        "gap": 3,
+        "padding": 0,
+        "align": "start",
+        "children": [
+          {
+            "type": "Box",
+            "border": {
+              "color": "gray-900",
+              "size": 1
+            },
+            "width": 100,
+            "children": [
+              {
+                "type": "Image",
+                "src": "https://i.imgur.com/ICeIhSc.png",
+                "alt": "Profile for Elowen Wilder",
+                "fit": "cover",
+                "position": "top",
+                "width": 98,
+                "height": 98,
+                "frame": true
+              }
+            ]
+          },
+          {
+            "type": "Col",
+            "gap": 1,
+            "children": [
+              {
+                "type": "Title",
+                "value": "Elowen Wilder",
+                "size": "sm"
+              },
+              {
+                "type": "Text",
+                "value": "Local Features Editor who chases neighborly mysteries and parks department quirks.",
+                "size": "sm"
+              },
+              {
+                "type": "Text",
+                "value": "2 articles in the archive",
+                "size": "xs"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ194djV6dGlxayIsIm5hbWUiOiJBdXRob3IgcHJldmlldyIsInZpZXciOiI8QmFzaWM-XG4gIDxSb3cgZ2FwPXszfSBwYWRkaW5nPXswfSBhbGlnbj1cInN0YXJ0XCI-XG4gIDxCb3ggYm9yZGVyPXt7IGNvbG9yOiBcImdyYXktOTAwXCIsIHNpemU6IDEgfX0gd2lkdGg9ezEwMH0-XG4gICAgPEltYWdlXG4gICAgICBzcmM9e2ltYWdlfVxuICAgICAgYWx0PXtgUHJvZmlsZSBmb3IgJHtuYW1lfWB9XG4gICAgICBmaXQ9XCJjb3ZlclwiXG4gICAgICBwb3NpdGlvbj1cInRvcFwiXG4gICAgICB3aWR0aD17OTh9XG4gICAgICBoZWlnaHQ9ezk4fVxuICAgICAgZnJhbWVcbiAgICAvPlxuICA8L0JveD5cbiAgPENvbCBnYXA9ezF9PlxuICAgIDxUaXRsZSB2YWx1ZT17bmFtZX0gc2l6ZT1cInNtXCIgLz5cbiAgICA8VGV4dCB2YWx1ZT17YmlvfSBzaXplPVwic21cIiAvPlxuICAgIHthcnRpY2xlQ291bnQgIT0gbnVsbCA_IChcbiAgICAgIDxUZXh0XG4gICAgICAgIHZhbHVlPXtgJHthcnRpY2xlQ291bnR9IGFydGljbGUke2FydGljbGVDb3VudCA9PT0gMSA_IFwiXCIgOiBcInNcIn0gaW4gdGhlIGFyY2hpdmVgfVxuICAgICAgICBzaXplPVwieHNcIlxuICAgICAgLz5cbiAgICApIDogbnVsbH1cbiAgPC9Db2w-XG48L1Jvdz5cbjwvQmFzaWM-IiwiZGVmYXVsdFN0YXRlIjp7InNsdWciOiJlbG93ZW4td2lsZGVyIiwibmFtZSI6IkVsb3dlbiBXaWxkZXIiLCJpbWFnZSI6Imh0dHBzOi8vaS5pbWd1ci5jb20vSUNlSWhTYy5wbmciLCJiaW8iOiJMb2NhbCBGZWF0dXJlcyBFZGl0b3Igd2hvIGNoYXNlcyBuZWlnaGJvcmx5IG15c3RlcmllcyBhbmQgcGFya3MgZGVwYXJ0bWVudCBxdWlya3MuIiwiYXJ0aWNsZUNvdW50IjoyfSwic2NoZW1hTW9kZSI6InpvZCIsImpzb25TY2hlbWEiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsidGl0bGUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsidGl0bGUiXSwiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlfSwic2NoZW1hIjoiaW1wb3J0IHsgeiB9IGZyb20gXCJ6b2RcIlxuXG5jb25zdCBBdXRob3IgPSB6Lm9iamVjdCh7XG4gIHNsdWc6IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKSxcbiAgbmFtZTogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICBpbWFnZTogei51cmwoKSxcbiAgYmlvOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksXG4gIGFydGljbGVDb3VudDogei5udW1iZXIoKS5pbnQoKS5ub25uZWdhdGl2ZSgpLm9wdGlvbmFsKCksXG59KTtcblxuZXhwb3J0IGRlZmF1bHQgQXV0aG9yOyIsInN0YXRlcyI6W10sInNjaGVtYVZhbGlkaXR5IjoidmFsaWQiLCJ2aWV3VmFsaWRpdHkiOiJ2YWxpZCIsImRlZmF1bHRTdGF0ZVZhbGlkaXR5IjoidmFsaWQifQ"
+}

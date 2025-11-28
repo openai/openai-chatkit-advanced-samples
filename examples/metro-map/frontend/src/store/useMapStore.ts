@@ -3,6 +3,8 @@ import { create } from "zustand";
 import { X_UNIT, Y_UNIT, type MetroMap } from "../lib/map";
 import type { ReactFlowInstance } from "reactflow";
 
+type InteractionMode = "select" | "pan";
+
 type MapState = {
   map: MetroMap | null;
   setMap: (map: MetroMap | null) => void;
@@ -14,7 +16,14 @@ type MapState = {
   setLocationSelectLineId: (lineId: string | null) => void;
   clearLocationSelectMode: () => void;
   selectedStationId: string | null;
+  selectedStationIds: string[];
   setSelectedStationId: (stationId: string | null) => void;
+  setSelectedStationIds: (stationIds: string[]) => void;
+  interactionLocked: boolean;
+  lockInteraction: () => void;
+  unlockInteraction: () => void;
+  interactionMode: InteractionMode;
+  setInteractionMode: (mode: InteractionMode) => void;
 };
 
 export const useMapStore = create<MapState>((set, get) => ({
@@ -40,7 +49,7 @@ export const useMapStore = create<MapState>((set, get) => ({
     const station = map.stations.find((entry) => entry.id === stationId);
     if (!station) return;
 
-    set({ selectedStationId: stationId });
+    set({ selectedStationId: stationId, selectedStationIds: stationId ? [stationId] : [] });
 
     const x = station.x * X_UNIT;
     const y = station.y * Y_UNIT;
@@ -50,12 +59,27 @@ export const useMapStore = create<MapState>((set, get) => ({
   },
   locationSelectLineId: null,
   setLocationSelectLineId: (lineId) => {
-    set({ locationSelectLineId: lineId, selectedStationId: null });
+    set({ locationSelectLineId: lineId, selectedStationId: null, selectedStationIds: [] });
     if (lineId) {
       get().fitView();
     }
   },
   clearLocationSelectMode: () => set({ locationSelectLineId: null }),
   selectedStationId: null,
-  setSelectedStationId: (stationId) => set({ selectedStationId: stationId }),
+  selectedStationIds: [],
+  setSelectedStationId: (stationId) =>
+    set({
+      selectedStationId: stationId,
+      selectedStationIds: stationId ? [stationId] : [],
+    }),
+  setSelectedStationIds: (stationIds) =>
+    set({
+      selectedStationIds: stationIds,
+      selectedStationId: stationIds[0] ?? null,
+    }),
+  interactionLocked: false,
+  lockInteraction: () => set({ interactionLocked: true }),
+  unlockInteraction: () => set({ interactionLocked: false }),
+  interactionMode: "select",
+  setInteractionMode: (mode) => set({ interactionMode: mode }),
 }));

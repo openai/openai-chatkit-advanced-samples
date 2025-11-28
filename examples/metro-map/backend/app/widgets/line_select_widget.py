@@ -4,10 +4,9 @@ List widget for picking one of the metro lines.
 
 from __future__ import annotations
 
-from chatkit.widgets import WidgetRoot
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 
 from ..data.metro_map_store import Line
-from .widget_template import WidgetTemplate
 
 line_select_widget_template = WidgetTemplate.from_file("line_select.widget")
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from typing import Annotated, List
 
@@ -19,6 +20,9 @@ from ..data.article_store import ArticleMetadata, ArticleRecord, ArticleStore
 from ..memory_store import MemoryStore
 from ..request_context import RequestContext
 from ..widgets.article_list_widget import build_article_list_widget
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 INSTRUCTIONS = """
     You are News Guide, a service-forward assistant focused on helping readers quickly
@@ -125,7 +129,7 @@ async def search_articles_by_tags(
     ctx: RunContextWrapper[NewsAgentContext],
     tags: List[str],
 ) -> ArticleSearchResult:
-    print("[TOOL CALL] search_articles_by_tags", tags)
+    logger.info("[TOOL CALL] search_articles_by_tags %s", tags)
     if not tags:
         raise ValueError("Please provide at least one tag to search for.")
     tags = [tag.strip().lower() for tag in tags if tag and tag.strip()]
@@ -147,7 +151,7 @@ async def search_articles_by_author(
     author: str,
 ) -> AuthorSearchResult:
     author = author.strip()
-    print("[TOOL CALL] search_articles_by_author", author)
+    logger.info("[TOOL CALL] search_articles_by_author %s", author)
     if not author:
         raise ValueError("Please provide an author name to search for.")
     display_name = " ".join(author.split("-")).title()
@@ -165,7 +169,7 @@ async def search_articles_by_author(
 async def list_available_tags_and_keywords(
     ctx: RunContextWrapper[NewsAgentContext],
 ) -> TagsAndKeywords:
-    print("[TOOL CALL] list_available_tags_and_keywords")
+    logger.info("[TOOL CALL] list_available_tags_and_keywords")
     await ctx.context.stream(ProgressUpdateEvent(text="Referencing available tags and keywords..."))
     return TagsAndKeywords.model_validate(ctx.context.articles.list_available_tags_and_keywords())
 
@@ -181,7 +185,7 @@ async def search_articles_by_keywords(
     keywords: List[str],
 ) -> ArticleSearchResult:
     cleaned = [keyword.strip().lower() for keyword in keywords if keyword and keyword.strip()]
-    print("[TOOL CALL] search_articles_by_keywords", cleaned)
+    logger.info("[TOOL CALL] search_articles_by_keywords %s", cleaned)
     if not cleaned:
         raise ValueError("Please provide at least one non-empty keyword to search for.")
     formatted = ", ".join(cleaned)
@@ -202,7 +206,7 @@ async def search_articles_by_exact_text(
     text: str,
 ) -> ArticleSearchResult:
     trimmed = text.strip()
-    print("[TOOL CALL] search_articles_by_exact_text", trimmed)
+    logger.info("[TOOL CALL] search_articles_by_exact_text %s", trimmed)
     if not trimmed:
         raise ValueError("Please provide a non-empty text string to search for.")
     await ctx.context.stream(ProgressUpdateEvent(text=f"Scanning articles for: {trimmed}"))
@@ -221,7 +225,7 @@ async def get_article_by_id(
     ctx: RunContextWrapper[NewsAgentContext],
     article_id: str,
 ) -> ArticleRecordResult:
-    print("[TOOL CALL] get_article_by_id", article_id)
+    logger.info("[TOOL CALL] get_article_by_id %s", article_id)
     await ctx.context.stream(ProgressUpdateEvent(text="Loading article..."))
     record = ctx.context.articles.get_article(article_id)
     if not record:
@@ -264,7 +268,7 @@ async def show_article_list_widget(
     articles: List[ArticleMetadata],
     message: str,
 ):
-    print("[TOOL CALL] show_article_list_widget", len(articles))
+    logger.info("[TOOL CALL] show_article_list_widget %s", len(articles))
     if not articles:
         raise ValueError("Provide at least one article metadata entry before calling this tool.")
 
@@ -284,7 +288,7 @@ async def show_article_list_widget(
         titles = ", ".join(article.title for article in articles)
         await ctx.context.stream_widget(widget, copy_text=titles)
     except Exception as exc:
-        print(f"[ERROR] show_article_list_widget: {exc}")
+        logger.error("[ERROR] show_article_list_widget: %s", exc)
         raise
 
 

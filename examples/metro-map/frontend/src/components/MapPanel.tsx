@@ -18,6 +18,8 @@ export function MapPanel() {
   const setMap = useMapStore((state) => state.setMap);
   const focusStation = useMapStore((state) => state.focusStation);
   const clearLocationSelectMode = useMapStore((state) => state.clearLocationSelectMode);
+  const interactionMode = useMapStore((state) => state.interactionMode);
+  const setInteractionMode = useMapStore((state) => state.setInteractionMode);
   const chatkit = useAppStore((state) => state.chatkit);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -162,6 +164,31 @@ export function MapPanel() {
           >
             Add station
           </button>
+          <div className="absolute top-4 right-4 z-10 flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold text-slate-700  dark:text-slate-100">
+            <div className="flex overflow-hidden rounded-full border border-slate-200 bg-white text-[12px] font-semibold shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              {([
+                { id: "select", label: "Select" },
+                { id: "pan", label: "Pan" },
+              ] as const).map((option) => {
+                const active = interactionMode === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setInteractionMode(option.id)}
+                    className={`px-3 py-1 transition ${
+                      active
+                        ? "bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900"
+                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+                    }`}
+                    aria-pressed={active}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           {map && <MetroMapCanvas map={map} />}
 
           <ReactModal

@@ -1,0 +1,253 @@
+{
+  "version": "1.0",
+  "name": "article_list",
+  "template": "{\"type\":\"ListView\",\"children\":[{%- set _c -%}{%-for article in articles -%},{\"type\":\"ListViewItem\",\"key\":{{ (article.id) | tojson }},\"children\":[{\"type\":\"Box\",\"maxWidth\":450,\"minWidth\":300,\"padding\":0,\"border\":{\"color\":\"gray-900\",\"size\":1},\"children\":[{\"type\":\"Row\",\"align\":\"stretch\",\"gap\":0,\"children\":[{\"type\":\"Image\",\"src\":{{ (article.heroImageUrl) | tojson }},\"alt\":{{ (article.title) | tojson }},\"fit\":\"cover\",\"position\":\"top\",\"height\":200,\"width\":160,\"radius\":\"none\",\"frame\":true},{\"type\":\"Col\",\"padding\":{\"x\":4,\"y\":3},\"gap\":2,\"flex\":1,\"align\":\"stretch\",\"justify\":\"between\",\"children\":[{\"type\":\"Col\",\"gap\":2,\"flex\":1,\"children\":[{\"type\":\"Text\",\"value\":{{ (article.date) | tojson }},\"color\":\"tertiary\",\"size\":\"xs\"},{\"type\":\"Text\",\"value\":{{ (article.title) | tojson }},\"size\":\"sm\",\"weight\":\"semibold\",\"maxLines\":4},{\"type\":\"Text\",\"value\":{{ ((\"by \" ~ article.author)) | tojson }},\"color\":\"tertiary\",\"size\":\"xs\"}]},{\"type\":\"Row\",\"justify\":\"end\",\"children\":[{\"type\":\"Button\",\"label\":\"View\",\"size\":\"sm\",\"iconSize\":\"sm\",\"pill\":true,\"variant\":\"ghost\",\"color\":\"warning\",\"iconEnd\":\"chevron-right\",\"onClickAction\":{\"type\":\"open_article\",\"handler\":\"client\",\"payload\":{\"id\":{{ (article.id) | tojson }}}}}]}]}]}]}]}{%-endfor-%}{%- endset -%}{{- (_c[1:] if _c and _c[0] == ',' else _c) -}}]}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "articles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "author": {
+              "type": "string",
+              "minLength": 1
+            },
+            "heroImageUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "date": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "author",
+            "heroImageUrl",
+            "date"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "articles"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "type": "ListView",
+    "children": [
+      {
+        "type": "ListViewItem",
+        "key": "bench-orientation-debate",
+        "children": [
+          {
+            "type": "Box",
+            "maxWidth": 450,
+            "minWidth": 300,
+            "padding": 0,
+            "border": {
+              "color": "gray-900",
+              "size": 1
+            },
+            "children": [
+              {
+                "type": "Row",
+                "align": "stretch",
+                "gap": 0,
+                "children": [
+                  {
+                    "type": "Image",
+                    "src": "https://i.imgur.com/qjpXOcJ.jpeg",
+                    "alt": "New Bench Installed Near Willow Path; Residents Debate Optimal Orientation",
+                    "fit": "cover",
+                    "position": "top",
+                    "height": 200,
+                    "width": 160,
+                    "radius": "none",
+                    "frame": true
+                  },
+                  {
+                    "type": "Col",
+                    "padding": {
+                      "x": 4,
+                      "y": 3
+                    },
+                    "gap": 2,
+                    "flex": 1,
+                    "align": "stretch",
+                    "justify": "between",
+                    "children": [
+                      {
+                        "type": "Col",
+                        "gap": 2,
+                        "flex": 1,
+                        "children": [
+                          {
+                            "type": "Text",
+                            "value": "Feb 4, 2025",
+                            "color": "tertiary",
+                            "size": "xs"
+                          },
+                          {
+                            "type": "Text",
+                            "value": "New Bench Installed Near Willow Path; Residents Debate Optimal Orientation",
+                            "size": "sm",
+                            "weight": "semibold",
+                            "maxLines": 4
+                          },
+                          {
+                            "type": "Text",
+                            "value": "by Elowen Wilder",
+                            "color": "tertiary",
+                            "size": "xs"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Row",
+                        "justify": "end",
+                        "children": [
+                          {
+                            "type": "Button",
+                            "label": "View",
+                            "size": "sm",
+                            "iconSize": "sm",
+                            "pill": true,
+                            "variant": "ghost",
+                            "color": "warning",
+                            "iconEnd": "chevron-right",
+                            "onClickAction": {
+                              "type": "open_article",
+                              "handler": "client",
+                              "payload": {
+                                "id": "bench-orientation-debate"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ListViewItem",
+        "key": "community-fridge-apple-pies",
+        "children": [
+          {
+            "type": "Box",
+            "maxWidth": 450,
+            "minWidth": 300,
+            "padding": 0,
+            "border": {
+              "color": "gray-900",
+              "size": 1
+            },
+            "children": [
+              {
+                "type": "Row",
+                "align": "stretch",
+                "gap": 0,
+                "children": [
+                  {
+                    "type": "Image",
+                    "src": "https://i.imgur.com/zQIkTc4.jpeg",
+                    "alt": "Community Fridge Mysteriously Filled With Apple Pies Overnight",
+                    "fit": "cover",
+                    "position": "top",
+                    "height": 200,
+                    "width": 160,
+                    "radius": "none",
+                    "frame": true
+                  },
+                  {
+                    "type": "Col",
+                    "padding": {
+                      "x": 4,
+                      "y": 3
+                    },
+                    "gap": 2,
+                    "flex": 1,
+                    "align": "stretch",
+                    "justify": "between",
+                    "children": [
+                      {
+                        "type": "Col",
+                        "gap": 2,
+                        "flex": 1,
+                        "children": [
+                          {
+                            "type": "Text",
+                            "value": "Feb 3, 2025",
+                            "color": "tertiary",
+                            "size": "xs"
+                          },
+                          {
+                            "type": "Text",
+                            "value": "Community Fridge Mysteriously Filled With Apple Pies Overnight",
+                            "size": "sm",
+                            "weight": "semibold",
+                            "maxLines": 4
+                          },
+                          {
+                            "type": "Text",
+                            "value": "by Marlow Keene",
+                            "color": "tertiary",
+                            "size": "xs"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "Row",
+                        "justify": "end",
+                        "children": [
+                          {
+                            "type": "Button",
+                            "label": "View",
+                            "size": "sm",
+                            "iconSize": "sm",
+                            "pill": true,
+                            "variant": "ghost",
+                            "color": "warning",
+                            "iconEnd": "chevron-right",
+                            "onClickAction": {
+                              "type": "open_article",
+                              "handler": "client",
+                              "payload": {
+                                "id": "community-fridge-apple-pies"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "encodedWidget": "eyJpZCI6IndpZ18yZ2czeDR4NCIsIm5hbWUiOiJBcnRpY2xlcyBsaXN0IiwidmlldyI6IjxMaXN0Vmlldz5cbiAge2FydGljbGVzLm1hcCgoYXJ0aWNsZSkgPT4gKFxuICAgIDxMaXN0Vmlld0l0ZW0ga2V5PXthcnRpY2xlLmlkfT5cbiAgICAgIDxCb3ggbWF4V2lkdGg9ezQ1MH0gbWluV2lkdGg9ezMwMH0gcGFkZGluZz17MH0gYm9yZGVyPXt7IGNvbG9yOiBcImdyYXktOTAwXCIsIHNpemU6IDEgfX0-XG4gICAgICAgIDxSb3cgYWxpZ249XCJzdHJldGNoXCIgZ2FwPXswfT5cbiAgICAgICAgICA8SW1hZ2VcbiAgICAgICAgICAgIHNyYz17YXJ0aWNsZS5oZXJvSW1hZ2VVcmx9XG4gICAgICAgICAgICBhbHQ9e2FydGljbGUudGl0bGV9XG4gICAgICAgICAgICBmaXQ9XCJjb3ZlclwiXG4gICAgICAgICAgICBwb3NpdGlvbj1cInRvcFwiXG4gICAgICAgICAgICBoZWlnaHQ9ezIwMH1cbiAgICAgICAgICAgIHdpZHRoPXsxNjB9XG4gICAgICAgICAgICByYWRpdXM9XCJub25lXCJcbiAgICAgICAgICAgIGZyYW1lXG4gICAgICAgICAgLz5cbiAgICAgICAgICA8Q29sIHBhZGRpbmc9e3t4OiA0LCB5OiAzfX0gZ2FwPXsyfSBmbGV4PXsxfSBhbGlnbj1cInN0cmV0Y2hcIiBqdXN0aWZ5PVwiYmV0d2VlblwiPlxuICAgICAgICAgICAgPENvbCBnYXA9ezJ9IGZsZXg9ezF9PlxuICAgICAgICAgICAgICA8VGV4dCB2YWx1ZT17YXJ0aWNsZS5kYXRlfSBjb2xvcj1cInRlcnRpYXJ5XCIgc2l6ZT1cInhzXCIgLz5cbiAgICAgICAgICAgICAgPFRleHQgdmFsdWU9e2FydGljbGUudGl0bGV9IHNpemU9XCJzbVwiIHdlaWdodD1cInNlbWlib2xkXCIgbWF4TGluZXM9ezR9IC8-XG4gICAgICAgICAgICAgIDxUZXh0IHZhbHVlPXtgYnkgJHthcnRpY2xlLmF1dGhvcn1gfSBjb2xvcj1cInRlcnRpYXJ5XCIgc2l6ZT1cInhzXCIgLz5cbiAgICAgICAgICAgIDwvQ29sPlxuICAgICAgICAgICAgPFJvdyBqdXN0aWZ5PVwiZW5kXCI-XG4gICAgICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgICAgICBsYWJlbD1cIlZpZXdcIlxuICAgICAgICAgICAgICAgIHNpemU9XCJzbVwiXG4gICAgICAgICAgICAgICAgaWNvblNpemU9XCJzbVwiXG4gICAgICAgICAgICAgICAgcGlsbFxuICAgICAgICAgICAgICAgIHZhcmlhbnQ9XCJnaG9zdFwiXG4gICAgICAgICAgICAgICAgY29sb3I9XCJ3YXJuaW5nXCJcbiAgICAgICAgICAgICAgICBpY29uRW5kPVwiY2hldnJvbi1yaWdodFwiXG4gICAgICAgICAgICAgICAgb25DbGlja0FjdGlvbj17eyB0eXBlOiBcIm9wZW5fYXJ0aWNsZVwiLCBoYW5kbGVyOiBcImNsaWVudFwiLCBwYXlsb2FkOiB7aWQ6IGFydGljbGUuaWR9IH19XG4gICAgICAgICAgICAgIC8-XG4gICAgICAgICAgICA8L1Jvdz5cbiAgICAgICAgICA8L0NvbD5cbiAgICAgICAgPC9Sb3c-XG4gICAgICA8L0JveD5cbiAgICA8L0xpc3RWaWV3SXRlbT5cbiAgKSl9XG48L0xpc3RWaWV3PiIsImRlZmF1bHRTdGF0ZSI6eyJhcnRpY2xlcyI6W3siaWQiOiJiZW5jaC1vcmllbnRhdGlvbi1kZWJhdGUiLCJ0aXRsZSI6Ik5ldyBCZW5jaCBJbnN0YWxsZWQgTmVhciBXaWxsb3cgUGF0aDsgUmVzaWRlbnRzIERlYmF0ZSBPcHRpbWFsIE9yaWVudGF0aW9uIiwiYXV0aG9yIjoiRWxvd2VuIFdpbGRlciIsImhlcm9JbWFnZVVybCI6Imh0dHBzOi8vaS5pbWd1ci5jb20vcWpwWE9jSi5qcGVnIiwiZGF0ZSI6IkZlYiA0LCAyMDI1In0seyJpZCI6ImNvbW11bml0eS1mcmlkZ2UtYXBwbGUtcGllcyIsInRpdGxlIjoiQ29tbXVuaXR5IEZyaWRnZSBNeXN0ZXJpb3VzbHkgRmlsbGVkIFdpdGggQXBwbGUgUGllcyBPdmVybmlnaHQiLCJhdXRob3IiOiJNYXJsb3cgS2VlbmUiLCJoZXJvSW1hZ2VVcmwiOiJodHRwczovL2kuaW1ndXIuY29tL3pRSWtUYzQuanBlZyIsImRhdGUiOiJGZWIgMywgMjAyNSJ9XX0sInNjaGVtYU1vZGUiOiJ6b2QiLCJqc29uU2NoZW1hIjp7InR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7InRpdGxlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbInRpdGxlIl0sImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZX0sInNjaGVtYSI6ImltcG9ydCB7IHogfSBmcm9tIFwiem9kXCI7XG5cbmNvbnN0IEFydGljbGUgPSB6Lm9iamVjdCh7XG4gIGlkOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksXG4gIHRpdGxlOiB6LnN0cmluZygpLnRyaW0oKS5taW4oMSksXG4gIGF1dGhvcjogei5zdHJpbmcoKS50cmltKCkubWluKDEpLFxuICBoZXJvSW1hZ2VVcmw6IHouc3RyaW5nKCkudXJsKCksXG4gIGRhdGU6IHouc3RyaW5nKCkudHJpbSgpLm1pbigxKSwgLy8gZGlzcGxheSBzdHJpbmcsIGUuZy4gXCJKYW4gNSwgMjAyNVwiXG59KTtcblxuY29uc3QgQXJ0aWNsZXNEYXRhID0gei5vYmplY3Qoe1xuICBhcnRpY2xlczogei5hcnJheShBcnRpY2xlKSxcbn0pO1xuXG5leHBvcnQgZGVmYXVsdCBBcnRpY2xlc0RhdGE7Iiwic3RhdGVzIjpbXSwic2NoZW1hVmFsaWRpdHkiOiJ2YWxpZCIsInZpZXdWYWxpZGl0eSI6InZhbGlkIiwiZGVmYXVsdFN0YXRlVmFsaWRpdHkiOiJ2YWxpZCJ9"
+}
