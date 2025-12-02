@@ -72,9 +72,7 @@ MODEL = "gpt-4.1-mini"
 
 class CatAgentContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    store: Annotated[MemoryStore, Field(exclude=True)]
     cats: Annotated[CatStore, Field(exclude=True)]
-    request_context: dict[str, Any]
 
 
 async def _get_state(ctx: RunContextWrapper[CatAgentContext]) -> CatState:

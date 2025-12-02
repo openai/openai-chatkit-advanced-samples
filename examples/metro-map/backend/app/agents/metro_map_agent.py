@@ -76,9 +76,7 @@ INSTRUCTIONS = """
 
 class MetroAgentContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    store: Annotated[MemoryStore, Field(exclude=True)]
     metro: Annotated[MetroMapStore, Field(exclude=True)]
-    request_context: Annotated[RequestContext, Field(exclude=True)]
 
 
 class MapResult(BaseModel):

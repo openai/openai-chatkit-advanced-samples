@@ -47,8 +47,6 @@ MODEL = "gpt-4.1-mini"
 
 class PuzzleAgentContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    store: Annotated[MemoryStore, Field(exclude=True)]
-    request_context: Annotated[RequestContext, Field(exclude=True, default_factory=RequestContext)]
 
 
 puzzle_agent = Agent[PuzzleAgentContext](

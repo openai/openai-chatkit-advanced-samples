@@ -49,9 +49,7 @@ MODEL = "gpt-4.1-mini"
 
 class EventFinderContext(AgentContext):
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    store: Annotated[MemoryStore, Field(exclude=True)]
     events: Annotated[EventStore, Field(exclude=True)]
-    request_context: Annotated[RequestContext, Field(exclude=True, default_factory=RequestContext)]
 
 
 class EventKeywords(BaseModel):
