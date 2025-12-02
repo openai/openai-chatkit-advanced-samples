@@ -17,7 +17,6 @@ from pydantic import ConfigDict, Field, ValidationError
 
 from .cat_state import CatState
 from .cat_store import CatStore
-from .memory_store import MemoryStore
 from .widgets.name_suggestions_widget import CatNameSuggestion, build_name_suggestions_widget
 from .widgets.profile_card_widget import build_profile_card_widget, profile_widget_copy_text
 

@@ -18,7 +18,6 @@ from chatkit.types import (
     AssistantMessageItem,
     Attachment,
     ClientEffectEvent,
-    ClientToolCallItem,
     HiddenContextItem,
     ThreadItemDoneEvent,
     ThreadItemReplacedEvent,

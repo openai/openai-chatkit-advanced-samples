@@ -17,8 +17,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..agents.event_finder_agent import event_finder_agent
 from ..agents.puzzle_agent import puzzle_agent
 from ..data.article_store import ArticleMetadata, ArticleRecord, ArticleStore
-from ..memory_store import MemoryStore
-from ..request_context import RequestContext
 from ..widgets.article_list_widget import build_article_list_widget
 
 logging.basicConfig(level=logging.INFO)
