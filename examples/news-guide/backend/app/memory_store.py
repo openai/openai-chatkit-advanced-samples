@@ -5,182 +5,95 @@ A production app would implement this using a persistant database.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Dict, List
+from collections import defaultdict
 
 from chatkit.store import NotFoundError, Store
-from chatkit.types import Attachment, Page, Thread, ThreadItem, ThreadMetadata
+from chatkit.types import Attachment, Page, ThreadItem, ThreadMetadata
 
 from .request_context import RequestContext
 
 
-@dataclass
-class _ThreadState:
-    thread: ThreadMetadata
-    items: List[ThreadItem]
-
-
 class MemoryStore(Store[RequestContext]):
-    """Simple in-memory store compatible with the ChatKit Store interface."""
+    def __init__(self):
+        self.threads: dict[str, ThreadMetadata] = {}
+        self.items: dict[str, list[ThreadItem]] = defaultdict(list)
 
-    def __init__(self) -> None:
-        self._threads: Dict[str, _ThreadState] = {}
-        # Attachments intentionally unsupported; use a real store that enforces auth.
-
-    @staticmethod
-    def _coerce_thread_metadata(thread: ThreadMetadata | Thread) -> ThreadMetadata:
-        """Return thread metadata without any embedded items."""
-        has_items = isinstance(thread, Thread) or "items" in getattr(
-            thread, "model_fields_set", set()
-        )
-        if not has_items:
-            return thread.model_copy(deep=True)
-
-        data = thread.model_dump()
-        data.pop("items", None)
-        return ThreadMetadata(**data).model_copy(deep=True)
-
-    # -- Thread metadata -------------------------------------------------
     async def load_thread(self, thread_id: str, context: RequestContext) -> ThreadMetadata:
-        state = self._threads.get(thread_id)
-        if not state:
+        if thread_id not in self.threads:
             raise NotFoundError(f"Thread {thread_id} not found")
-        return self._coerce_thread_metadata(state.thread)
+        return self.threads[thread_id]
 
     async def save_thread(self, thread: ThreadMetadata, context: RequestContext) -> None:
-        metadata = self._coerce_thread_metadata(thread)
-        state = self._threads.get(thread.id)
-        if state:
-            state.thread = metadata
-        else:
-            self._threads[thread.id] = _ThreadState(
-                thread=metadata,
-                items=[],
-            )
+        self.threads[thread.id] = thread
 
     async def load_threads(
-        self,
-        limit: int,
-        after: str | None,
-        order: str,
-        context: RequestContext,
+        self, limit: int, after: str | None, order: str, context: RequestContext
     ) -> Page[ThreadMetadata]:
-        threads = sorted(
-            (self._coerce_thread_metadata(state.thread) for state in self._threads.values()),
-            key=lambda t: t.created_at or datetime.min,
-            reverse=(order == "desc"),
+        threads = list(self.threads.values())
+        return self._paginate(
+            threads, after, limit, order, sort_key=lambda t: t.created_at, cursor_key=lambda t: t.id
         )
-
-        if after:
-            index_map = {thread.id: idx for idx, thread in enumerate(threads)}
-            start = index_map.get(after, -1) + 1
-        else:
-            start = 0
-
-        slice_threads = threads[start : start + limit + 1]
-        has_more = len(slice_threads) > limit
-        slice_threads = slice_threads[:limit]
-        next_after = slice_threads[-1].id if has_more and slice_threads else None
-        return Page(
-            data=slice_threads,
-            has_more=has_more,
-            after=next_after,
-        )
-
-    async def delete_thread(self, thread_id: str, context: RequestContext) -> None:
-        self._threads.pop(thread_id, None)
-
-    # -- Thread items ----------------------------------------------------
-    def _thread_state(self, thread_id: str) -> _ThreadState:
-        state = self._threads.get(thread_id)
-        if state is None:
-            state = _ThreadState(
-                thread=ThreadMetadata(id=thread_id, created_at=datetime.utcnow()),
-                items=[],
-            )
-            self._threads[thread_id] = state
-        return state
-
-    def _items(self, thread_id: str) -> List[ThreadItem]:
-        state = self._thread_state(thread_id)
-        return state.items
 
     async def load_thread_items(
-        self,
-        thread_id: str,
-        after: str | None,
-        limit: int,
-        order: str,
-        context: RequestContext,
+        self, thread_id: str, after: str | None, limit: int, order: str, context: RequestContext
     ) -> Page[ThreadItem]:
-        items = [item.model_copy(deep=True) for item in self._items(thread_id)]
-        items.sort(
-            key=lambda item: getattr(item, "created_at", datetime.utcnow()),
-            reverse=(order == "desc"),
+        items = self.items.get(thread_id, [])
+        return self._paginate(
+            items, after, limit, order, sort_key=lambda i: i.created_at, cursor_key=lambda i: i.id
         )
-
-        if after:
-            index_map = {item.id: idx for idx, item in enumerate(items)}
-            start = index_map.get(after, -1) + 1
-        else:
-            start = 0
-
-        slice_items = items[start : start + limit + 1]
-        has_more = len(slice_items) > limit
-        slice_items = slice_items[:limit]
-        next_after = slice_items[-1].id if has_more and slice_items else None
-        return Page(data=slice_items, has_more=has_more, after=next_after)
 
     async def add_thread_item(
         self, thread_id: str, item: ThreadItem, context: RequestContext
     ) -> None:
-        self._items(thread_id).append(item.model_copy(deep=True))
+        self.items[thread_id].append(item)
 
     async def save_item(self, thread_id: str, item: ThreadItem, context: RequestContext) -> None:
-        items = self._items(thread_id)
+        items = self.items[thread_id]
         for idx, existing in enumerate(items):
             if existing.id == item.id:
-                items[idx] = item.model_copy(deep=True)
+                items[idx] = item
                 return
-        items.append(item.model_copy(deep=True))
+        items.append(item)
 
     async def load_item(self, thread_id: str, item_id: str, context: RequestContext) -> ThreadItem:
-        for item in self._items(thread_id):
+        for item in self.items.get(thread_id, []):
             if item.id == item_id:
-                return item.model_copy(deep=True)
-        raise NotFoundError(f"Item {item_id} not found")
+                return item
+        raise NotFoundError(f"Item {item_id} not found in thread {thread_id}")
+
+    async def delete_thread(self, thread_id: str, context: RequestContext) -> None:
+        self.threads.pop(thread_id, None)
+        self.items.pop(thread_id, None)
 
     async def delete_thread_item(
         self, thread_id: str, item_id: str, context: RequestContext
     ) -> None:
-        items = self._items(thread_id)
-        self._threads[thread_id].items = [item for item in items if item.id != item_id]
+        self.items[thread_id] = [
+            item for item in self.items.get(thread_id, []) if item.id != item_id
+        ]
 
-    # -- Files -----------------------------------------------------------
-    # These methods are not currently used but required to be compatible with the Store interface.
+    def _paginate(
+        self, rows: list, after: str | None, limit: int, order: str, sort_key, cursor_key
+    ):
+        sorted_rows = sorted(rows, key=sort_key, reverse=order == "desc")
+        start = 0
+        if after:
+            for idx, row in enumerate(sorted_rows):
+                if cursor_key(row) == after:
+                    start = idx + 1
+                    break
+        data = sorted_rows[start : start + limit]
+        has_more = start + limit < len(sorted_rows)
+        next_after = cursor_key(data[-1]) if has_more and data else None
+        return Page(data=data, has_more=has_more, after=next_after)
 
-    async def save_attachment(
-        self,
-        attachment: Attachment,
-        context: RequestContext,
-    ) -> None:
-        raise NotImplementedError(
-            "MemoryStore does not persist attachments. Provide a Store implementation "
-            "that enforces authentication and authorization before enabling uploads."
-        )
+    # Attachments are not implemented in the quickstart store
 
-    async def load_attachment(
-        self,
-        attachment_id: str,
-        context: RequestContext,
-    ) -> Attachment:
-        raise NotImplementedError(
-            "MemoryStore does not load attachments. Provide a Store implementation "
-            "that enforces authentication and authorization before enabling uploads."
-        )
+    async def save_attachment(self, attachment: Attachment, context: RequestContext) -> None:
+        raise NotImplementedError()
+
+    async def load_attachment(self, attachment_id: str, context: RequestContext) -> Attachment:
+        raise NotImplementedError()
 
     async def delete_attachment(self, attachment_id: str, context: RequestContext) -> None:
-        raise NotImplementedError(
-            "MemoryStore does not delete attachments because they are never stored."
-        )
+        raise NotImplementedError()
