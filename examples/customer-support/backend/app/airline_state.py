@@ -120,10 +120,12 @@ class AirlineStateManager:
         )
         return f"Seat updated to {segment.seat} on flight {segment.flight_number}."
 
-    def cancel_trip(self, thread_id: str) -> str:
+    def cancel_trip(self, thread_id: str, flight_number: str) -> str:
         profile = self.get_profile(thread_id)
-        for segment in profile.segments:
-            segment.cancel()
+        segment = self._find_segment(profile, flight_number)
+        if segment is None:
+            raise ValueError(f"Flight {flight_number} is not on the customer's itinerary.")
+        segment.cancel()
         profile.log("Trip cancelled at customer request.", kind="warning")
         return "The reservation has been cancelled. Refund processing will begin immediately."
 
