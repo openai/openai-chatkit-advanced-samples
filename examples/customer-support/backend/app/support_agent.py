@@ -29,7 +29,7 @@ Custom tags:
 
 Available tools:
 - change_seat(flight_number: str, seat: str) – move the passenger to a new seat.
-- cancel_trip() – cancel the upcoming reservation and note the refund.
+- cancel_trip(flight_number: str) – cancel the upcoming reservation and note the refund.
 - add_checked_bag() – add one checked bag to the itinerary.
 - meal_preference_list() – show meal options so the traveller can pick their preference.
   Invoke this tool when the user requests to set or change their meal preference or option.
@@ -63,8 +63,11 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
     @function_tool(
         description_override="Cancel the traveller's upcoming trip and note the refund.",
     )
-    async def cancel_trip(ctx: RunContextWrapper[AgentContext]) -> Dict[str, str]:
-        message = state_manager.cancel_trip(_thread_id(ctx))
+    async def cancel_trip(ctx: RunContextWrapper[AgentContext], flight_number: str) -> Dict[str, str]:
+        try:
+            message = state_manager.cancel_trip(_thread_id(ctx), flight_number)
+        except ValueError as exc:  # translate user errors
+            raise ValueError(str(exc)) from exc
         return {"result": message}
 
     @function_tool(
