@@ -1,11 +1,14 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import clsx from "clsx";
 
-import { ChatKitPanel } from "./ChatKitPanel";
+import { ChatKitPanel, type ChatKitInstance } from "./ChatKitPanel";
 import { CustomerContextPanel } from "./CustomerContextPanel";
 import { ThemeToggle } from "./ThemeToggle";
+import type { CustomerProfile } from "../hooks/useCustomerContext";
 import { useCustomerContext } from "../hooks/useCustomerContext";
 import type { ColorScheme } from "../hooks/useColorScheme";
+import { SUPPORT_GREETINGS, SUPPORT_STARTER_PROMPTS } from "../lib/config";
+import type { SupportView } from "../types/support";
 
 type HomeProps = {
   scheme: ColorScheme;
@@ -14,13 +17,16 @@ type HomeProps = {
 
 export default function Home({ scheme, onThemeChange }: HomeProps) {
   const [threadId, setThreadId] = useState<string | null>(null);
-  const { profile, loading, error, refresh } = useCustomerContext(threadId);
+  const [view, setView] = useState<SupportView>("overview");
+  const [chatkit, setChatkit] = useState<ChatKitInstance | null>(null);
+  const { profile, loading, error, refresh, setProfile } =
+    useCustomerContext(threadId);
 
   const containerClass = clsx(
     "min-h-screen bg-gradient-to-br transition-colors duration-300",
     scheme === "dark"
       ? "from-slate-950 via-slate-950 to-slate-900 text-slate-100"
-      : "from-slate-100 via-white to-slate-200 text-slate-900",
+      : "from-slate-100 via-white to-slate-200 text-slate-900"
   );
 
   const handleThreadChange = useCallback((nextThreadId: string | null) => {
@@ -31,6 +37,25 @@ export default function Home({ scheme, onThemeChange }: HomeProps) {
     void refresh();
   }, [refresh]);
 
+  const handleWidgetActionComplete = useCallback(() => {
+    void refresh();
+  }, [refresh]);
+
+  const handleProfileEffect = useCallback(
+    (nextProfile: CustomerProfile) => {
+      setProfile(nextProfile);
+    },
+    [setProfile]
+  );
+
+  const startScreen = useMemo(
+    () => ({
+      greeting: SUPPORT_GREETINGS[view],
+      prompts: SUPPORT_STARTER_PROMPTS[view],
+    }),
+    [view]
+  );
+
   return (
     <div className={containerClass}>
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-8 px-6 py-8 lg:h-screen lg:max-h-screen lg:py-10">
@@ -40,12 +65,12 @@ export default function Home({ scheme, onThemeChange }: HomeProps) {
               OpenSkies concierge desk
             </p>
             <h1 className="text-3xl font-semibold sm:text-4xl">
-              Airline customer support overview
+              Airline customer support workspace
             </h1>
             <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              Chat with the concierge on the left. The right panel refreshes with customer
-              profile details, itinerary changes, and a live service timeline after each
-              action.
+              Chat with the concierge on the left. Use the tabs below to switch
+              between overview details, trips, and loyalty, while the agent
+              keeps everything up to date.
             </p>
           </div>
           <ThemeToggle value={scheme} onChange={onThemeChange} />
@@ -56,13 +81,25 @@ export default function Home({ scheme, onThemeChange }: HomeProps) {
             <div className="flex flex-1">
               <ChatKitPanel
                 theme={scheme}
+                greeting={startScreen.greeting}
+                prompts={startScreen.prompts}
                 onThreadChange={handleThreadChange}
                 onResponseCompleted={handleResponseCompleted}
+                onProfileUpdate={handleProfileEffect}
+                onWidgetActionComplete={handleWidgetActionComplete}
+                onChatKitReady={setChatkit}
               />
             </div>
           </section>
 
-          <CustomerContextPanel profile={profile} loading={loading} error={error} />
+          <CustomerContextPanel
+            profile={profile}
+            loading={loading}
+            error={error}
+            view={view}
+            onViewChange={setView}
+            chatkit={chatkit}
+          />
         </div>
       </div>
     </div>

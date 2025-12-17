@@ -35,6 +35,8 @@ You can run the following examples:
   - The metro agent syncs map data with `get_map` and surfaces line and station details via `list_lines`, `list_stations`, `get_line_route`, and `get_station` before giving directions ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
   - `show_line_selector` presents the user a multiple-choice question using a widget.
   - Route-planning replies attach entity sources for the stations in the suggested path as annotations.
+- **Customer Support**:
+  - The concierge prepends a `<CUSTOMER_PROFILE>` snapshot (itinerary, loyalty, recent timeline) before each run and exposes tools to change seats, cancel trips, add bags, set meals, surface flight options, and request assistance against the per-thread `AirlineStateManager` state ([server.py](examples/customer-support/backend/app/server.py), [support_agent.py](examples/customer-support/backend/app/support_agent.py), [airline_state.py](examples/customer-support/backend/app/airline_state.py)).
 
 ### Client tool calls that mutate or fetch UI state
 
@@ -48,6 +50,8 @@ You can run the following examples:
 - **Metro Map**:
   - Client effect `location_select_mode` is streamed within the server action handler ([server.py](examples/metro-map/backend/app/server.py)) after a line is chosen and updates the metro map canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
   - Client effect `add_station` is streamed by the agent after map updates to immediately sync the canvas and focus the newly created stop ([metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py), [ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
+- **Customer Support**:
+  - The server streams `customer_profile/update` effects after tools or widget actions so the side panel mirrors the latest itinerary, loyalty, and timeline data ([support_agent.py](examples/customer-support/backend/app/support_agent.py), [server.py](examples/customer-support/backend/app/server.py)).
 
 ### Page-aware model responses
 
@@ -78,6 +82,8 @@ You can run the following examples:
 - **Cat Lounge**:
   - Server tool `suggest_cat_names` streams a widget with action configs that specify `cats.select_name` and `cats.more_names` client-handled actions.
   - When the user clicks the widget, these actions are handled with the `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
+- **Customer Support**:
+  - Flight and meal widgets stream with action payloads (`flight.select`, `support.set_meal_preference`) to capture choices before booking, built from `.widget` templates ([flight_options.py](examples/customer-support/backend/app/flight_options.py), [meal_preferences.py](examples/customer-support/backend/app/meal_preferences.py), [support_agent.py](examples/customer-support/backend/app/support_agent.py)).
 - **News Guide**:
   - Article list widgets render “View” buttons that dispatch `open_article` actions for client navigation and engagement ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py), [article_list_widget.py](examples/news-guide/backend/app/widgets/article_list_widget.py)).
   - The event finder streams a timeline widget with `view_event_details` buttons configured for server handling so users can expand items inline ([event_finder_agent.py](examples/news-guide/backend/app/agents/event_finder_agent.py), [event_list_widget.py](examples/news-guide/backend/app/widgets/event_list_widget.py)).
@@ -89,10 +95,17 @@ You can run the following examples:
 - **Cat Lounge**:
   - The `cats.select_name` action is also handled server-side to reflect updates to data and stream back an updated version of the name suggestions widget in [server.py](examples/cat-lounge/backend/app/server.py).
   - It is invoked using `chatkit.sendAction()` from `handleWidgetAction` callback in [ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx).
+- **Customer Support**:
+  - Action handlers persist bookings, meals, upsells, and rebooks; lock widgets; log hidden context; and refresh the profile when users click `flight.select`, `support.set_meal_preference`, `booking.*`, `upsell.*`, or `rebook.select_option` ([server.py](examples/customer-support/backend/app/server.py)).
 - **News Guide**:
   - The `view_event_details` action is processed server-side to update the timeline widget with expanded descriptions without a round trip to the model ([server.py](examples/news-guide/backend/app/server.py)).
 - **Metro Map**:
   - The `line.select` action is handled server-side to stream an updated widget, add a `<LINE_SELECTED>` hidden context item to thread, stream an assistant message to ask the user whether to add the station at the line’s start or end, and trigger the `location_select_mode` client effect for the UI to sync ([server.py](examples/metro-map/backend/app/server.py)).
+
+### Attachments
+
+- **Customer Support**:
+  - End-to-end image attachments: the backend issues upload/download URLs, enforces image/size limits, and converts uploads to data URLs for the model ([attachment_store.py](examples/customer-support/backend/app/attachment_store.py), [main.py](examples/customer-support/backend/app/main.py), [thread_item_converter.py](examples/customer-support/backend/app/thread_item_converter.py)). The React panel registers `attachments.create`, uploads via the signed URL, and drops the attachment into the composer when travellers share inspiration photos ([CustomerContextPanel.tsx](examples/customer-support/frontend/src/components/CustomerContextPanel.tsx)).
 
 ### Annotations
 
@@ -103,6 +116,8 @@ You can run the following examples:
 
 - **Cat Lounge**:
   - After the user names the cat, the `set_cat_name` tool locks in the name and updates the thread title to `{name}’s Lounge` before saving it ([cat_agent.py](examples/cat-lounge/backend/app/cat_agent.py)).
+- **Customer Support**:
+  - A lightweight title agent names the conversation on the first user message without delaying the first reply ([title_agent.py](examples/customer-support/backend/app/title_agent.py), [server.py](examples/customer-support/backend/app/server.py)).
 - **News Guide**:
   - The `title_agent` runs on the first user message to generate a short newsroom-friendly title when none exists ([server.py](examples/news-guide/backend/app/server.py), [title_agent.py](examples/news-guide/backend/app/agents/title_agent.py)).
 - **Metro Map**:

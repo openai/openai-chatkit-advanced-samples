@@ -1,0 +1,620 @@
+{
+  "version": "1.0",
+  "name": "flight_options_list",
+  "template": "{%- set option_list = options | default([]) -%}\n{%- set selected_id = selectedId | default(None) -%}\n{%- set leg_value = leg | default(\"outbound\") -%}\n{\n  \"type\": \"ListView\",\n  \"children\": [\n    {%- for option in option_list %}\n    {%- set is_selected = selected_id == option.id %}\n    {\n      \"type\": \"ListViewItem\",\n      \"key\": {{ (option.id) | tojson }},\n      \"gap\": 0,\n      \"align\": \"stretch\",\n      \"onClickAction\": {% if is_selected %}{{ (none) | tojson }}{% else %}{\n        \"type\": {{ (actionType) | tojson }},\n        \"handler\": \"server\",\n        \"payload\": {\n          \"id\": {{ (option.id) | tojson }},\n          \"options\": {{ (option_list) | tojson }},\n          \"request\": {{ (request) | tojson }},\n          \"leg\": {{ (leg_value) | tojson }}\n        }\n      }{% endif %},\n      \"children\": [\n        {\n          \"type\": \"Box\",\n          \"width\": \"100%\",\n          \"padding\": 3,\n          \"border\": {\n            \"size\": 1,\n            \"color\": {% if is_selected %}\"blue-500\"{% else %}\"default\"{% endif %},\n            \"style\": {% if is_selected %}\"solid\"{% else %}\"dashed\"{% endif %}\n          },\n          \"radius\": \"xl\",\n          \"background\": \"surface\",\n          \"children\": [\n            {\n              \"type\": \"Row\",\n              \"gap\": 3,\n              \"align\": \"stretch\",\n              \"children\": [\n                {\n                  \"type\": \"Box\",\n                  \"width\": 3,\n                  \"background\": \"blue-600\",\n                  \"radius\": \"full\"\n                },\n                {\n                  \"type\": \"Col\",\n                  \"flex\": \"auto\",\n                  \"gap\": 2,\n                  \"children\": [\n                    {\n                      \"type\": \"Row\",\n                      \"children\": [\n                        {\n                          \"type\": \"Title\",\n                          \"value\": {{ (option.from_airport ~ \" \u2192 \" ~ option.to_airport) | tojson }},\n                          \"size\": \"md\"\n                        },\n                        {\"type\": \"Spacer\"},\n                        {\n                          \"type\": \"Badge\",\n                          \"label\": {{ (option.cabin) | tojson }},\n                          \"color\": \"discovery\",\n                          \"variant\": \"soft\"\n                        }\n                      ]\n                    },\n                    {\n                      \"type\": \"Row\",\n                      \"children\": [\n                        {\n                          \"type\": \"Col\",\n                          \"children\": [\n                            {\"type\": \"Caption\", \"value\": \"Depart\", \"color\": \"secondary\"},\n                            {\"type\": \"Title\", \"value\": {{ (option.dep_time) | tojson }}, \"size\": \"lg\"}\n                          ]\n                        },\n                        {\"type\": \"Spacer\"},\n                        {\n                          \"type\": \"Col\",\n                          \"align\": \"end\",\n                          \"children\": [\n                            {\"type\": \"Caption\", \"value\": \"Arrive\", \"color\": \"secondary\"},\n                            {\"type\": \"Title\", \"value\": {{ (option.arr_time) | tojson }}, \"size\": \"lg\"}\n                          ]\n                        }\n                      ]\n                    },\n                    {\"type\": \"Divider\"},\n                    {\n                      \"type\": \"Row\",\n                      \"children\": [\n                        {\"type\": \"Caption\", \"value\": {{ (option.date_label) | tojson }}},\n                        {\"type\": \"Spacer\"},\n                        {\"type\": \"Caption\", \"value\": {{ (option.from_airport ~ \" \u2022 \" ~ option.to_airport) | tojson }}}\n                      ]\n                    }\n                  ]\n                }\n              ]\n            }\n          ]\n        }\n      ]\n    }\n    {%- if not loop.last %},{%- endif %}\n    {%- endfor %}\n  ]\n}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "from_airport": {
+              "type": "string",
+              "minLength": 1
+            },
+            "to_airport": {
+              "type": "string",
+              "minLength": 1
+            },
+            "dep_time": {
+              "type": "string",
+              "minLength": 1
+            },
+            "arr_time": {
+              "type": "string",
+              "minLength": 1
+            },
+            "date_label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "cabin": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "id",
+            "from_airport",
+            "to_airport",
+            "dep_time",
+            "arr_time",
+            "date_label",
+            "cabin"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "request": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destination": {
+            "type": "string",
+            "minLength": 1
+          },
+          "depart_date": {
+            "type": "string",
+            "minLength": 1
+          },
+          "return_date": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cabin": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "origin",
+          "destination",
+          "depart_date",
+          "return_date",
+          "cabin"
+        ],
+        "additionalProperties": false
+      },
+      "selectedId": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "leg": {
+        "type": "string",
+        "enum": [
+          "outbound",
+          "return"
+        ]
+      },
+      "actionType": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "options",
+      "request",
+      "actionType"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "key": "flight-option-list",
+    "type": "ListView",
+    "children": [
+      {
+        "key": "flight-morning",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": null,
+                    "width": 3.0,
+                    "radius": "full",
+                    "background": "blue-600",
+                    "type": "Box"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "Title",
+                            "value": "SFO \u2192 JFK",
+                            "size": "md"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Badge",
+                            "label": "Business",
+                            "color": "discovery",
+                            "variant": "soft"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Depart",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "08:10",
+                                "size": "lg"
+                              }
+                            ],
+                            "type": "Col"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Arrive",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "16:40",
+                                "size": "lg"
+                              }
+                            ],
+                            "align": "end",
+                            "type": "Col"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "type": "Divider"
+                      },
+                      {
+                        "children": [
+                          {
+                            "type": "Caption",
+                            "value": "Mon, Feb 10"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Caption",
+                            "value": "SFO \u2022 JFK"
+                          }
+                        ],
+                        "type": "Row"
+                      }
+                    ],
+                    "flex": "auto",
+                    "gap": 2,
+                    "type": "Col"
+                  }
+                ],
+                "align": "stretch",
+                "gap": 3,
+                "type": "Row"
+              }
+            ],
+            "width": "100%",
+            "padding": 3.0,
+            "border": {
+              "size": 1,
+              "color": "default",
+              "style": "dashed"
+            },
+            "radius": "xl",
+            "background": "surface",
+            "type": "Box"
+          }
+        ],
+        "onClickAction": {
+          "type": "flight.select",
+          "payload": {
+            "id": "flight-morning",
+            "options": [
+              {
+                "id": "flight-morning",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "08:10",
+                "arr_time": "16:40",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-midday",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "12:35",
+                "arr_time": "21:05",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-late",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "21:55",
+                "arr_time": "06:20 (+1)",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              }
+            ],
+            "request": {
+              "origin": "sfo",
+              "destination": "jfk",
+              "depart_date": "2025-02-10",
+              "return_date": "2025-02-17",
+              "cabin": "business"
+            },
+            "leg": "outbound"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        },
+        "gap": 0,
+        "align": "stretch"
+      },
+      {
+        "key": "flight-midday",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": null,
+                    "width": 3.0,
+                    "radius": "full",
+                    "background": "blue-600",
+                    "type": "Box"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "Title",
+                            "value": "SFO \u2192 JFK",
+                            "size": "md"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Badge",
+                            "label": "Business",
+                            "color": "discovery",
+                            "variant": "soft"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Depart",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "12:35",
+                                "size": "lg"
+                              }
+                            ],
+                            "type": "Col"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Arrive",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "21:05",
+                                "size": "lg"
+                              }
+                            ],
+                            "align": "end",
+                            "type": "Col"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "type": "Divider"
+                      },
+                      {
+                        "children": [
+                          {
+                            "type": "Caption",
+                            "value": "Mon, Feb 10"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Caption",
+                            "value": "SFO \u2022 JFK"
+                          }
+                        ],
+                        "type": "Row"
+                      }
+                    ],
+                    "flex": "auto",
+                    "gap": 2,
+                    "type": "Col"
+                  }
+                ],
+                "align": "stretch",
+                "gap": 3,
+                "type": "Row"
+              }
+            ],
+            "width": "100%",
+            "padding": 3.0,
+            "border": {
+              "size": 1,
+              "color": "default",
+              "style": "dashed"
+            },
+            "radius": "xl",
+            "background": "surface",
+            "type": "Box"
+          }
+        ],
+        "onClickAction": {
+          "type": "flight.select",
+          "payload": {
+            "id": "flight-midday",
+            "options": [
+              {
+                "id": "flight-morning",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "08:10",
+                "arr_time": "16:40",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-midday",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "12:35",
+                "arr_time": "21:05",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-late",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "21:55",
+                "arr_time": "06:20 (+1)",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              }
+            ],
+            "request": {
+              "origin": "sfo",
+              "destination": "jfk",
+              "depart_date": "2025-02-10",
+              "return_date": "2025-02-17",
+              "cabin": "business"
+            },
+            "leg": "outbound"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        },
+        "gap": 0,
+        "align": "stretch"
+      },
+      {
+        "key": "flight-late",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": null,
+                    "width": 3.0,
+                    "radius": "full",
+                    "background": "blue-600",
+                    "type": "Box"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "type": "Title",
+                            "value": "SFO \u2192 JFK",
+                            "size": "md"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Badge",
+                            "label": "Business",
+                            "color": "discovery",
+                            "variant": "soft"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Depart",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "21:55",
+                                "size": "lg"
+                              }
+                            ],
+                            "type": "Col"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "children": [
+                              {
+                                "type": "Caption",
+                                "value": "Arrive",
+                                "color": "secondary"
+                              },
+                              {
+                                "type": "Title",
+                                "value": "06:20 (+1)",
+                                "size": "lg"
+                              }
+                            ],
+                            "align": "end",
+                            "type": "Col"
+                          }
+                        ],
+                        "type": "Row"
+                      },
+                      {
+                        "type": "Divider"
+                      },
+                      {
+                        "children": [
+                          {
+                            "type": "Caption",
+                            "value": "Mon, Feb 10"
+                          },
+                          {
+                            "type": "Spacer"
+                          },
+                          {
+                            "type": "Caption",
+                            "value": "SFO \u2022 JFK"
+                          }
+                        ],
+                        "type": "Row"
+                      }
+                    ],
+                    "flex": "auto",
+                    "gap": 2,
+                    "type": "Col"
+                  }
+                ],
+                "align": "stretch",
+                "gap": 3,
+                "type": "Row"
+              }
+            ],
+            "width": "100%",
+            "padding": 3.0,
+            "border": {
+              "size": 1,
+              "color": "default",
+              "style": "dashed"
+            },
+            "radius": "xl",
+            "background": "surface",
+            "type": "Box"
+          }
+        ],
+        "onClickAction": {
+          "type": "flight.select",
+          "payload": {
+            "id": "flight-late",
+            "options": [
+              {
+                "id": "flight-morning",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "08:10",
+                "arr_time": "16:40",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-midday",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "12:35",
+                "arr_time": "21:05",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              },
+              {
+                "id": "flight-late",
+                "from": "SFO",
+                "to": "JFK",
+                "dep_time": "21:55",
+                "arr_time": "06:20 (+1)",
+                "date_label": "Mon, Feb 10",
+                "cabin": "Business"
+              }
+            ],
+            "request": {
+              "origin": "sfo",
+              "destination": "jfk",
+              "depart_date": "2025-02-10",
+              "return_date": "2025-02-17",
+              "cabin": "business"
+            },
+            "leg": "outbound"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        },
+        "gap": 0,
+        "align": "stretch"
+      }
+    ]
+  },
+  "encodedWidget": "eyUtIHNldCBvcHRpb25fbGlzdCA9IG9wdGlvbnMgfCBkZWZhdWx0KFtdKSAtJX0KeyUtIHNldCBzZWxlY3RlZF9pZCA9IHNlbGVjdGVkSWQgfCBkZWZhdWx0KE5vbmUpIC0lfQp7JS0gc2V0IGxlZ192YWx1ZSA9IGxlZyB8IGRlZmF1bHQoIm91dGJvdW5kIikgLSV9CnsKICAidHlwZSI6ICJMaXN0VmlldyIsCiAgImNoaWxkcmVuIjogWwogICAgeyUtIGZvciBvcHRpb24gaW4gb3B0aW9uX2xpc3QgJX0KICAgIHslLSBzZXQgaXNfc2VsZWN0ZWQgPSBzZWxlY3RlZF9pZCA9PSBvcHRpb24uaWQgJX0KICAgIHsKICAgICAgInR5cGUiOiAiTGlzdFZpZXdJdGVtIiwKICAgICAgImtleSI6IHt7IChvcHRpb24uaWQpIHwgdG9qc29uIH19LAogICAgICAiZ2FwIjogMCwKICAgICAgImFsaWduIjogInN0cmV0Y2giLAogICAgICAib25DbGlja0FjdGlvbiI6IHslIGlmIGlzX3NlbGVjdGVkICV9e3sgKG5vbmUpIHwgdG9qc29uIH19eyUgZWxzZSAlfXsKICAgICAgICAidHlwZSI6IHt7IChhY3Rpb25UeXBlKSB8IHRvanNvbiB9fSwKICAgICAgICAiaGFuZGxlciI6ICJzZXJ2ZXIiLAogICAgICAgICJwYXlsb2FkIjogewogICAgICAgICAgImlkIjoge3sgKG9wdGlvbi5pZCkgfCB0b2pzb24gfX0sCiAgICAgICAgICAib3B0aW9ucyI6IHt7IChvcHRpb25fbGlzdCkgfCB0b2pzb24gfX0sCiAgICAgICAgICAicmVxdWVzdCI6IHt7IChyZXF1ZXN0KSB8IHRvanNvbiB9fSwKICAgICAgICAgICJsZWciOiB7eyAobGVnX3ZhbHVlKSB8IHRvanNvbiB9fQogICAgICAgIH0KICAgICAgfXslIGVuZGlmICV9LAogICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAiQm94IiwKICAgICAgICAgICJ3aWR0aCI6ICIxMDAlIiwKICAgICAgICAgICJwYWRkaW5nIjogMywKICAgICAgICAgICJib3JkZXIiOiB7CiAgICAgICAgICAgICJzaXplIjogMSwKICAgICAgICAgICAgImNvbG9yIjogeyUgaWYgaXNfc2VsZWN0ZWQgJX0iYmx1ZS01MDAieyUgZWxzZSAlfSJkZWZhdWx0InslIGVuZGlmICV9LAogICAgICAgICAgICAic3R5bGUiOiB7JSBpZiBpc19zZWxlY3RlZCAlfSJzb2xpZCJ7JSBlbHNlICV9ImRhc2hlZCJ7JSBlbmRpZiAlfQogICAgICAgICAgfSwKICAgICAgICAgICJyYWRpdXMiOiAieGwiLAogICAgICAgICAgImJhY2tncm91bmQiOiAic3VyZmFjZSIsCiAgICAgICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAidHlwZSI6ICJSb3ciLAogICAgICAgICAgICAgICJnYXAiOiAzLAogICAgICAgICAgICAgICJhbGlnbiI6ICJzdHJldGNoIiwKICAgICAgICAgICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICJ0eXBlIjogIkJveCIsCiAgICAgICAgICAgICAgICAgICJ3aWR0aCI6IDMsCiAgICAgICAgICAgICAgICAgICJiYWNrZ3JvdW5kIjogImJsdWUtNjAwIiwKICAgICAgICAgICAgICAgICAgInJhZGl1cyI6ICJmdWxsIgogICAgICAgICAgICAgICAgfSwKICAgICAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgICAgInR5cGUiOiAiQ29sIiwKICAgICAgICAgICAgICAgICAgImZsZXgiOiAiYXV0byIsCiAgICAgICAgICAgICAgICAgICJnYXAiOiAyLAogICAgICAgICAgICAgICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAiUm93IiwKICAgICAgICAgICAgICAgICAgICAgICJjaGlsZHJlbiI6IFsKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICJ0eXBlIjogIlRpdGxlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAidmFsdWUiOiB7eyAob3B0aW9uLmZyb21fYWlycG9ydCB+ICIg4oaSICIgfiBvcHRpb24udG9fYWlycG9ydCkgfCB0b2pzb24gfX0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgInNpemUiOiAibWQiCiAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgIHsidHlwZSI6ICJTcGFjZXIifSwKICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICJ0eXBlIjogIkJhZGdlIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAibGFiZWwiOiB7eyAob3B0aW9uLmNhYmluKSB8IHRvanNvbiB9fSwKICAgICAgICAgICAgICAgICAgICAgICAgICAiY29sb3IiOiAiZGlzY292ZXJ5IiwKICAgICAgICAgICAgICAgICAgICAgICAgICAidmFyaWFudCI6ICJzb2Z0IgogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgICAgICAgICAgfSwKICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAidHlwZSI6ICJSb3ciLAogICAgICAgICAgICAgICAgICAgICAgImNoaWxkcmVuIjogWwogICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAiQ29sIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiQ2FwdGlvbiIsICJ2YWx1ZSI6ICJEZXBhcnQiLCAiY29sb3IiOiAic2Vjb25kYXJ5In0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiVGl0bGUiLCAidmFsdWUiOiB7eyAob3B0aW9uLmRlcF90aW1lKSB8IHRvanNvbiB9fSwgInNpemUiOiAibGcifQogICAgICAgICAgICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgICAgICAgICAgICAgfSwKICAgICAgICAgICAgICAgICAgICAgICAgeyJ0eXBlIjogIlNwYWNlciJ9LAogICAgICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgInR5cGUiOiAiQ29sIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAiYWxpZ24iOiAiZW5kIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiQ2FwdGlvbiIsICJ2YWx1ZSI6ICJBcnJpdmUiLCAiY29sb3IiOiAic2Vjb25kYXJ5In0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiVGl0bGUiLCAidmFsdWUiOiB7eyAob3B0aW9uLmFycl90aW1lKSB8IHRvanNvbiB9fSwgInNpemUiOiAibGcifQogICAgICAgICAgICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgICAgXQogICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgeyJ0eXBlIjogIkRpdmlkZXIifSwKICAgICAgICAgICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAgICAgICAidHlwZSI6ICJSb3ciLAogICAgICAgICAgICAgICAgICAgICAgImNoaWxkcmVuIjogWwogICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiQ2FwdGlvbiIsICJ2YWx1ZSI6IHt7IChvcHRpb24uZGF0ZV9sYWJlbCkgfCB0b2pzb24gfX19LAogICAgICAgICAgICAgICAgICAgICAgICB7InR5cGUiOiAiU3BhY2VyIn0sCiAgICAgICAgICAgICAgICAgICAgICAgIHsidHlwZSI6ICJDYXB0aW9uIiwgInZhbHVlIjoge3sgKG9wdGlvbi5mcm9tX2FpcnBvcnQgfiAiIOKAoiAiIH4gb3B0aW9uLnRvX2FpcnBvcnQpIHwgdG9qc29uIH19fQogICAgICAgICAgICAgICAgICAgICAgXQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgXQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIF0KICAgICAgICAgICAgfQogICAgICAgICAgXQogICAgICAgIH0KICAgICAgXQogICAgfQogICAgeyUtIGlmIG5vdCBsb29wLmxhc3QgJX0seyUtIGVuZGlmICV9CiAgICB7JS0gZW5kZm9yICV9CiAgXQp9"
+}

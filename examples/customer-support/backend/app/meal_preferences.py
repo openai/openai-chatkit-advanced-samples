@@ -3,10 +3,15 @@ from __future__ import annotations
 from typing import Literal
 
 from chatkit.actions import Action
-from chatkit.widgets import Icon, ListView, ListViewItem, Row, Text
+from chatkit.widgets import WidgetRoot, WidgetTemplate
 from pydantic import BaseModel
 
-MealPreferenceOption = Literal["vegetarian", "kosher", "gluten intolerant", "child"]
+MealPreferenceOption = Literal[
+    "vegetarian",
+    "kosher",
+    "gluten intolerant",
+    "child",
+]
 
 SET_MEAL_PREFERENCE_ACTION_TYPE = "support.set_meal_preference"
 
@@ -16,6 +21,7 @@ class SetMealPreferencePayload(BaseModel):
 
 
 SetMealPreferenceAction = Action[Literal["support.set_meal_preference"], SetMealPreferencePayload]
+meal_preferences_template = WidgetTemplate.from_file("meal_preferences.widget")
 
 _MEAL_PREFERENCE_LABELS: dict[MealPreferenceOption, str] = {
     "vegetarian": "Vegetarian",
@@ -39,42 +45,15 @@ def meal_preference_label(value: MealPreferenceOption) -> str:
 def build_meal_preference_widget(
     *,
     selected: MealPreferenceOption | None = None,
-) -> ListView:
+) -> WidgetRoot:
     """Render the meal preference list widget with optional selection state."""
 
-    items: list[ListViewItem] = []
-    for value in MEAL_PREFERENCE_ORDER:
-        label = meal_preference_label(value)
-        emphasized = value == selected
-        action_config = (
-            SetMealPreferenceAction.create(SetMealPreferencePayload(meal=value))
-            if selected is None
-            else None
-        )
-        items.append(
-            ListViewItem(
-                key=f"meal-{value}",
-                onClickAction=None if selected else action_config,
-                children=[
-                    Row(
-                        gap=2,
-                        children=[
-                            Icon(
-                                name="check" if emphasized else "empty-circle",
-                                color="secondary",
-                            ),
-                            Text(
-                                value=label,
-                                weight="semibold" if emphasized else "medium",
-                                color="emphasis" if emphasized else None,
-                            ),
-                        ],
-                    )
-                ],
-            )
-        )
-
-    return ListView(
-        key="meal-preference-list",
-        children=items,
-    )
+    options = [
+        {"value": value, "label": meal_preference_label(value)} for value in MEAL_PREFERENCE_ORDER
+    ]
+    payload = {
+        "options": options,
+        "selected": selected,
+        "actionType": SET_MEAL_PREFERENCE_ACTION_TYPE,
+    }
+    return meal_preferences_template.build(payload)

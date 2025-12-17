@@ -15,13 +15,20 @@ class MemoryStore(Store[dict]):
     def __init__(self):
         self.threads: dict[str, ThreadMetadata] = {}
         self.items: dict[str, list[ThreadItem]] = defaultdict(list)
+        self.attachments: dict[str, Attachment] = {}
 
     async def load_thread(self, thread_id: str, context: dict) -> ThreadMetadata:
         if thread_id not in self.threads:
             raise NotFoundError(f"Thread {thread_id} not found")
-        return self.threads[thread_id]
+        thread = self.threads[thread_id]
+        if hasattr(thread, "items"):
+            thread = ThreadMetadata.model_validate(thread.model_dump(exclude={"items"}))
+            self.threads[thread_id] = thread
+        return thread
 
     async def save_thread(self, thread: ThreadMetadata, context: dict) -> None:
+        if hasattr(thread, "items"):
+            thread = ThreadMetadata.model_validate(thread.model_dump(exclude={"items"}))
         self.threads[thread.id] = thread
 
     async def load_threads(
@@ -81,13 +88,13 @@ class MemoryStore(Store[dict]):
         next_after = cursor_key(data[-1]) if has_more and data else None
         return Page(data=data, has_more=has_more, after=next_after)
 
-    # Attachments are not implemented in the quickstart store
-
     async def save_attachment(self, attachment: Attachment, context: dict) -> None:
-        raise NotImplementedError()
+        self.attachments[attachment.id] = attachment
 
     async def load_attachment(self, attachment_id: str, context: dict) -> Attachment:
-        raise NotImplementedError()
+        if attachment_id not in self.attachments:
+            raise NotFoundError(f"Attachment {attachment_id} not found")
+        return self.attachments[attachment_id]
 
     async def delete_attachment(self, attachment_id: str, context: dict) -> None:
-        raise NotImplementedError()
+        self.attachments.pop(attachment_id, None)

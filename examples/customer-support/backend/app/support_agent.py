@@ -5,34 +5,58 @@ from typing import Dict
 
 from agents import Agent, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext
-from chatkit.types import AssistantMessageContent, AssistantMessageItem, ThreadItemDoneEvent
+from chatkit.types import (
+    AssistantMessageContent,
+    AssistantMessageItem,
+    ClientEffectEvent,
+    ThreadItemDoneEvent,
+)
 
 from .airline_state import AirlineStateManager
+from .flight_options import (
+    FlightSearchRequest,
+    build_flight_options_widget,
+    generate_flight_options,
+)
 from .meal_preferences import build_meal_preference_widget
 
 SUPPORT_AGENT_INSTRUCTIONS = """
-You are a friendly and efficient airline customer support agent for OpenSkies.
-You help elite flyers with seat changes, cancellations, checked bags, and
-special requests. Follow these guidelines:
+You are a friendly and efficient OpenSkies concierge representing the
+traveller. Act on the customer's behalf as you help elite flyers with seat
+changes, cancellations, checked bags, and special requests. Follow these
+guidelines:
 
-- Acknowledge the customer's loyalty status and recent travel plans if you haven't
-  already done so.
+- Acknowledge the customer's loyalty status and recent travel plans if you
+  haven't already done so.
+- Always speak as the traveller's concierge acting on their behalf.
 - When a task requires action, call the appropriate tool instead of describing
   the change hypothetically.
 - After using a tool, confirm the outcome and offer next steps.
 - If you cannot fulfill a request, apologize and suggest an alternative.
 - Keep responses concise (2-3 sentences) unless extra detail is required.
-- For tool calls `cancel_trip` and `add_checked_bag`, ask the user for confirmation before proceeding.
+- For tool calls `cancel_trip` and `add_checked_bag`, ask the user for
+  confirmation before proceeding.
+- For trip booking requests, gather origin (use the traveller's home airport if
+  not provided), destination, depart/return dates, and cabin type (economy,
+  premium economy, business, first). Once you have those details, call
+  `flight_option_list` to share options instead of describing them. Use airport
+  codes, not city names, when showing options.
 
 Custom tags:
-- <CUSTOMER_PROFILE> - provides contexto on the customer's account and travel details.
+- <CUSTOMER_PROFILE> - provides contexto on the customer's account and travel
+  details.
 
 Available tools:
-- change_seat(flight_number: str, seat: str) – move the passenger to a new seat.
+- change_seat(flight_number: str, seat: str) – move the passenger to a new
+  seat.
 - cancel_trip() – cancel the upcoming reservation and note the refund.
 - add_checked_bag() – add one checked bag to the itinerary.
-- meal_preference_list() – show meal options so the traveller can pick their preference.
-  Invoke this tool when the user requests to set or change their meal preference or option.
+- meal_preference_list() – show meal options so the traveller can pick their
+  preference. Invoke this tool when the user requests to set or change their
+  meal preference or option.
+- flight_option_list(origin?: str, destination: str, depart_date: str,
+  return_date: str, cabin: str) – present bookable flight options after the
+  key details are confirmed.
 - request_assistance(note: str) – record a special assistance request.
 
 Only use information provided in the customer context or tool results. Do not
@@ -40,14 +64,25 @@ invent confirmation numbers or policy details.
 """.strip()
 
 
-def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContext]:
+def build_support_agent(
+    state_manager: AirlineStateManager,
+) -> Agent[AgentContext]:
     """Create the airline customer support agent with task-specific tools."""
 
     def _thread_id(ctx: RunContextWrapper[AgentContext]) -> str:
         return ctx.context.thread.id
 
+    async def _sync_profile(ctx: RunContextWrapper[AgentContext]) -> None:
+        profile = state_manager.get_profile(_thread_id(ctx))
+        await ctx.context.stream(
+            ClientEffectEvent(
+                name="customer_profile/update",
+                data={"profile": profile.to_dict()},
+            )
+        )
+
     @function_tool(
-        description_override="Move the passenger to a different seat on a flight.",
+        description_override=("Move the passenger to a different seat on a flight."),
     )
     async def change_seat(
         ctx: RunContextWrapper[AgentContext],
@@ -58,13 +93,17 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
             message = state_manager.change_seat(_thread_id(ctx), flight_number, seat)
         except ValueError as exc:  # translate user errors
             raise ValueError(str(exc)) from exc
+        await _sync_profile(ctx)
         return {"result": message}
 
     @function_tool(
-        description_override="Cancel the traveller's upcoming trip and note the refund.",
+        description_override=("Cancel the traveller's upcoming trip and note the refund."),
     )
-    async def cancel_trip(ctx: RunContextWrapper[AgentContext]) -> Dict[str, str]:
+    async def cancel_trip(
+        ctx: RunContextWrapper[AgentContext],
+    ) -> Dict[str, str]:
         message = state_manager.cancel_trip(_thread_id(ctx))
+        await _sync_profile(ctx)
         return {"result": message}
 
     @function_tool(
@@ -75,10 +114,11 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
     ) -> Dict[str, str | int]:
         message = state_manager.add_bag(_thread_id(ctx))
         profile = state_manager.get_profile(_thread_id(ctx))
+        await _sync_profile(ctx)
         return {"result": message, "bags_checked": profile.bags_checked}
 
     @function_tool(
-        description_override="Display the meal preference picker so the traveller can choose an option.",
+        description_override="Display the meal preference picker.",
     )
     async def meal_preference_list(
         ctx: RunContextWrapper[AgentContext],
@@ -98,13 +138,68 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         return {"result": "Shared meal preference options with the traveller."}
 
     @function_tool(
-        description_override="Note a special assistance request for airport staff.",
+        description_override=(
+            "Share specific flight options after collecting destination, dates, and cabin."
+        ),
+    )
+    async def flight_option_list(
+        ctx: RunContextWrapper[AgentContext],
+        destination: str,
+        depart_date: str,
+        return_date: str,
+        cabin: str,
+        origin: str | None = None,
+    ) -> Dict[str, str]:
+        profile = state_manager.get_profile(_thread_id(ctx))
+        origin_airport = (origin or profile.home_airport).strip()
+        request = FlightSearchRequest(
+            origin=origin_airport,
+            destination=destination.strip().upper(),
+            depart_date=depart_date.strip(),
+            return_date=return_date.strip(),
+            cabin=cabin.strip(),
+        )
+
+        state_manager.record_trip_dates(
+            _thread_id(ctx),
+            request.origin,
+            request.destination,
+            request.depart_date,
+            request.return_date,
+        )
+
+        options = generate_flight_options(request)
+        await ctx.context.stream(
+            ThreadItemDoneEvent(
+                item=AssistantMessageItem(
+                    thread_id=ctx.context.thread.id,
+                    id=ctx.context.generate_id("message"),
+                    created_at=datetime.now(),
+                    content=[
+                        AssistantMessageContent(
+                            text=(
+                                "I pulled a few flight options based on those "
+                                "dates and cabin preferences. Pick one to "
+                                "place on hold."
+                            )
+                        )
+                    ],
+                ),
+            )
+        )
+        widget = build_flight_options_widget(options, request)
+        await ctx.context.stream_widget(widget)
+        return {"result": "Shared flight options with the traveller."}
+
+    @function_tool(
+        description_override=("Note a special assistance request for airport staff."),
     )
     async def request_assistance(
         ctx: RunContextWrapper[AgentContext],
         note: str,
     ) -> Dict[str, str]:
         message = state_manager.request_assistance(_thread_id(ctx), note)
+        await _sync_profile(ctx)
         return {"result": message}
 
     tools = [
@@ -112,6 +207,7 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         cancel_trip,
         add_checked_bag,
         meal_preference_list,
+        flight_option_list,
         request_assistance,
     ]
 
@@ -120,7 +216,12 @@ def build_support_agent(state_manager: AirlineStateManager) -> Agent[AgentContex
         name="OpenSkies Concierge",
         instructions=SUPPORT_AGENT_INSTRUCTIONS,
         tools=tools,  # type: ignore[arg-type]
-        tool_use_behavior=StopAtTools(stop_at_tool_names=[meal_preference_list.name]),
+        tool_use_behavior=StopAtTools(
+            stop_at_tool_names=[
+                meal_preference_list.name,
+                flight_option_list.name,
+            ]
+        ),
     )
 
 

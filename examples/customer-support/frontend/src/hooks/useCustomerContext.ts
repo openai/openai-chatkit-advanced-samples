@@ -19,6 +19,16 @@ export type TimelineEntry = {
   entry: string;
 };
 
+export type LoyaltyProgress = {
+  current_tier: string;
+  next_tier: string;
+  points_earned: number;
+  points_required: number;
+  segments_flown: number;
+  segments_required: number;
+  renewal_date: string;
+};
+
 export type CustomerProfile = {
   customer_id: string;
   name: string;
@@ -26,12 +36,17 @@ export type CustomerProfile = {
   loyalty_id: string;
   email: string;
   phone: string;
+  home_airport: string;
+  preferred_routes: string[];
+  travel_summary: string;
   tier_benefits: string[];
+  loyalty_progress: LoyaltyProgress;
   segments: FlightSegment[];
   bags_checked: number;
   meal_preference: string | null;
   special_assistance: string | null;
   timeline: TimelineEntry[];
+  spotlight: string[];
 };
 
 type CustomerResponse = {
@@ -71,5 +86,17 @@ export function useCustomerContext(threadId: string | null) {
     void fetchProfile();
   }, [fetchProfile]);
 
-  return { profile, loading, error, refresh: fetchProfile };
+  const applyProfileUpdate = useCallback((nextProfile: CustomerProfile) => {
+    setProfile(nextProfile);
+    setLoading(false);
+    setError(null);
+  }, []);
+
+  return {
+    profile,
+    loading,
+    error,
+    refresh: fetchProfile,
+    setProfile: applyProfileUpdate,
+  };
 }

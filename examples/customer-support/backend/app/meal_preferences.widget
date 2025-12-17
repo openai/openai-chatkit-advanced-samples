@@ -1,0 +1,179 @@
+{
+  "version": "1.0",
+  "name": "meal_preference_list",
+  "template": "{%- set option_list = options | default([]) -%}\n{%- set selected_value = selected | default(None) -%}\n{\n  \"type\": \"ListView\",\n  \"children\": [\n    {%- for option in option_list %}\n    {%- set is_selected = selected_value == option.value %}\n    {\n      \"type\": \"ListViewItem\",\n      \"key\": {{ (option.value) | tojson }},\n      \"onClickAction\": {% if selected_value %}{{ (none) | tojson }}{% else %}{\n        \"type\": {{ (actionType) | tojson }},\n        \"handler\": \"server\",\n        \"payload\": {\"meal\": {{ (option.value) | tojson }}}\n      }{% endif %},\n      \"children\": [\n        {\n          \"type\": \"Row\",\n          \"gap\": 2,\n          \"children\": [\n            {\n              \"type\": \"Icon\",\n              \"name\": {% if is_selected %}\"check\"{% else %}\"empty-circle\"{% endif %},\n              \"color\": \"secondary\"\n            },\n            {\n              \"type\": \"Text\",\n              \"value\": {{ (option.label) | tojson }},\n              \"weight\": {% if is_selected %}\"semibold\"{% else %}\"medium\"{% endif %},\n              \"color\": {% if is_selected %}\"emphasis\"{% else %}{{ (none) | tojson }}{% endif %}\n            }\n          ]\n        }\n      ]\n    }\n    {%- if not loop.last %},{%- endif %}\n    {%- endfor %}\n  ]\n}",
+  "jsonSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "options": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "value",
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "selected": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "actionType": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "options",
+      "actionType"
+    ],
+    "additionalProperties": false
+  },
+  "outputJsonPreview": {
+    "key": "meal-preference-list",
+    "type": "ListView",
+    "children": [
+      {
+        "key": "meal-vegetarian",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "type": "Icon",
+                "name": "empty-circle",
+                "color": "secondary"
+              },
+              {
+                "type": "Text",
+                "value": "Vegetarian",
+                "weight": "medium"
+              }
+            ],
+            "gap": 2,
+            "type": "Row"
+          }
+        ],
+        "onClickAction": {
+          "type": "support.set_meal_preference",
+          "payload": {
+            "meal": "vegetarian"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        }
+      },
+      {
+        "key": "meal-kosher",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "type": "Icon",
+                "name": "empty-circle",
+                "color": "secondary"
+              },
+              {
+                "type": "Text",
+                "value": "Kosher",
+                "weight": "medium"
+              }
+            ],
+            "gap": 2,
+            "type": "Row"
+          }
+        ],
+        "onClickAction": {
+          "type": "support.set_meal_preference",
+          "payload": {
+            "meal": "kosher"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        }
+      },
+      {
+        "key": "meal-gluten intolerant",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "type": "Icon",
+                "name": "empty-circle",
+                "color": "secondary"
+              },
+              {
+                "type": "Text",
+                "value": "Gluten intolerant",
+                "weight": "medium"
+              }
+            ],
+            "gap": 2,
+            "type": "Row"
+          }
+        ],
+        "onClickAction": {
+          "type": "support.set_meal_preference",
+          "payload": {
+            "meal": "gluten intolerant"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        }
+      },
+      {
+        "key": "meal-child",
+        "type": "ListViewItem",
+        "children": [
+          {
+            "children": [
+              {
+                "type": "Icon",
+                "name": "empty-circle",
+                "color": "secondary"
+              },
+              {
+                "type": "Text",
+                "value": "Child",
+                "weight": "medium"
+              }
+            ],
+            "gap": 2,
+            "type": "Row"
+          }
+        ],
+        "onClickAction": {
+          "type": "support.set_meal_preference",
+          "payload": {
+            "meal": "child"
+          },
+          "handler": "server",
+          "loadingBehavior": "auto"
+        }
+      }
+    ]
+  },
+  "encodedWidget": "eyUtIHNldCBvcHRpb25fbGlzdCA9IG9wdGlvbnMgfCBkZWZhdWx0KFtdKSAtJX0KeyUtIHNldCBzZWxlY3RlZF92YWx1ZSA9IHNlbGVjdGVkIHwgZGVmYXVsdChOb25lKSAtJX0KewogICJ0eXBlIjogIkxpc3RWaWV3IiwKICAiY2hpbGRyZW4iOiBbCiAgICB7JS0gZm9yIG9wdGlvbiBpbiBvcHRpb25fbGlzdCAlfQogICAgeyUtIHNldCBpc19zZWxlY3RlZCA9IHNlbGVjdGVkX3ZhbHVlID09IG9wdGlvbi52YWx1ZSAlfQogICAgewogICAgICAidHlwZSI6ICJMaXN0Vmlld0l0ZW0iLAogICAgICAia2V5Ijoge3sgKG9wdGlvbi52YWx1ZSkgfCB0b2pzb24gfX0sCiAgICAgICJvbkNsaWNrQWN0aW9uIjogeyUgaWYgc2VsZWN0ZWRfdmFsdWUgJX17eyAobm9uZSkgfCB0b2pzb24gfX17JSBlbHNlICV9ewogICAgICAgICJ0eXBlIjoge3sgKGFjdGlvblR5cGUpIHwgdG9qc29uIH19LAogICAgICAgICJoYW5kbGVyIjogInNlcnZlciIsCiAgICAgICAgInBheWxvYWQiOiB7Im1lYWwiOiB7eyAob3B0aW9uLnZhbHVlKSB8IHRvanNvbiB9fX0KICAgICAgfXslIGVuZGlmICV9LAogICAgICAiY2hpbGRyZW4iOiBbCiAgICAgICAgewogICAgICAgICAgInR5cGUiOiAiUm93IiwKICAgICAgICAgICJnYXAiOiAyLAogICAgICAgICAgImNoaWxkcmVuIjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAiSWNvbiIsCiAgICAgICAgICAgICAgIm5hbWUiOiB7JSBpZiBpc19zZWxlY3RlZCAlfSJjaGVjayJ7JSBlbHNlICV9ImVtcHR5LWNpcmNsZSJ7JSBlbmRpZiAlfSwKICAgICAgICAgICAgICAiY29sb3IiOiAic2Vjb25kYXJ5IgogICAgICAgICAgICB9LAogICAgICAgICAgICB7CiAgICAgICAgICAgICAgInR5cGUiOiAiVGV4dCIsCiAgICAgICAgICAgICAgInZhbHVlIjoge3sgKG9wdGlvbi5sYWJlbCkgfCB0b2pzb24gfX0sCiAgICAgICAgICAgICAgIndlaWdodCI6IHslIGlmIGlzX3NlbGVjdGVkICV9InNlbWlib2xkInslIGVsc2UgJX0ibWVkaXVtInslIGVuZGlmICV9LAogICAgICAgICAgICAgICJjb2xvciI6IHslIGlmIGlzX3NlbGVjdGVkICV9ImVtcGhhc2lzInslIGVsc2UgJX17eyAobm9uZSkgfCB0b2pzb24gfX17JSBlbmRpZiAlfQogICAgICAgICAgICB9CiAgICAgICAgICBdCiAgICAgICAgfQogICAgICBdCiAgICB9CiAgICB7JS0gaWYgbm90IGxvb3AubGFzdCAlfSx7JS0gZW5kaWYgJX0KICAgIHslLSBlbmRmb3IgJX0KICBdCn0="
+}
