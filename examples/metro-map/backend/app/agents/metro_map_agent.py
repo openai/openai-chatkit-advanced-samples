@@ -165,16 +165,27 @@ async def plan_route(
     message: str,
 ):
     logger.info("[TOOL CALL] plan_route %s", route)
-    sources = [
-        EntitySource(
-            id=station.id,
-            icon="map-pin",
-            title=station.name,
-            description=station.description,
-            data={"type": "station", "station_id": station.id, "name": station.name},
+    annotations = []
+    for station in route:
+        if station.name not in message:
+            index = None
+        else:
+            index = message.index(station.name) + len(station.name)
+
+        annotations.append(
+            Annotation(
+                source=EntitySource(
+                    id=station.id,
+                    icon="map-pin",
+                    title=station.name,
+                    description=station.description,
+                    interactive=True,
+                    label="Station",
+                    data={"type": "station", "station_id": station.id, "name": station.name},
+                ),
+                index=index,
+            )
         )
-        for station in route
-    ]
 
     await ctx.context.stream(
         ThreadItemDoneEvent(
@@ -182,12 +193,7 @@ async def plan_route(
                 thread_id=ctx.context.thread.id,
                 id=ctx.context.generate_id("message"),
                 created_at=datetime.now(),
-                content=[
-                    AssistantMessageContent(
-                        text=message,
-                        annotations=[Annotation(source=source, index=0) for source in sources],
-                    )
-                ],
+                content=[AssistantMessageContent(text=message, annotations=annotations)],
             )
         )
     )
