@@ -24,3 +24,4 @@ Virtual cat caretaker demo built with ChatKit (FastAPI backend + Vite/React fron
 - One-way client effects (`update_cat_status`, `cat_say`) are streamed from the server to keep the UI stats in sync and surface speech bubbles after each server tool invocation.
 - Hidden context tags track recent actions (<FED_CAT>, <PLAYED_WITH_CAT>, <CLEANED_CAT>, <CAT_NAME_SELECTED>) so the agent remembers what already happened.
 - Quick actions call `chatkit.sendUserMessage` to send canned requests without typing ([App.tsx](frontend/src/App.tsx)).
+- Image generation for cat pictures with partials using `ImageGenerationTool`

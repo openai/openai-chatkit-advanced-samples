@@ -144,3 +144,9 @@ You can run the following examples:
 
 - **Metro Map**:
   - The chat header uses a right-side icon toggle (`dark-mode` / `light-mode`) to flip the app’s color scheme client-side ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
+
+### Image generation
+
+- **Cat Lounge**:
+  - The `cat_agent` includes an `ImageGenerationTool` configured with 3 partial images.
+  - The cat lounge server's `respond` method passes in `ResponseStreamConverter(partial_images=3)` when invoking `stream_agent_response` so that the helper correctly computes image generation progress when streaming each partial image.
