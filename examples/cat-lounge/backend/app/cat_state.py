@@ -8,6 +8,13 @@ from typing import Any
 STATUS_MIN = 0
 STATUS_MAX = 10
 COLOR_PATTERNS = ("black", "calico", "colorpoint", "tabby", "white")
+DESCRIPTIONS = {
+    "black": "A black cat with large pale yellow eyes.",
+    "calico": "A calico cat with pale green eyes, cream paws, and orange and black spots.",
+    "colorpoint": "A ragdoll cat with blue eyes and colorpoint coat. Cream fur with darker patches on the ears, face, paws, and tail.",
+    "tabby": "A shaggy orange tabby cat with a striped coat and a temper.",
+    "white": "A white smily cat with odd eyes - right eye yellow, left eye blue. Pink inner ears.",
+}
 
 
 def _clamp(value: int) -> int:
@@ -22,6 +29,7 @@ class CatState:
     cleanliness: int = 6
     age: int = 2
     color_pattern: str | None = None
+    description: str | None = None
     updated_at: datetime = field(default_factory=datetime.utcnow)
 
     def touch(self) -> None:
@@ -59,6 +67,7 @@ class CatState:
         if not self.color_pattern:
             print(f"Choosing random color pattern for {value}")
             self.color_pattern = choice(COLOR_PATTERNS)
+            self.description = DESCRIPTIONS[self.color_pattern]
             print(f"Color pattern: {self.color_pattern}")
         self.touch()
 
@@ -78,6 +87,7 @@ class CatState:
             "cleanliness": self.cleanliness,
             "age": self.age,
             "colorPattern": self.color_pattern,
+            "description": self.description,
             "updatedAt": self.updated_at.isoformat(),
         }
         if thread_id:

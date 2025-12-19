@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Any, AsyncIterator
 
 from agents import Runner
-from chatkit.agents import stream_agent_response
+from chatkit.agents import ResponseStreamConverter, stream_agent_response
 from chatkit.server import ChatKitServer
 from chatkit.types import (
     Action,
@@ -107,7 +107,9 @@ class CatAssistantServer(ChatKitServer[dict[str, Any]]):
             context=agent_context,
         )
 
-        async for event in stream_agent_response(agent_context, result):
+        async for event in stream_agent_response(
+            agent_context, result, converter=ResponseStreamConverter(partial_images=3)
+        ):
             yield event
         return
 

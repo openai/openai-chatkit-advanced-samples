@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Annotated, Any, Callable
 
-from agents import Agent, RunContextWrapper, StopAtTools, function_tool
+from agents import Agent, ImageGenerationTool, RunContextWrapper, StopAtTools, function_tool
 from chatkit.agents import AgentContext
 from chatkit.types import (
     AssistantMessageContent,
@@ -13,6 +13,7 @@ from chatkit.types import (
     HiddenContextItem,
     ThreadItemDoneEvent,
 )
+from openai.types.responses.tool_param import ImageGeneration
 from pydantic import ConfigDict, Field, ValidationError
 
 from .cat_state import CatState
@@ -55,6 +56,11 @@ INSTRUCTIONS: str = """
     - If the cat currently does not have a name and the user explicitly names the cat, call `set_cat_name` with the exact name.
       Use that name in all future responses.
 
+    When the user asks for a picture of the cat:
+    - 1. ALWAYS tell them to name the cat first if the cat does not have a name.
+    - 2. Retrieve the description of the cat from state using the `get_cat_status` tool.
+    - 3. Call the image_generation tool to generate a picture of the cat with the description. It should be a lifelike picture of the cat in a home environment.
+
     Stay in character: talk about caring for the cat, suggest next steps if the stats look unbalanced, and avoid unrelated topics.
 
     Notes:
@@ -63,7 +69,8 @@ INSTRUCTIONS: str = """
     - Once a cat is named, it cannot be renamed. Do not invoke the `set_cat_name` tool if the cat has already been named.
     - If a user addresses an unnamed cat by a name for the first time, ask the user whether they'd like to name the cat.
     - If a user indicates they want to name the cat but does not provide a name, call the `suggest_cat_names` tool to give some options.
-    - After naming the cat, let the user know that the cat's profile card has been issued and ask them whether they'd like to see it.
+    - After naming the cat, ask the user if they want a picture of the cat. Also let the user know that the cat's profile card has been issued and
+      ask them whether they'd like to see it.
 """
 
 MODEL = "gpt-4.1-mini"
@@ -382,6 +389,8 @@ cat_agent = Agent[CatAgentContext](
         set_cat_name,
         # Outputs interactive widget output with partially agent-generated content.
         suggest_cat_names,
+        # Image generation
+        ImageGenerationTool(tool_config=ImageGeneration(type="image_generation", partial_images=3)),
     ],
     # Stop inference after tool calls with widget outputs to prevent repetition.
     tool_use_behavior=StopAtTools(
