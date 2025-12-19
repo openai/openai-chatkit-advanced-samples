@@ -110,7 +110,8 @@ You can run the following examples:
 ### Annotations
 
 - **Metro Map**:
-  - The `plan_route` tool renders each station in a planned route as an entity source on the assistant message; the client’s entity click handler pans the React Flow canvas to the clicked station ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx), [metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
+  - The `plan_route` tool renders each station in a planned route as an entity source on the assistant message. The station is rendered as inline annotations in the assistant message and also in the sources list.
+  - The client’s entity click handler pans the React Flow canvas to the clicked station ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx), [metro_map_agent.py](examples/metro-map/backend/app/agents/metro_map_agent.py)).
 
 ### Thread titles
 

@@ -19,7 +19,7 @@ Chat-driven GUI updates for a metro map using a React Flow canvas that lets the 
 
 - Map sync + lookup tools: `get_map`, `list_lines`, `list_stations`, `get_line_route`, `get_station` keep the agent grounded in the latest network data.
 - Selection-aware replies: the agent calls the `get_selected_stations` client tool to pull the user’s current canvas selection before continuing a response, handled in `onClientTool` ([ChatKitPanel.tsx](frontend/src/components/ChatKitPanel.tsx), [metro_map_agent.py](backend/app/agents/metro_map_agent.py)).
-- Plan-a-route responses attach entity sources for each station in the recommended path so ChatKit can keep the canvas focused on the stops being discussed.
+- Plan-a-route responses attach entity sources that are shown as inline annotations for each station in the recommended path so ChatKit can keep the canvas focused on the stops being discussed.
 - Station creation flow: `show_line_selector` streams a clickable `line.select` widget, the server stashes `<LINE_SELECTED>`, and `add_station` triggers a widget update and a client tool call to refresh the canvas and focus the new stop.
 - Location placement helper: after a line is chosen, a `location_select_mode` client effect flips the UI into placement mode so users pick start/end of line for insertion.
 - Progress updates: initial map fetch streams a quick progress event while loading line data.
