@@ -21,12 +21,70 @@ const DEFAULT_START_SCREEN_PROMPTS: StartScreenPrompt[] = [
     },
     {
       label: "Plan a route",
-      prompt: "What's the quickest way from Cinderia to Lyra Verge?",
+      prompt: [
+        {
+          type: "input_text",
+          text: "What's the quickest way from ",
+        },
+        {
+          type: "input_tag",
+          text: "Cinderia",
+          id: "cinderia",
+          group: "Stations",
+          interactive: true,
+          data: {
+            type: "station",
+            station_id: "cinderia",
+            name: "Cinderia",
+          },
+        },
+        {
+          type: "input_text",
+          text: " to ",
+        },
+        {
+          type: "input_tag",
+          text: "Lyra Verge",
+          id: "lyra-verge",
+          group: "Stations",
+          interactive: true,
+          data: {
+            type: "station",
+            station_id: "lyra-verge",
+            name: "Lyra Verge",
+          },
+        },
+        {
+          type: "input_text",
+          text: "?",
+        },
+      ],
       icon: "maps",
     },
     {
       label: "Station overview",
-      prompt: "Tell me about the Titan Border station.",
+      prompt: [
+        {
+          type: "input_text",
+          text: "Tell me about the ",
+        },
+        {
+          type: "input_tag",
+          text: "Titan Border",
+          id: "titan-border",
+          group: "Stations",
+          interactive: true,
+          data: {
+            type: "station",
+            station_id: "titan-border",
+            name: "Titan Border",
+          },
+        },
+        {
+          type: "input_text",
+          text: " station.",
+        },
+      ],
       icon: "map-pin",
     },
     {
@@ -34,7 +92,7 @@ const DEFAULT_START_SCREEN_PROMPTS: StartScreenPrompt[] = [
       prompt: "Give me a short rundown of each line and where they cross.",
       icon: "globe",
     },
-]
+];
 
 export const getGreeting = (selectedStationIds: string[]) => {
   if (selectedStationIds.length > 1) {

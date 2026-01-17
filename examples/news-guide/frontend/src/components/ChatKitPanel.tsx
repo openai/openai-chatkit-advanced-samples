@@ -121,6 +121,7 @@ export function ChatKitPanel({
     },
     entities: {
       onTagSearch: search,
+      showComposerMenu: true,
       onRequestPreview: getPreview,
       onClick: handleEntityClick,
     },

@@ -127,11 +127,11 @@ You can run the following examples:
 ### Entity tags (@-mentions)
 
 - **News Guide**:
-  - Entity search and previews power @-mentions for articles/authors in the composer and render hover previews via `/articles/tags` ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx), [main.py](examples/news-guide/backend/app/main.py)).
+  - Entity search and previews power @-mentions for articles/authors in the composer (type `@` or click the `@` button) and render hover previews via `/articles/tags` ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx), [main.py](examples/news-guide/backend/app/main.py)).
   - Tagged entities are converted into model-readable markers so the agent can fetch the right records (`<ARTICLE_REFERENCE>` / `<AUTHOR_REFERENCE>`) ([thread_item_converter.py](examples/news-guide/backend/app/thread_item_converter.py)).
   - Article reference tags are resolved into full articles via the instructed `get_article_by_id` tool before the agent cites details ([news_agent.py](examples/news-guide/backend/app/agents/news_agent.py)).
 - **Metro Map**:
-  - The composer’s entity search lists stations so users can @-mention them; clicking a tag also focuses the station on the canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
+  - The composer’s entity search lists stations so users can @-mention them (type `@` or click the `@` button); clicking a tag also focuses the station on the canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
   - Tagged stations are converted into `<STATION_TAG>` blocks with full line metadata so the agent can answer without another lookup ([thread_item_converter.py](examples/metro-map/backend/app/thread_item_converter.py), [server.py](examples/metro-map/backend/app/server.py)).
 
 ### Tool choice (composer menu)

@@ -185,6 +185,7 @@ export function ChatKitPanel({
     },
     entities: {
       onTagSearch: searchStations,
+      showComposerMenu: true,
       onClick: handleEntityClick,
     },
     threadItemActions: {
