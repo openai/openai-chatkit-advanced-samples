@@ -23,5 +23,5 @@ Chat-driven GUI updates for a metro map using a React Flow canvas that lets the 
 - Station creation flow: `show_line_selector` streams a clickable `line.select` widget, the server stashes `<LINE_SELECTED>`, and `add_station` triggers a widget update and a client tool call to refresh the canvas and focus the new stop.
 - Location placement helper: after a line is chosen, a `location_select_mode` client effect flips the UI into placement mode so users pick start/end of line for insertion.
 - Progress updates: initial map fetch streams a quick progress event while loading line data.
-- Entity tags: station @-mentions in the composer add `<STATION_TAG>` content for the agent and can be clicked to focus the station on the canvas.
+- Entity tags: station @-mentions in the composer add `<STATION_TAG>` content for the agent and can be clicked to focus the station on the canvas. Users can trigger tag search by typing "@" in the composer or clicking the "@" button.
 - Custom header action: a right-side icon toggles dark/light themes in the ChatKit header.
