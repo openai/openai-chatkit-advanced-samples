@@ -237,7 +237,7 @@ export function CustomerContextPanel({
 }
 
 type UploadableImageAttachment = Attachment & {
-  upload_url?: string | null;
+  upload_descriptor?: { url: string; };
   preview_url?: string | null;
 };
 
@@ -268,7 +268,7 @@ async function uploadImageAttachment(
   }
 
   const created = (await createResponse.json()) as UploadableImageAttachment;
-  const uploadUrl = created.upload_url;
+  const uploadUrl = created.upload_descriptor?.url;
 
   if (!uploadUrl) {
     return normalizeAttachment(created, fileName, mimeType);

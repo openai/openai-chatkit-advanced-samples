@@ -4,7 +4,12 @@ import base64
 from typing import Any
 
 from chatkit.store import AttachmentStore, NotFoundError
-from chatkit.types import Attachment, AttachmentCreateParams, ImageAttachment
+from chatkit.types import (
+    Attachment,
+    AttachmentCreateParams,
+    AttachmentUploadDescriptor,
+    ImageAttachment,
+)
 from fastapi import HTTPException, status
 from starlette.requests import Request
 
@@ -42,10 +47,9 @@ class LocalAttachmentStore(AttachmentStore[dict[str, Any]]):
             id=attachment_id,
             name=input.name,
             mime_type=input.mime_type,
-            upload_url=upload_url,
+            upload_descriptor=AttachmentUploadDescriptor(url=upload_url, method="POST"),
             preview_url=preview_url,
         )
-        await self.store.save_attachment(attachment, context=context)
         self._files.pop(attachment_id, None)
         return attachment
 
@@ -65,8 +69,8 @@ class LocalAttachmentStore(AttachmentStore[dict[str, Any]]):
         mime_type = getattr(attachment, "mime_type", "image/jpeg")
         encoded = base64.b64encode(data).decode("ascii")
         preview_url = "data:" + mime_type + ";base64," + encoded
-        if attachment.upload_url is not None:
-            attachment = attachment.model_copy(update={"upload_url": None})
+        if attachment.upload_descriptor is not None:
+            attachment = attachment.model_copy(update={"upload_descriptor": None})
         if getattr(attachment, "preview_url", None) != preview_url:
             attachment = attachment.model_copy(update={"preview_url": preview_url})
         await self.store.save_attachment(attachment, context=context)
