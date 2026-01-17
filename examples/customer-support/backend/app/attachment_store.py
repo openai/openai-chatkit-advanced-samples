@@ -88,7 +88,7 @@ class LocalAttachmentStore(AttachmentStore[dict[str, Any]]):
         return attachment, self._files[attachment_id]
 
     def _build_url(self, request: Request, route_name: str, attachment_id: str):
-        return request.url_for(route_name, attachment_id=attachment_id)
+        return str(request.url_for(route_name, attachment_id=attachment_id))
 
     def _validate_mime_type(self, mime_type: str) -> None:
         if not mime_type.startswith("image/"):
