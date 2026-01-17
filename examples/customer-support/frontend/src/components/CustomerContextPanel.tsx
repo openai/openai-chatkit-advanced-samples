@@ -109,10 +109,9 @@ export function CustomerContextPanel({
         );
         return;
       }
-      const attachment = await uploadImageAttachment(chatkit, file);
       await chatkit.setComposerValue({
         text: `Let's explore flights to ${destination.name}.`,
-        attachments: [attachment],
+        files: [file]
       });
       await chatkit.focusComposer();
     } catch (err) {
@@ -137,10 +136,9 @@ export function CustomerContextPanel({
     }
     setUploadError(null);
     try {
-      const attachment = await uploadImageAttachment(chatkit, file);
       await chatkit.setComposerValue({
         text: "Book a flight to this destination.",
-        attachments: [attachment],
+        files: [file]
       });
       await chatkit.focusComposer();
     } catch (uploadErr) {
@@ -234,84 +232,6 @@ export function CustomerContextPanel({
       />
     </section>
   );
-}
-
-type UploadableImageAttachment = Attachment & {
-  upload_descriptor?: { url: string; };
-  preview_url?: string | null;
-};
-
-async function uploadImageAttachment(
-  chatkit: ChatKitInstance,
-  file: File
-): Promise<Attachment> {
-  const apiConfig = chatkit.control.options.api;
-  const apiUrl = "url" in apiConfig ? apiConfig.url : SUPPORT_CHATKIT_API_URL;
-  const fileName = file.name || "image-upload";
-  const mimeType = file.type || "image/jpeg";
-
-  const createResponse = await fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      type: "attachments.create",
-      params: {
-        name: fileName,
-        size: file.size,
-        mime_type: mimeType,
-      },
-    }),
-  });
-
-  if (!createResponse.ok) {
-    throw new Error("Unable to register the attachment with ChatKit.");
-  }
-
-  const created = (await createResponse.json()) as UploadableImageAttachment;
-  const uploadUrl = created.upload_descriptor?.url;
-
-  if (!uploadUrl) {
-    return normalizeAttachment(created, fileName, mimeType);
-  }
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const uploadResponse = await fetch(uploadUrl, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!uploadResponse.ok) {
-    throw new Error("Uploading the attachment failed.");
-  }
-
-  let saved: UploadableImageAttachment | null = null;
-  try {
-    saved = (await uploadResponse.json()) as UploadableImageAttachment;
-  } catch {
-    saved = null;
-  }
-
-  const result = saved ?? created;
-  return normalizeAttachment(result, fileName, result.mime_type ?? mimeType);
-}
-
-function normalizeAttachment(
-  input: UploadableImageAttachment,
-  fallbackName: string,
-  fallbackMimeType: string
-): Attachment {
-  if (input.type !== "image") {
-    throw new Error("Only image attachments are supported.");
-  }
-  return {
-    type: "image",
-    id: input.id,
-    name: input.name ?? fallbackName,
-    mime_type: input.mime_type ?? fallbackMimeType,
-    preview_url: input.preview_url ?? "",
-  };
 }
 
 async function dataUrlToFile(dataUrl: string, filename: string): Promise<File> {
