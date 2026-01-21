@@ -5,6 +5,7 @@ Deliver airline-quality support with a ChatKit-powered workflow. This example pa
 ## What's Inside
 - FastAPI service that streams responses from an OpenAI Agent trained on airline tooling.
 - ChatKit Web Component embedded in a React app with a context-rich side panel.
+- Chat composer dictation (speech-to-text) so you can talk your prompts instead of typing.
 - Tools for seat changes, trip cancellations, and itinerary updates that sync with the UI in real time.
 
 ## Prerequisites
@@ -63,3 +64,5 @@ Open the printed URL and experiment with prompts such as:
 - `Add one more checked bag to my reservation.`
 
 The agent invokes the appropriate tools and the timeline updates automatically in the side panel.
+
+You can also use dictation: click the mic button in the message composer, grant microphone permission when prompted, and speak your request (the app transcribes it before sending).
