@@ -107,6 +107,11 @@ You can run the following examples:
 - **Customer Support**:
   - End-to-end image attachments: the backend issues upload/download URLs, enforces image/size limits, and converts uploads to data URLs for the model ([attachment_store.py](examples/customer-support/backend/app/attachment_store.py), [main.py](examples/customer-support/backend/app/main.py), [thread_item_converter.py](examples/customer-support/backend/app/thread_item_converter.py)). The React panel registers `attachments.create`, uploads via the signed URL, and drops the attachment into the composer when travellers share inspiration photos ([CustomerContextPanel.tsx](examples/customer-support/frontend/src/components/CustomerContextPanel.tsx)).
 
+### Dictation (speech-to-text)
+
+- **Customer Support**:
+  - The chat composer supports built-in dictation (click the mic button to speak). It's enabled client-side via `composer.dictation` ([ChatKitPanel.tsx](examples/customer-support/frontend/src/components/ChatKitPanel.tsx)) and handled server-side by implementing `ChatKitServer.transcribe()` ([server.py](examples/customer-support/backend/app/server.py)).
+
 ### Annotations
 
 - **Metro Map**:
