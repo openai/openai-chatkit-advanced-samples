@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import logging
 import random
 from datetime import datetime
@@ -16,16 +17,20 @@ from chatkit.types import (
     Action,
     AssistantMessageContent,
     AssistantMessageItem,
+    AudioInput,
     ClientEffectEvent,
     HiddenContextItem,
     ThreadItemDoneEvent,
     ThreadItemUpdated,
     ThreadMetadata,
     ThreadStreamEvent,
+    TranscriptionResult,
     UserMessageItem,
     WidgetItem,
     WidgetRootUpdated,
 )
+from fastapi import HTTPException
+from openai import OpenAI
 from openai.types.responses import (
     EasyInputMessageParam,
     ResponseInputTextParam,
@@ -61,6 +66,8 @@ UPSELL_DECLINE_ACTION_TYPE = "upsell.decline"
 REBOOK_SELECT_ACTION_TYPE = "rebook.select_option"
 
 logger = logging.getLogger(__name__)
+
+client = OpenAI()
 
 ActionHandler = Callable[
     [ThreadMetadata, Action[str, Any], WidgetItem | None, dict[str, Any]],
@@ -536,7 +543,26 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
         model_result = model_result[:1].upper() + model_result[1:]
         thread.title = model_result.strip(".")
 
-    # ------------------------------------------------------------- Attachments
+    # ------------------------------------------------------------- Dictation
+
+    async def transcribe(
+        self, audio_input: AudioInput, context: dict[str, Any]
+    ) -> TranscriptionResult:
+        ext = {
+            "audio/webm": "webm",
+            "audio/mp4": "m4a",
+            "audio/ogg": "ogg",
+        }.get(audio_input.media_type)
+        if not ext:
+            raise HTTPException(status_code=400, detail="Unexpected audio format")
+
+        audio_file = io.BytesIO(audio_input.data)
+        audio_file.name = f"audio.{ext}"
+        transcription = client.audio.transcriptions.create(
+            model="gpt-4o-transcribe", file=audio_file
+        )
+        return TranscriptionResult(text=transcription.text)
+
     # ----------------------------------------------------------------- Helpers
     @staticmethod
     def _parse_meal_preference_payload(action: Action[str, Any]) -> SetMealPreferencePayload | None:

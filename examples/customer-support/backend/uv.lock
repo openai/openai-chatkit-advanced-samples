@@ -120,7 +120,7 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28,<0.29" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.8,<2" },
     { name = "openai", specifier = ">=1.40" },
-    { name = "openai-chatkit", specifier = ">=1.5.3,<1.6.0" },
+    { name = "openai-chatkit", specifier = ">=1.6.0,<1.7.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4,<0.7" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.36,<0.37" },
 ]
@@ -548,7 +548,7 @@ wheels = [
 
 [[package]]
 name = "openai-chatkit"
-version = "1.5.3"
+version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
@@ -557,9 +557,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "uvicorn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/16/45/854c988728c8638064f3fb5652b30be395a164b526aa7fda2f24de6652c9/openai_chatkit-1.5.3.tar.gz", hash = "sha256:ef43c500a9a8f7e066a99cd04369cee5ee4dacdb1ec94976cb3b17a2caab185f", size = 59768, upload-time = "2026-01-15T06:25:51.225Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/8d/80d05af592b4c9484014de5cb5fd095916ac32f077232f1e62b85452cf07/openai_chatkit-1.6.0.tar.gz", hash = "sha256:01d029f4ddbb2035a84a484cecb254e6848601ae76a466bc8f8ce8b61c62efa6", size = 60890, upload-time = "2026-01-21T17:22:20.457Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/40/f5dacf061be090a912a3977033123044856bb0e195bbf0a6afa27dd288a7/openai_chatkit-1.5.3-py3-none-any.whl", hash = "sha256:aa6a5bda8620d5875cdeccd843f675cf74c56842622c4a24dc1e89f3b74304fb", size = 41731, upload-time = "2026-01-15T06:25:50.105Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/9d/6830850971dcd89f0461801be0cab7affce8d584799fc1397077bd082c3f/openai_chatkit-1.6.0-py3-none-any.whl", hash = "sha256:241887f65dd129d0af7cc6e30c46c99c4a477317c1862d8620d3a579b0511dcd", size = 42271, upload-time = "2026-01-21T17:22:19.039Z" },
 ]
 
 [[package]]

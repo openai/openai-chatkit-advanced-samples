@@ -95,6 +95,7 @@ export function ChatKitPanel({
         maxSize: MAX_UPLOAD_BYTES,
         accept: IMAGE_ATTACHMENT_ACCEPT,
       },
+      dictation: { enabled: true },
     },
     threadItemActions: {
       feedback: false,
