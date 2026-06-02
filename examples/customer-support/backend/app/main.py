@@ -1,18 +1,19 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from chatkit.server import StreamingResult
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
+from openai import OpenAI
+from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
-from .server import CustomerSupportServer, create_chatkit_server
+from .server import TPTHelpServer, create_chatkit_server
 
-DEFAULT_THREAD_ID = "demo_default_thread"
-
-app = FastAPI(title="ChatKit Customer Support API")
+app = FastAPI(title="TPT Help Desk API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,16 +22,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-customer_support_server: CustomerSupportServer = create_chatkit_server()
+tpt_help_server: TPTHelpServer = create_chatkit_server()
+CHATBOT_PROMPT_ID = os.getenv(
+    "OPENAI_SUPPORT_PROMPT_ID",
+    "pmpt_69cd0f0626e88197ab6100e38b46b65a0ebc4aff65bc5102",
+)
+CHATBOT_PROMPT_VERSION = os.getenv("OPENAI_SUPPORT_PROMPT_VERSION", "1")
 
 
-def get_server() -> CustomerSupportServer:
-    return customer_support_server
+class ChatbotMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatbotRequest(BaseModel):
+    messages: list[ChatbotMessage]
+    usertype: str
+    question: str
+    previous_response_id: str | None = None
+
+
+class ChatbotResponse(BaseModel):
+    answer: str
+    response_id: str | None = None
+    handoffSuggested: bool = False
+
+
+def get_openai_client() -> OpenAI:
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="OPENAI_API_KEY is not configured for chatbot requests.",
+        )
+    return OpenAI(api_key=api_key)
+
+
+def get_server() -> TPTHelpServer:
+    return tpt_help_server
 
 
 @app.post("/support/chatkit")
 async def chatkit_endpoint(
-    request: Request, server: CustomerSupportServer = Depends(get_server)
+    request: Request, server: TPTHelpServer = Depends(get_server)
 ) -> Response:
     payload = await request.body()
     result = await server.process(payload, {"request": request})
@@ -49,7 +83,7 @@ async def chatkit_endpoint(
 async def upload_attachment(
     attachment_id: str,
     request: Request,
-    server: CustomerSupportServer = Depends(get_server),
+    server: TPTHelpServer = Depends(get_server),
 ) -> dict[str, Any]:
     content_type = request.headers.get("content-type", "").lower()
     data: bytes | None = None
@@ -85,7 +119,7 @@ async def upload_attachment(
 async def download_attachment(
     attachment_id: str,
     request: Request,
-    server: CustomerSupportServer = Depends(get_server),
+    server: TPTHelpServer = Depends(get_server),
 ) -> Response:
     attachment, data = await server.attachment_uploader.read_file(
         attachment_id, {"request": request}
@@ -101,23 +135,61 @@ async def download_attachment(
     )
 
 
-def _thread_param(thread_id: str | None) -> str:
-    return thread_id or DEFAULT_THREAD_ID
-
-
-@app.get("/support/customer")
-async def customer_snapshot(
-    thread_id: str | None = Query(
-        None,
-        description="ChatKit thread identifier",
-    ),
-    server: CustomerSupportServer = Depends(get_server),
-) -> dict[str, Any]:
-    key = _thread_param(thread_id)
-    data = server.agent_state.to_dict(key)
-    return {"customer": data}
-
-
 @app.get("/support/health")
 async def health_check() -> dict[str, str]:
     return {"status": "healthy"}
+
+
+@app.post("/support/chatbot", response_model=ChatbotResponse)
+async def chatbot_endpoint(payload: ChatbotRequest) -> ChatbotResponse:
+    if not payload.question.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Question is required.",
+        )
+
+    prompt = {
+        "id": CHATBOT_PROMPT_ID,
+        "version": CHATBOT_PROMPT_VERSION,
+        "variables": {
+            "usertype": payload.usertype,
+        },
+    }
+
+    request_args: dict[str, Any] = {
+        "prompt": prompt,
+    }
+
+    if payload.previous_response_id:
+        request_args["previous_response_id"] = payload.previous_response_id
+        request_args["input"] = [
+            {
+                "role": "user",
+                "content": [{"type": "input_text", "text": payload.question}],
+            }
+        ]
+    else:
+        request_args["input"] = [
+            {
+                "role": message.role,
+                "content": [{"type": "input_text", "text": message.content}],
+            }
+            for message in payload.messages
+        ]
+
+    try:
+        response = get_openai_client().responses.create(**request_args)
+    except Exception as exc:  # pragma: no cover - surface API failure clearly
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Chatbot request failed: {exc}",
+        ) from exc
+
+    answer = (response.output_text or "").strip()
+    if not answer:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Chatbot response did not contain text output.",
+        )
+
+    return ChatbotResponse(answer=answer, response_id=response.id)
