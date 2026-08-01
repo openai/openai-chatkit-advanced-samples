@@ -139,6 +139,13 @@ You can run the following examples:
   - The composer’s entity search lists stations so users can @-mention them (type `@` or click the `@` button); clicking a tag also focuses the station on the canvas ([ChatKitPanel.tsx](examples/metro-map/frontend/src/components/ChatKitPanel.tsx)).
   - Tagged stations are converted into `<STATION_TAG>` blocks with full line metadata so the agent can answer without another lookup ([thread_item_converter.py](examples/metro-map/backend/app/thread_item_converter.py), [server.py](examples/metro-map/backend/app/server.py)).
 
+### Composer commands
+
+- **Cat Lounge**:
+  - The `/care` command opens a state-aware submenu for feeding, playing with, or cleaning the cat, then sends the selected request through `chatkit.sendUserMessage()` ([ChatKitPanel.tsx](examples/cat-lounge/frontend/src/components/ChatKitPanel.tsx)).
+- **News Guide**:
+  - The `/find-events` command opens a date-range submenu, selects the existing `event_finder` composer tool, and prefills a reviewable prompt with `chatkit.setComposerValue()` ([ChatKitPanel.tsx](examples/news-guide/frontend/src/components/ChatKitPanel.tsx)).
+
 ### Tool choice (composer menu)
 
 - **News Guide**:

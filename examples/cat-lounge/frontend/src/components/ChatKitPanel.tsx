@@ -1,7 +1,7 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import clsx from "clsx";
-import type { Widgets } from "@openai/chatkit";
-import { useCallback, useRef } from "react";
+import type { Command, Widgets } from "@openai/chatkit";
+import { useCallback, useMemo, useRef } from "react";
 
 import {
   CHATKIT_API_DOMAIN_KEY,
@@ -20,6 +20,23 @@ type ChatKitPanelProps = {
   className?: string;
 };
 
+const CARE_COMMAND: Command = {
+  id: "care",
+  label: "Care for the cat",
+  description: "Feed, play with, or clean the cat",
+  icon: "sparkle",
+};
+
+const commandMatchesQuery = (command: Command, query: string) => {
+  const normalizedQuery = query.trim().toLowerCase();
+  return (
+    normalizedQuery.length === 0 ||
+    command.id.toLowerCase().includes(normalizedQuery) ||
+    command.label.toLowerCase().includes(normalizedQuery) ||
+    command.description?.toLowerCase().includes(normalizedQuery)
+  );
+};
+
 export function ChatKitPanel({
   onChatKitReady,
   className,
@@ -35,6 +52,30 @@ export function ChatKitPanel({
   const cat = useAppStore((state) => state.cat);
   const refresh = useAppStore((state) => state.refreshCat);
   const applyUpdate = useAppStore((state) => state.applyCatUpdate);
+
+  const careCommands = useMemo<Command[]>(
+    () => [
+      {
+        id: "care-feed",
+        label: "Feed the cat",
+        description: `Restore energy (currently ${cat.energy}/10)`,
+        icon: "sparkle",
+      },
+      {
+        id: "care-play",
+        label: "Play with the cat",
+        description: `Boost happiness (currently ${cat.happiness}/10)`,
+        icon: "confetti",
+      },
+      {
+        id: "care-clean",
+        label: "Clean the cat",
+        description: `Improve cleanliness (currently ${cat.cleanliness}/10)`,
+        icon: "check-circle",
+      },
+    ],
+    [cat.cleanliness, cat.energy, cat.happiness]
+  );
 
   const handleStatusUpdate = useCallback(
     (state: CatStatePayload, flash?: string) => {
@@ -126,6 +167,32 @@ export function ChatKitPanel({
     },
     composer: {
       placeholder: getPlaceholder(cat.name),
+    },
+    commands: {
+      enabled: true,
+      onSearch: async (query) =>
+        commandMatchesQuery(CARE_COMMAND, query) ? [CARE_COMMAND] : [],
+      onSelect: async (command) => {
+        switch (command.id) {
+          case "care":
+            return { type: "menu", commands: careCommands };
+          case "care-feed":
+            await chatkitRef.current?.sendUserMessage({
+              text: "Please feed the cat something tasty.",
+            });
+            return;
+          case "care-play":
+            await chatkitRef.current?.sendUserMessage({
+              text: "Please play with the cat using a fun toy.",
+            });
+            return;
+          case "care-clean":
+            await chatkitRef.current?.sendUserMessage({
+              text: "Please clean and freshen up the cat.",
+            });
+            return;
+        }
+      },
     },
     threadItemActions: {
       feedback: false,

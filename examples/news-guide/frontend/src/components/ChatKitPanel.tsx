@@ -1,4 +1,5 @@
 import { ChatKit, useChatKit, Widgets, type Entity } from "@openai/chatkit-react";
+import type { Command } from "@openai/chatkit";
 import clsx from "clsx";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,37 @@ export type ChatKit = ReturnType<typeof useChatKit>;
 type ChatKitPanelProps = {
   onChatKitReady: (chatkit: ChatKit) => void;
   className?: string;
+};
+
+const FIND_EVENTS_COMMAND: Command = {
+  id: "find-events",
+  label: "Find events",
+  description: "Search Foxhollow events by date range",
+  icon: "calendar",
+};
+
+const EVENT_RANGE_COMMANDS: Command[] = [
+  { id: "find-events-today", label: "Today", icon: "calendar" },
+  { id: "find-events-weekend", label: "This weekend", icon: "calendar" },
+  { id: "find-events-next-week", label: "Next week", icon: "calendar" },
+  { id: "find-events-custom", label: "Choose dates", icon: "calendar" },
+];
+
+const EVENT_RANGE_PROMPTS: Record<string, string> = {
+  "find-events-today": "Find events happening today.",
+  "find-events-weekend": "Find events happening this weekend.",
+  "find-events-next-week": "Find events happening next week.",
+  "find-events-custom": "Find events between [start date] and [end date].",
+};
+
+const commandMatchesQuery = (command: Command, query: string) => {
+  const normalizedQuery = query.trim().toLowerCase();
+  return (
+    normalizedQuery.length === 0 ||
+    command.id.toLowerCase().includes(normalizedQuery) ||
+    command.label.toLowerCase().includes(normalizedQuery) ||
+    command.description?.toLowerCase().includes(normalizedQuery)
+  );
 };
 
 export function ChatKitPanel({
@@ -118,6 +150,26 @@ export function ChatKitPanel({
     composer: {
       placeholder: getPlaceholder(Boolean(activeThread)),
       tools: TOOL_CHOICES,
+    },
+    commands: {
+      enabled: true,
+      onSearch: async (query) =>
+        commandMatchesQuery(FIND_EVENTS_COMMAND, query)
+          ? [FIND_EVENTS_COMMAND]
+          : [],
+      onSelect: async (command) => {
+        if (command.id === "find-events") {
+          return { type: "menu", commands: EVENT_RANGE_COMMANDS };
+        }
+
+        const prompt = EVENT_RANGE_PROMPTS[command.id];
+        if (prompt) {
+          await chatkitRef.current?.setComposerValue({
+            text: prompt,
+            selectedToolId: "event_finder",
+          });
+        }
+      },
     },
     entities: {
       onTagSearch: search,

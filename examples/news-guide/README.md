@@ -16,6 +16,7 @@ Foxhollow Dispatch newsroom assistant showcasing retrieval-heavy ChatKit flows a
 - "@Elowen latest stories?" (author @-mention lookup; only works when manually typing @, no copy paste)
 - "What events are happening this Saturday?" (select the "Event finder" tool from the composer menu first)
 - "Give me a quick puzzle break." (select the "Coffee break puzzle" tool from the composer menu)
+- Type `/find-events` to choose a date range and prefill an event search.
 
 ## Features
 
@@ -24,4 +25,5 @@ Foxhollow Dispatch newsroom assistant showcasing retrieval-heavy ChatKit flows a
 - Entity tags with previews; tagged articles/authors become `<ARTICLE_REFERENCE>` / `<AUTHOR_REFERENCE>` markers that drive `get_article_by_id`. Users can trigger tag search by typing "@" in the composer or clicking the "@" button.
 - Progress streaming (`ProgressUpdateEvent`) during searches and page loads to keep the UI responsive.
 - Composer tool options for explicit agent routing (`event_finder`, `puzzle`) using `tool_choice`.
+- The `/find-events` composer command opens a date-range submenu, selects `event_finder`, and prefills the composer with `chatkit.setComposerValue`.
 - Widgets with client and server actions: article list "View" buttons (`open_article`) and event timeline with server-handled `view_event_details` updates.
