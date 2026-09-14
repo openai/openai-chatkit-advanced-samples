@@ -123,7 +123,8 @@ class ArticleStore:
         payload: List[ArticleMetadata] = []
         for article_id in self._order:
             record = self._articles[article_id]
-            if not set(record.tags).intersection(normalized):
+            record_tags = {tag.strip().lower() for tag in record.tags if tag}
+            if not record_tags.intersection(normalized):
                 continue
             payload.append(record)
 
