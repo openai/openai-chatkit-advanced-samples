@@ -277,7 +277,7 @@ class ArticleStore:
             author_slug = slugify(record.author)
             if (
                 normalized in author_name
-                or normalized_slug == author_slug
+                or (normalized_slug != "" and normalized_slug == author_slug)
                 or normalized in author_slug
             ):
                 metadata = record.model_dump(exclude={"content"})
