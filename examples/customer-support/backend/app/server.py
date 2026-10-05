@@ -258,6 +258,11 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
             seat=seat_assignment,
         )
 
+        # The booking is committed before streaming its confirmation. Record the
+        # replay guard now so a retry or disconnect cannot duplicate the booking.
+        if sender is not None:
+            self.agent_state.mark_widget_consumed(thread.id, sender.id)
+
         summary = describe_flight_option(selected, payload.request)
         action_text = (
             "You're scheduled on that option. I'll surface a few returns now."
@@ -284,7 +289,6 @@ class CustomerSupportServer(ChatKitServer[dict[str, Any]]):
                 item_id=sender.id,
                 update=WidgetRootUpdated(widget=selected_widget),
             )
-            self.agent_state.mark_widget_consumed(thread.id, sender.id)
 
         if payload.leg == "outbound":
             return_request = FlightSearchRequest(
