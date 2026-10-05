@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { SUPPORT_CUSTOMER_URL } from "../lib/config";
 
@@ -58,7 +58,10 @@ export function useCustomerContext(threadId: string | null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const requestVersion = useRef(0);
+
   const fetchProfile = useCallback(async () => {
+    const version = ++requestVersion.current;
     setLoading(true);
     setError(null);
     try {
@@ -72,21 +75,27 @@ export function useCustomerContext(threadId: string | null) {
         throw new Error(`Failed to load customer context (${response.status})`);
       }
       const payload = (await response.json()) as CustomerResponse;
-      setProfile(payload.customer);
+      if (version === requestVersion.current) setProfile(payload.customer);
     } catch (err) {
+      if (version !== requestVersion.current) return;
       const message = err instanceof Error ? err.message : String(err);
       setError(message);
       setProfile(null);
     } finally {
-      setLoading(false);
+      if (version === requestVersion.current) setLoading(false);
     }
   }, [threadId]);
 
   useEffect(() => {
     void fetchProfile();
+    return () => {
+      requestVersion.current++;
+    };
   }, [fetchProfile]);
 
   const applyProfileUpdate = useCallback((nextProfile: CustomerProfile) => {
+    // A direct update supersedes any profile snapshot already being fetched.
+    requestVersion.current++;
     setProfile(nextProfile);
     setLoading(false);
     setError(null);
