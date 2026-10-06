@@ -69,6 +69,8 @@ class ArticleStore:
         order: List[str] = []
 
         for entry in metadata_entries:
+            if entry.id in articles:
+                raise ValueError(f"Duplicate article id {entry.id!r} in articles.json")
             markdown = self._load_markdown(entry)
             record = ArticleRecord(**entry.model_dump(), content=markdown)
             articles[record.id] = record
