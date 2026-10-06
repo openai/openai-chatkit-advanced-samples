@@ -78,6 +78,7 @@ function celebrateReveal() {
 }
 
 export const useAppStore = create<AppState>((set, get) => {
+  let refreshVersion = 0;
   const initialScheme = getInitialScheme();
   syncSchemeWithDocument(initialScheme);
 
@@ -95,11 +96,13 @@ export const useAppStore = create<AppState>((set, get) => {
       }
       clearSpeechTimer();
       clearFlashTimer();
-      set({ threadId, speech: null, flashMessage: null });
+      set({ threadId, cat: { ...DEFAULT_CAT_STATE, threadId }, speech: null, flashMessage: null });
       void get().refreshCat(threadId ?? null);
     },
     cat: DEFAULT_CAT_STATE,
     applyCatUpdate: (update) => {
+      if (update.threadId != null && update.threadId !== get().threadId) return;
+      refreshVersion += 1;
       const prev = get().cat
       if (prev.name === "Unnamed Cat" && update.name !== prev.name) {
         celebrateReveal();
@@ -130,7 +133,10 @@ export const useAppStore = create<AppState>((set, get) => {
       }));
     },
     refreshCat: async (overrideId) => {
-      const id = overrideId ?? get().threadId;
+      const id = overrideId === undefined ? get().threadId : overrideId;
+      if (id !== get().threadId) return;
+      const version = ++refreshVersion;
+      const isCurrent = () => version === refreshVersion && id === get().threadId;
       if (!id) {
         set({
           cat: {
@@ -147,6 +153,7 @@ export const useAppStore = create<AppState>((set, get) => {
           throw new Error(`Failed to load cat state (${response.status})`);
         }
         const data = (await response.json()) as { cat?: CatStatePayload };
+        if (!isCurrent()) return;
         if (data?.cat) {
           const prev = get().cat
           if (prev.name === "Unnamed Cat" && data.cat.name !== prev.name) {
@@ -157,7 +164,7 @@ export const useAppStore = create<AppState>((set, get) => {
           return data.cat;
         }
       } catch (error) {
-        console.error("Failed to fetch cat state", error);
+        if (isCurrent()) console.error("Failed to fetch cat state", error);
       }
     },
     speech: null,
