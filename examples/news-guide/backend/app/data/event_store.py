@@ -63,6 +63,8 @@ class EventStore:
                 record = EventRecord.model_validate(entry)
             except ValidationError as exc:
                 raise ValueError(f"Invalid event metadata at index {idx}: {exc}") from exc
+            if record.id in events:
+                raise ValueError(f"Duplicate event id {record.id!r} in events.json")
             events[record.id] = record
             order.append(record.id)
 
